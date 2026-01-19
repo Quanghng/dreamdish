@@ -1,6 +1,5 @@
 'use client';
-
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import DishCard from './components/DishCard';
 import IngredientTag from './components/IngredientTag';
@@ -16,14 +15,24 @@ interface Ingredient {
 }
 
 export default function Home() {
-  const [ingredients, setIngredients] = useState<Ingredient[]>([
+  const defaultIngredients: Ingredient[] = [
     { id: '1', icon: '🍌', label: 'Banane' },
     { id: '2', icon: '🍫', label: 'Chocolat' },
     { id: '3', icon: '🐟', label: 'Saumon' },
-  ]);
+  ];
+  const defaultIngredientLabels = new Set(defaultIngredients.map(ing => ing.label.toLowerCase()));
+
+  const [ingredients, setIngredients] = useState<Ingredient[]>(defaultIngredients);
   
   const [inputValue, setInputValue] = useState('');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const hasCustomIngredient = ingredients.some(
+    ing => !defaultIngredientLabels.has(ing.label.toLowerCase())
+  );
+  const visibleIngredients = hasCustomIngredient
+    ? ingredients.filter(ing => !defaultIngredientLabels.has(ing.label.toLowerCase()))
+    : ingredients;
 
   const dishes = [
     { image: '🍝', title: 'Pasta' },
@@ -90,11 +99,45 @@ export default function Home() {
     return { ...ing, tags: defaultTags };
   });
 
-  // Filtrer les ingrédients selon les filtres actifs
+  // Filtrer les ingrédients selon la categorie uniquement
+  // - Catégories: OBLIGATOIRE si sélectionné (légume, poisson, etc)
+  // - Autres filtres: servent aux recommandations, pas au filtrage ici
+  const selectedIngredientNames = new Set(visibleIngredients.map(i => i.label.toLowerCase()));
+  
   const filteredIngredients = ingredientsWithTags.filter(ingredient => {
-    if (activeFilters.length === 0) return true;
-    return activeFilters.every(filter => ingredient.tags?.includes(filter));
+    // Exclure les ingrédients déjà sélectionnés
+    if (selectedIngredientNames.has(ingredient.name.toLowerCase())) {
+      return false;
+    }
+    
+    // Si une catégorie est sélectionnée, l'ingrédient DOIT avoir ce tag de catégorie
+    if (selectedCategory) {
+      if (!ingredient.tags?.includes(selectedCategory)) {
+        return false;
+      }
+    }
+    return true;
   });
+
+  // Add ingredient to bottom selection when a card is clicked
+  useEffect(() => {
+    if (!hasCustomIngredient) return;
+    if (ingredients.length === visibleIngredients.length) return;
+    setIngredients(visibleIngredients);
+  }, [hasCustomIngredient, ingredients, visibleIngredients]);
+
+  const handleSelectIngredient = (ing: any) => {
+    const name = ing.name || ing.label;
+    setIngredients(prev => {
+      if (prev.some(i => i.label.toLowerCase() === name.toLowerCase())) return prev;
+      const newIngredient: Ingredient = {
+        id: `${Date.now()}_${name}`,
+        icon: ing.icon || '🥗',
+        label: name,
+      };
+      return [...prev, newIngredient];
+    });
+  };
 
   const handleAddIngredient = () => {
     if (inputValue.trim()) {
@@ -103,7 +146,9 @@ export default function Home() {
         icon: '🥗',
         label: inputValue.trim(),
       };
-      setIngredients([...ingredients, newIngredient]);
+      setIngredients(prev => {
+        return [...prev, newIngredient];
+      });
       setInputValue('');
     }
   };
@@ -165,7 +210,10 @@ export default function Home() {
         <section className="w-full max-w-7xl mx-auto px-8 py-20">
           {/* Filter Bar */}
           <div className="mb-12">
-            <FilterBar onFilterChange={setActiveFilters} />
+            <FilterBar onFilterChange={(filters, category) => {
+              setActiveFilters(filters || []);
+              setSelectedCategory(category || '');
+            }} />
           </div>
 
           {/* Ingredients Grid */}
@@ -176,6 +224,7 @@ export default function Home() {
                 name={ingredient.name}
                 color={ingredient.color}
                 icon={ingredient.icon}
+                onSelect={() => handleSelectIngredient(ingredient)}
               />
             ))}
           </div>
@@ -199,7 +248,7 @@ export default function Home() {
         <div className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-6 space-y-4">
           {/* Ingredient Tags */}
           <div className="flex flex-wrap gap-3 min-h-[3rem] items-center">
-            {ingredients.map((ingredient) => (
+            {visibleIngredients.map((ingredient) => (
               <IngredientTag
                 key={ingredient.id}
                 icon={ingredient.icon}
@@ -208,7 +257,7 @@ export default function Home() {
               />
             ))}
           </div>
-          
+
           {/* Input Bar */}
           <div className="flex items-center gap-3 bg-gradient-to-r from-orange-50 to-amber-50 rounded-full px-6 py-4 border-2 border-amber-200 focus-within:border-amber-400 transition-colors">
             <input
