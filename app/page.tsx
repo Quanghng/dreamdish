@@ -6,6 +6,7 @@ import DishCard from './components/DishCard';
 import IngredientTag from './components/IngredientTag';
 import FilterBar from './components/FilterBar';
 import IngredientCard from './components/IngredientCard';
+import Footer from './components/Footer';
 
 interface Ingredient {
   id: string;
@@ -174,6 +175,9 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
