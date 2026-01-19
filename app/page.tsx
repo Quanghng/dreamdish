@@ -14,26 +14,39 @@ interface Ingredient {
   label: string;
 }
 
-export default function Home() {
-  const defaultIngredients: Ingredient[] = [
-    { id: '1', icon: '🍌', label: 'Banane' },
-    { id: '2', icon: '🍫', label: 'Chocolat' },
-    { id: '3', icon: '🐟', label: 'Saumon' },
-  ];
-  const defaultIngredientLabels = new Set(defaultIngredients.map(ing => ing.label.toLowerCase()));
+const DEFAULT_INGREDIENTS: Ingredient[] = [
+  { id: '1', icon: '🍌', label: 'Banane' },
+  { id: '2', icon: '🍫', label: 'Chocolat' },
+  { id: '3', icon: '🐟', label: 'Saumon' },
+];
+const DEFAULT_INGREDIENT_IDS = new Set(DEFAULT_INGREDIENTS.map(ing => ing.id));
+const DEFAULT_INGREDIENT_LABELS = new Set(
+  DEFAULT_INGREDIENTS.map(ing => ing.label.toLowerCase())
+);
 
-  const [ingredients, setIngredients] = useState<Ingredient[]>(defaultIngredients);
+interface FilterSelection {
+  category: string;
+  cuisson: string;
+  style: string;
+  regime: string;
+  type: string;
+}
+
+export default function Home() {
+  const [ingredients, setIngredients] = useState<Ingredient[]>(DEFAULT_INGREDIENTS);
   
   const [inputValue, setInputValue] = useState('');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const hasCustomIngredient = ingredients.some(
-    ing => !defaultIngredientLabels.has(ing.label.toLowerCase())
-  );
-  const visibleIngredients = hasCustomIngredient
-    ? ingredients.filter(ing => !defaultIngredientLabels.has(ing.label.toLowerCase()))
-    : ingredients;
-
+  const [hasClearedDefaults, setHasClearedDefaults] = useState(false);
+  const [filterSelection, setFilterSelection] = useState<FilterSelection>({
+    category: '',
+    cuisson: '',
+    style: '',
+    regime: '',
+    type: '',
+  });
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const dishes = [
     { image: '🍝', title: 'Pasta' },
     { image: '🍕', title: 'Pizza' },
@@ -102,7 +115,7 @@ export default function Home() {
   // Filtrer les ingrédients selon la categorie uniquement
   // - Catégories: OBLIGATOIRE si sélectionné (légume, poisson, etc)
   // - Autres filtres: servent aux recommandations, pas au filtrage ici
-  const selectedIngredientNames = new Set(visibleIngredients.map(i => i.label.toLowerCase()));
+  const selectedIngredientNames = new Set(ingredients.map(i => i.label.toLowerCase()));
   
   const filteredIngredients = ingredientsWithTags.filter(ingredient => {
     // Exclure les ingrédients déjà sélectionnés
@@ -119,12 +132,23 @@ export default function Home() {
     return true;
   });
 
-  // Add ingredient to bottom selection when a card is clicked
   useEffect(() => {
+    if (hasClearedDefaults) return;
+    const hasCustomIngredient = ingredients.some(
+      ing => !DEFAULT_INGREDIENT_LABELS.has(ing.label.toLowerCase())
+    );
     if (!hasCustomIngredient) return;
-    if (ingredients.length === visibleIngredients.length) return;
-    setIngredients(visibleIngredients);
-  }, [hasCustomIngredient, ingredients, visibleIngredients]);
+    setIngredients(prev => prev.filter(ing => !DEFAULT_INGREDIENT_IDS.has(ing.id)));
+    setHasClearedDefaults(true);
+  }, [hasClearedDefaults, ingredients]);
+
+  const handleFilterSelection = (nextSelection: FilterSelection) => {
+    setFilterSelection(nextSelection);
+    setActiveFilters(
+      [nextSelection.cuisson, nextSelection.style, nextSelection.regime, nextSelection.type].filter(Boolean)
+    );
+    setSelectedCategory(nextSelection.category || '');
+  };
 
   const handleSelectIngredient = (ing: any) => {
     const name = ing.name || ing.label;
@@ -210,10 +234,7 @@ export default function Home() {
         <section className="w-full max-w-7xl mx-auto px-8 py-20">
           {/* Filter Bar */}
           <div className="mb-12">
-            <FilterBar onFilterChange={(filters, category) => {
-              setActiveFilters(filters || []);
-              setSelectedCategory(category || '');
-            }} />
+            <FilterBar value={filterSelection} onValueChange={handleFilterSelection} />
           </div>
 
           {/* Ingredients Grid */}
@@ -248,7 +269,7 @@ export default function Home() {
         <div className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-6 space-y-4">
           {/* Ingredient Tags */}
           <div className="flex flex-wrap gap-3 min-h-[3rem] items-center">
-            {visibleIngredients.map((ingredient) => (
+            {ingredients.map((ingredient) => (
               <IngredientTag
                 key={ingredient.id}
                 icon={ingredient.icon}
@@ -276,6 +297,49 @@ export default function Home() {
             </button>
           </div>
         </div>
+      </div>
+
+      <div className="fixed bottom-36 right-6 md:bottom-14 md:right-10 z-40 flex flex-col items-end gap-3">
+        {isFilterOpen && (
+          <div className="w-[320px] md:w-[400px] max-h-[60vh] overflow-y-auto bg-gradient-to-br from-white via-amber-50 to-white rounded-2xl border border-amber-200/70 shadow-xl p-5">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-semibold tracking-wide text-amber-900 uppercase">Filtres</h3>
+              <button
+                onClick={() => setIsFilterOpen(false)}
+                className="w-8 h-8 rounded-full border border-amber-200 text-amber-700 hover:bg-amber-50 transition"
+                aria-label="Fermer"
+              >
+                ✕
+              </button>
+            </div>
+            <FilterBar
+              value={filterSelection}
+              onValueChange={handleFilterSelection}
+              collapsible
+            />
+          </div>
+        )}
+        <button
+          onClick={() => setIsFilterOpen(prev => !prev)}
+          aria-label="Ouvrir les filtres"
+          className="w-16 h-16 rounded-full bg-white border-2 border-black text-black shadow-lg hover:shadow-xl transition-all flex items-center justify-center"
+        >
+          <svg
+            width="26"
+            height="26"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M3 5h18" />
+            <path d="M7 12h10" />
+            <path d="M10 19h4" />
+          </svg>
+        </button>
       </div>
 
       {/* Footer */}

@@ -8,50 +8,57 @@ const STYLE = ['français', 'italien', 'japonais', 'chinois', 'indien', 'mexicai
 const REGIME = ['végétarien', 'vegan', 'sans gluten', 'sans lactose', 'halal', 'casher'];
 const TYPE = ['entrée', 'plat principal', 'dessert', 'apéritif', 'petit-déjeuner'];
 
-interface FilterBarProps {
-  // filters: other optional filters (Cuisson/Style/Régime/Type)
-  // category: single selected main category (or undefined)
-  onFilterChange?: (filters: string[], category?: string) => void;
+interface FilterSelection {
+  category: string;
+  cuisson: string;
+  style: string;
+  regime: string;
+  type: string;
 }
 
-export default function FilterBar({ onFilterChange }: FilterBarProps) {
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [selectedCuisson, setSelectedCuisson] = useState<string>('');
-  const [selectedStyle, setSelectedStyle] = useState<string>('');
-  const [selectedRegime, setSelectedRegime] = useState<string>('');
-  const [selectedType, setSelectedType] = useState<string>('');
+interface FilterBarProps {
+  value?: FilterSelection;
+  onValueChange?: (value: FilterSelection) => void;
+  collapsible?: boolean;
+}
+
+export default function FilterBar({ value, onValueChange, collapsible = false }: FilterBarProps) {
+  const [internalSelection, setInternalSelection] = useState<FilterSelection>({
+    category: '',
+    cuisson: '',
+    style: '',
+    regime: '',
+    type: '',
+  });
+  const [openSections, setOpenSections] = useState(() => ({
+    category: !collapsible,
+    cuisson: !collapsible,
+    style: !collapsible,
+    regime: !collapsible,
+    type: !collapsible,
+  }));
+  const selection = value ?? internalSelection;
 
   const toggleFilter = (filter: string) => {
-    let newCategory = selectedCategory;
-    let newCuisson = selectedCuisson;
-    let newStyle = selectedStyle;
-    let newRegime = selectedRegime;
-    let newType = selectedType;
+    const nextSelection: FilterSelection = { ...selection };
 
     if (CATEGORIES.includes(filter)) {
       // Single-select category: select or deselect
-      if (selectedCategory === filter) {
-        newCategory = '';
-      } else {
-        newCategory = filter;
-      }
-      setSelectedCategory(newCategory);
+      nextSelection.category = selection.category === filter ? '' : filter;
     } else if (CUISSON.includes(filter)) {
-      newCuisson = selectedCuisson === filter ? '' : filter;
-      setSelectedCuisson(newCuisson);
+      nextSelection.cuisson = selection.cuisson === filter ? '' : filter;
     } else if (STYLE.includes(filter)) {
-      newStyle = selectedStyle === filter ? '' : filter;
-      setSelectedStyle(newStyle);
+      nextSelection.style = selection.style === filter ? '' : filter;
     } else if (REGIME.includes(filter)) {
-      newRegime = selectedRegime === filter ? '' : filter;
-      setSelectedRegime(newRegime);
+      nextSelection.regime = selection.regime === filter ? '' : filter;
     } else if (TYPE.includes(filter)) {
-      newType = selectedType === filter ? '' : filter;
-      setSelectedType(newType);
+      nextSelection.type = selection.type === filter ? '' : filter;
     }
 
-    const newFilters = [newCuisson, newStyle, newRegime, newType].filter(Boolean);
-    onFilterChange?.(newFilters, newCategory || undefined);
+    if (!value) {
+      setInternalSelection(nextSelection);
+    }
+    onValueChange?.(nextSelection);
   };
 
   const FilterChip = ({
@@ -63,14 +70,14 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
   }) => {
     const isActive =
       group === 'category'
-        ? selectedCategory === label
+        ? selection.category === label
         : group === 'cuisson'
-          ? selectedCuisson === label
+          ? selection.cuisson === label
           : group === 'style'
-            ? selectedStyle === label
+            ? selection.style === label
             : group === 'regime'
-              ? selectedRegime === label
-              : selectedType === label;
+              ? selection.regime === label
+              : selection.type === label;
     return (
       <button
         onClick={() => toggleFilter(label)}
@@ -86,73 +93,153 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
   };
 
   return (
-    <div className="space-y-4 px-8">
-      {/* Mode explanation */}
-      <div className="text-xs text-amber-600 opacity-75 mb-3 px-2 bg-amber-50 py-2 rounded">
-        💡 <strong>Logique de filtrage:</strong> Catégories = obligatoire | Cuisson/Style/Régime = optionnel (ajout à la catégorie)
-      </div>
-      
+    <div className="space-y-6 px-6 md:px-8">
       {/* Catégories */}
-      <div className="flex items-center gap-4">
-        <h3 className="text-lg font-semibold text-amber-900 min-w-[140px]">Catégories :</h3>
-        <div className="flex flex-wrap gap-2">
-          <FilterChip label="viande" group="category" />
-          <FilterChip label="poisson" group="category" />
-          <FilterChip label="légume" group="category" />
-          <FilterChip label="fruit" group="category" />
-          <FilterChip label="produit laitier" group="category" />
-          <FilterChip label="céréale" group="category" />
-        </div>
+      <div className="grid gap-3 md:grid-cols-[160px_1fr] items-start">
+        {collapsible ? (
+          <button
+            type="button"
+            onClick={() =>
+              setOpenSections(prev => ({ ...prev, category: !prev.category }))
+            }
+            className="flex items-center gap-2 text-left text-lg font-semibold text-amber-900"
+          >
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-amber-50 text-amber-700">
+              {openSections.category ? '−' : '+'}
+            </span>
+            Catégories
+          </button>
+        ) : (
+          <h3 className="text-lg font-semibold text-amber-900">Catégories</h3>
+        )}
+        {(!collapsible || openSections.category) && (
+          <div className="flex flex-wrap gap-2">
+            <FilterChip label="viande" group="category" />
+            <FilterChip label="poisson" group="category" />
+            <FilterChip label="légume" group="category" />
+            <FilterChip label="fruit" group="category" />
+            <FilterChip label="produit laitier" group="category" />
+            <FilterChip label="céréale" group="category" />
+          </div>
+        )}
       </div>
 
       {/* Cuisson */}
-      <div className="flex items-center gap-4">
-        <h3 className="text-lg font-semibold text-amber-900 min-w-[140px]">Cuisson :</h3>
-        <div className="flex flex-wrap gap-2">
-          <FilterChip label="chaud" group="cuisson" />
-          <FilterChip label="froid" group="cuisson" />
-          <FilterChip label="ambiant" group="cuisson" />
-        </div>
+      <div className="grid gap-3 md:grid-cols-[160px_1fr] items-start">
+        {collapsible ? (
+          <button
+            type="button"
+            onClick={() =>
+              setOpenSections(prev => ({ ...prev, cuisson: !prev.cuisson }))
+            }
+            className="flex items-center gap-2 text-left text-lg font-semibold text-amber-900"
+          >
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-amber-50 text-amber-700">
+              {openSections.cuisson ? '−' : '+'}
+            </span>
+            Cuisson
+          </button>
+        ) : (
+          <h3 className="text-lg font-semibold text-amber-900">Cuisson</h3>
+        )}
+        {(!collapsible || openSections.cuisson) && (
+          <div className="flex flex-wrap gap-2">
+            <FilterChip label="chaud" group="cuisson" />
+            <FilterChip label="froid" group="cuisson" />
+            <FilterChip label="ambiant" group="cuisson" />
+          </div>
+        )}
       </div>
 
       {/* Style de cuisine */}
-      <div className="flex items-center gap-4">
-        <h3 className="text-lg font-semibold text-amber-900 min-w-[140px]">Style de cuisine :</h3>
-        <div className="flex flex-wrap gap-2">
-          <FilterChip label="français" group="style" />
-          <FilterChip label="italien" group="style" />
-          <FilterChip label="japonais" group="style" />
-          <FilterChip label="chinois" group="style" />
-          <FilterChip label="indien" group="style" />
-          <FilterChip label="mexicain" group="style" />
-          <FilterChip label="américain" group="style" />
-          <FilterChip label="méditerranéen" group="style" />
-        </div>
+      <div className="grid gap-3 md:grid-cols-[160px_1fr] items-start">
+        {collapsible ? (
+          <button
+            type="button"
+            onClick={() =>
+              setOpenSections(prev => ({ ...prev, style: !prev.style }))
+            }
+            className="flex items-center gap-2 text-left text-lg font-semibold text-amber-900"
+          >
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-amber-50 text-amber-700">
+              {openSections.style ? '−' : '+'}
+            </span>
+            Style de cuisine
+          </button>
+        ) : (
+          <h3 className="text-lg font-semibold text-amber-900">Style de cuisine</h3>
+        )}
+        {(!collapsible || openSections.style) && (
+          <div className="flex flex-wrap gap-2">
+            <FilterChip label="français" group="style" />
+            <FilterChip label="italien" group="style" />
+            <FilterChip label="japonais" group="style" />
+            <FilterChip label="chinois" group="style" />
+            <FilterChip label="indien" group="style" />
+            <FilterChip label="mexicain" group="style" />
+            <FilterChip label="américain" group="style" />
+            <FilterChip label="méditerranéen" group="style" />
+          </div>
+        )}
       </div>
 
       {/* Régime alimentaire */}
-      <div className="flex items-center gap-4">
-        <h3 className="text-lg font-semibold text-amber-900 min-w-[140px]">Régime :</h3>
-        <div className="flex flex-wrap gap-2">
-          <FilterChip label="végétarien" group="regime" />
-          <FilterChip label="vegan" group="regime" />
-          <FilterChip label="sans gluten" group="regime" />
-          <FilterChip label="sans lactose" group="regime" />
-          <FilterChip label="halal" group="regime" />
-          <FilterChip label="casher" group="regime" />
-        </div>
+      <div className="grid gap-3 md:grid-cols-[160px_1fr] items-start">
+        {collapsible ? (
+          <button
+            type="button"
+            onClick={() =>
+              setOpenSections(prev => ({ ...prev, regime: !prev.regime }))
+            }
+            className="flex items-center gap-2 text-left text-lg font-semibold text-amber-900"
+          >
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-amber-50 text-amber-700">
+              {openSections.regime ? '−' : '+'}
+            </span>
+            Régime
+          </button>
+        ) : (
+          <h3 className="text-lg font-semibold text-amber-900">Régime</h3>
+        )}
+        {(!collapsible || openSections.regime) && (
+          <div className="flex flex-wrap gap-2">
+            <FilterChip label="végétarien" group="regime" />
+            <FilterChip label="vegan" group="regime" />
+            <FilterChip label="sans gluten" group="regime" />
+            <FilterChip label="sans lactose" group="regime" />
+            <FilterChip label="halal" group="regime" />
+            <FilterChip label="casher" group="regime" />
+          </div>
+        )}
       </div>
 
       {/* Type de plat */}
-      <div className="flex items-center gap-4">
-        <h3 className="text-lg font-semibold text-amber-900 min-w-[140px]">Type de plat :</h3>
-        <div className="flex flex-wrap gap-2">
-          <FilterChip label="entrée" group="type" />
-          <FilterChip label="plat principal" group="type" />
-          <FilterChip label="dessert" group="type" />
-          <FilterChip label="apéritif" group="type" />
-          <FilterChip label="petit-déjeuner" group="type" />
-        </div>
+      <div className="grid gap-3 md:grid-cols-[160px_1fr] items-start">
+        {collapsible ? (
+          <button
+            type="button"
+            onClick={() =>
+              setOpenSections(prev => ({ ...prev, type: !prev.type }))
+            }
+            className="flex items-center gap-2 text-left text-lg font-semibold text-amber-900"
+          >
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-amber-50 text-amber-700">
+              {openSections.type ? '−' : '+'}
+            </span>
+            Type de plat
+          </button>
+        ) : (
+          <h3 className="text-lg font-semibold text-amber-900">Type de plat</h3>
+        )}
+        {(!collapsible || openSections.type) && (
+          <div className="flex flex-wrap gap-2">
+            <FilterChip label="entrée" group="type" />
+            <FilterChip label="plat principal" group="type" />
+            <FilterChip label="dessert" group="type" />
+            <FilterChip label="apéritif" group="type" />
+            <FilterChip label="petit-déjeuner" group="type" />
+          </div>
+        )}
       </div>
     </div>
   );
