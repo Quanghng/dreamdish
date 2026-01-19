@@ -4,6 +4,8 @@ import { useState } from 'react';
 import Navbar from './components/Navbar';
 import DishCard from './components/DishCard';
 import IngredientTag from './components/IngredientTag';
+import FilterBar from './components/FilterBar';
+import IngredientCard from './components/IngredientCard';
 
 interface Ingredient {
   id: string;
@@ -36,6 +38,21 @@ export default function Home() {
     { image: '🍤', title: 'Tempura' },
     { image: '🥟', title: 'Ravioli' },
     { image: '🍖', title: 'Viande' },
+  ];
+
+  const ingredientsGallery = [
+    { name: 'Tomate', color: '#FF6B6B', icon: '🍅' },
+    { name: 'Poulet', color: '#FFE5B4', icon: '🍗' },
+    { name: 'Fromage', color: '#FFD93D', icon: '🧀' },
+    { name: 'Brocoli', color: '#6BCB77', icon: '🥦' },
+    { name: 'Saumon', color: '#FF8B94', icon: '🐟' },
+    { name: 'Avocat', color: '#95E1D3', icon: '🥑' },
+    { name: 'Champignon', color: '#D4A574', icon: '🍄' },
+    { name: 'Crevette', color: '#FFB6C1', icon: '🦐' },
+    { name: 'Carotte', color: '#FFA500', icon: '🥕' },
+    { name: 'Œuf', color: '#FFF8DC', icon: '🥚' },
+    { name: 'Riz', color: '#F5F5DC', icon: '🍚' },
+    { name: 'Bœuf', color: '#8B4513', icon: '🥩' },
   ];
 
   const handleAddIngredient = () => {
@@ -96,6 +113,31 @@ export default function Home() {
             ))}
           </div>
         </div>
+
+        {/* Ingredients Gallery Section */}
+        <section className="w-full max-w-7xl mx-auto px-8 py-20">
+          {/* Section Title */}
+          <h2 className="text-4xl font-bold text-amber-900 mb-12 text-center">
+            Choisissez parmi des centaines d'ingrédients
+          </h2>
+
+          {/* Filter Bar */}
+          <div className="mb-12">
+            <FilterBar />
+          </div>
+
+          {/* Ingredients Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {ingredientsGallery.map((ingredient, index) => (
+              <IngredientCard
+                key={index}
+                name={ingredient.name}
+                color={ingredient.color}
+                icon={ingredient.icon}
+              />
+            ))}
+          </div>
+        </section>
       </main>
 
       {/* Bottom Interaction Zone */}
