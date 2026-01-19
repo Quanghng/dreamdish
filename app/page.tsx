@@ -22,6 +22,7 @@ export default function Home() {
   ]);
   
   const [inputValue, setInputValue] = useState('');
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
   const dishes = [
     { image: '🍝', title: 'Pasta' },
@@ -42,12 +43,12 @@ export default function Home() {
   ];
 
   const ingredientsGallery = [
-    { name: 'Tomate', color: '#FF6B6B', icon: '🍅' },
-    { name: 'Poulet', color: '#FFE5B4', icon: '🍗' },
-    { name: 'Fromage', color: '#FFD93D', icon: '🧀' },
-    { name: 'Brocoli', color: '#6BCB77', icon: '🥦' },
-    { name: 'Saumon', color: '#FF8B94', icon: '🐟' },
-    { name: 'Avocat', color: '#95E1D3', icon: '🥑' },
+    { name: 'Tomate', color: '#FF6B6B', icon: '🍅', tags: ['légume', 'froid', 'ambiant', 'italien', 'méditerranéen', 'végétarien', 'vegan', 'sans gluten', 'entrée', 'plat principal'] },
+    { name: 'Poulet', color: '#FFE5B4', icon: '🍗', tags: ['viande', 'chaud', 'français', 'plat principal', 'halal'] },
+    { name: 'Fromage', color: '#FFD93D', icon: '🧀', tags: ['produit laitier', 'froid', 'ambiant', 'français', 'italien', 'végétarien', 'entrée', 'plat principal', 'apéritif'] },
+    { name: 'Brocoli', color: '#6BCB77', icon: '🥦', tags: ['légume', 'chaud', 'végétarien', 'vegan', 'sans gluten', 'plat principal'] },
+    { name: 'Saumon', color: '#FF8B94', icon: '🐟', tags: ['poisson', 'chaud', 'froid', 'français', 'japonais', 'plat principal', 'entrée'] },
+    { name: 'Avocat', color: '#95E1D3', icon: '🥑', tags: ['fruit', 'légume', 'froid', 'ambiant', 'mexicain', 'végétarien', 'vegan', 'sans gluten', 'entrée'] },
     { name: 'Champignon', color: '#D4A574', icon: '🍄' },
     { name: 'Crevette', color: '#FFB6C1', icon: '🦐' },
     { name: 'Carotte', color: '#FFA500', icon: '🥕' },
@@ -637,6 +638,59 @@ export default function Home() {
     { name: 'Konjac', color: '#808080', icon: '🧊' },
   ];
 
+  // Ajouter des tags par défaut aux ingrédients qui n'en ont pas
+  const ingredientsWithTags = ingredientsGallery.map(ing => {
+    if (ing.tags) return ing;
+    
+    // Tags par défaut basés sur le nom et le type
+    const defaultTags: string[] = ['plat principal'];
+    
+    // Ajout automatique de tags selon le type d'ingrédient
+    if (['Champignon', 'Carotte', 'Laitue', 'Poivron', 'Oignon', 'Ail', 'Aubergine', 'Pomme de terre', 'Concombre', 'Épinards', 'Chou', 'Maïs', 'Piment', 'Basilic', 'Persil', 'Coriandre', 'Thym', 'Romarin', 'Menthe', 'Courge', 'Courgette', 'Betterave', 'Navet', 'Radis', 'Céleri', 'Fenouil', 'Artichaut', 'Asperge'].includes(ing.name)) {
+      defaultTags.push('légume', 'végétarien', 'vegan', 'sans gluten');
+      if (['Laitue', 'Concombre', 'Tomate', 'Avocat', 'Radis'].includes(ing.name)) {
+        defaultTags.push('froid', 'entrée');
+      } else {
+        defaultTags.push('chaud');
+      }
+    }
+    
+    if (['Bœuf', 'Poulet', 'Agneau', 'Dinde', 'Canard', 'Porc', 'Bacon', 'Jambon', 'Chorizo', 'Saucisse'].includes(ing.name)) {
+      defaultTags.push('viande', 'chaud');
+    }
+    
+    if (['Saumon', 'Thon', 'Cabillaud', 'Truite', 'Crevette', 'Crabe', 'Homard', 'Moule', 'Huître'].includes(ing.name)) {
+      defaultTags.push('poisson', 'chaud');
+    }
+    
+    if (['Pomme', 'Banane', 'Fraise', 'Raisin', 'Orange', 'Citron', 'Pêche', 'Cerise', 'Ananas', 'Kiwi', 'Mangue'].includes(ing.name)) {
+      defaultTags.push('fruit', 'froid', 'ambiant', 'végétarien', 'vegan', 'sans gluten', 'dessert');
+    }
+    
+    if (['Fromage', 'Lait', 'Beurre', 'Crème', 'Yaourt', 'Mozzarella', 'Parmesan', 'Cheddar'].includes(ing.name)) {
+      defaultTags.push('produit laitier', 'végétarien');
+      if (['Fromage', 'Mozzarella', 'Parmesan', 'Cheddar'].includes(ing.name)) {
+        defaultTags.push('froid', 'ambiant');
+      }
+    }
+    
+    if (['Riz', 'Pâtes', 'Pain', 'Quinoa', 'Couscous', 'Avoine'].includes(ing.name)) {
+      defaultTags.push('céréale', 'végétarien', 'vegan');
+      if (ing.name !== 'Pain' && ing.name !== 'Pâtes') {
+        defaultTags.push('sans gluten');
+      }
+      defaultTags.push('chaud', 'ambiant');
+    }
+    
+    return { ...ing, tags: defaultTags };
+  });
+
+  // Filtrer les ingrédients selon les filtres actifs
+  const filteredIngredients = ingredientsWithTags.filter(ingredient => {
+    if (activeFilters.length === 0) return true;
+    return activeFilters.every(filter => ingredient.tags?.includes(filter));
+  });
+
   const handleAddIngredient = () => {
     if (inputValue.trim()) {
       const newIngredient: Ingredient = {
@@ -697,20 +751,21 @@ export default function Home() {
         </div>
 
         {/* Ingredients Gallery Section */}
-        <section className="w-full max-w-7xl mx-auto px-8 py-20">
-          {/* Section Title */}
-          <h2 className="text-4xl font-bold text-amber-900 mb-12 text-center">
+        <div className="w-full bg-black py-12 mb-8 relative z-10">
+          <h2 className="text-4xl font-bold text-white text-center">
             Choisissez parmi des centaines d'ingrédients
           </h2>
-
+        </div>
+        
+        <section className="w-full max-w-7xl mx-auto px-8 py-20">
           {/* Filter Bar */}
           <div className="mb-12">
-            <FilterBar />
+            <FilterBar onFilterChange={setActiveFilters} />
           </div>
 
           {/* Ingredients Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {ingredientsGallery.map((ingredient, index) => (
+            {filteredIngredients.map((ingredient, index) => (
               <IngredientCard
                 key={index}
                 name={ingredient.name}
@@ -719,11 +774,23 @@ export default function Home() {
               />
             ))}
           </div>
+          
+          {/* Message si aucun résultat */}
+          {filteredIngredients.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-2xl text-amber-600">
+                Aucun ingrédient ne correspond aux filtres sélectionnés
+              </p>
+              <p className="text-amber-500 mt-2">
+                Essayez de retirer certains filtres
+              </p>
+            </div>
+          )}
         </section>
       </main>
 
       {/* Bottom Interaction Zone */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-4xl">
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-4xl z-20">
         <div className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-6 space-y-4">
           {/* Ingredient Tags */}
           <div className="flex flex-wrap gap-3 min-h-[3rem] items-center">
