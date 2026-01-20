@@ -13,6 +13,7 @@ import { ingredientsData } from '../data/ingredients';
 import { useSuggestions } from '@/hooks/useSuggestions';
 import { useGenerate } from '@/hooks/useGenerate';
 import { useRecipe } from '@/hooks/useRecipe';
+import type { FilterSelection } from '@/types';
 
 interface Ingredient {
   id: string;
@@ -25,6 +26,10 @@ const DEFAULT_INGREDIENTS: Ingredient[] = [
   { id: '2', icon: '🍫', label: 'Chocolat' },
   { id: '3', icon: '🐟', label: 'Saumon' },
 ];
+const DEFAULT_INGREDIENT_IDS = new Set(DEFAULT_INGREDIENTS.map(ing => ing.id));
+const DEFAULT_INGREDIENT_LABELS = new Set(
+  DEFAULT_INGREDIENTS.map(ing => ing.label.toLowerCase())
+);
 
 export default function Home() {
   const [ingredients, setIngredients] = useState<Ingredient[]>(DEFAULT_INGREDIENTS);
@@ -35,6 +40,7 @@ export default function Home() {
   const [showResult, setShowResult] = useState(false);
   const [showRecipe, setShowRecipe] = useState(false);
   const [isRecipeSaved, setIsRecipeSaved] = useState(false);
+  const [hasClearedDefaults, setHasClearedDefaults] = useState(false);
 
   const { 
     suggestions, 
@@ -356,10 +362,6 @@ export default function Home() {
               <div className="mb-6 p-4 bg-gradient-to-br from-orange-50 to-amber-100 rounded-2xl border-2 border-amber-200">
                 <h4 className="text-sm font-bold text-amber-900 mb-3">🏷️ Vos sélections</h4>
                 <div className="space-y-2 text-sm">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium text-amber-800 min-w-[80px]">Ingrédients:</span>
-                    <span className="text-amber-700">{ingredients.map(i => i.label).join(', ')}</span>
-                  </div>
                   {filterSelection.type && (
                     <div className="flex items-center gap-2">
                       <span className="font-medium text-amber-800 min-w-[80px]">Type:</span>

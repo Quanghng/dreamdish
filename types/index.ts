@@ -218,13 +218,6 @@ export interface GenerateRecipeResponse {
 // ============================================
 // Types supplémentaires pour la compatibilité
 // ============================================
-
-// Styles culinaires disponibles
-export type CulinaryStyle = 'modern' | 'classic' | 'fusion' | 'molecular' | 'rustic';
-
-// Styles de présentation
-export type PresentationStyle = 'minimalist' | 'elaborate' | 'artistic' | 'traditional';
-
 // Prompt construit
 export interface BuiltPrompt {
   systemPrompt: string;
