@@ -153,13 +153,6 @@ export default function Home() {
     return true;
   });
 
-  const handleAddIngredient = (label?: string) => {
-    const ingredientLabel = label || inputValue.trim();
-    if (ingredientLabel) {
-      if (ingredients.some(ing => ing.label.toLowerCase() === ingredientLabel.toLowerCase())) {
-        return;
-      }
-      
   useEffect(() => {
     if (hasClearedDefaults) return;
     const hasCustomIngredient = ingredients.some(
@@ -191,8 +184,12 @@ export default function Home() {
     });
   };
 
-  const handleAddIngredient = () => {
-    if (inputValue.trim()) {
+  const handleAddIngredient = (label?: string) => {
+    const ingredientLabel = label || inputValue.trim();
+    if (ingredientLabel) {
+      if (ingredients.some(ing => ing.label.toLowerCase() === ingredientLabel.toLowerCase())) {
+        return;
+      }
       const newIngredient: Ingredient = {
         id: Date.now().toString(),
         icon: '🥗',

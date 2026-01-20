@@ -91,23 +91,27 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(response, { status: 200 });
 
-  } catch (error) {
-    console.error('[API Images] Erreur:', error);
+  } catch (err) {
+    console.error('[API Images] Erreur:', err);
 
-    if (isAIError(error)) {
+    if (isAIError(err)) {
       return NextResponse.json(
         {
-          error: getUserFriendlyMessage(error),
-          code: error.code,
+          error: getUserFriendlyMessage(err),
+          code: err.code,
         },
         { status: 500 }
       );
     }
 
+    // Cast to unknown first to allow instanceof check
+    const error = err as unknown;
+    const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
+
     return NextResponse.json(
       {
         error: 'Erreur lors de la génération de l\'image',
-        details: error instanceof Error ? error.message : 'Erreur inconnue',
+        details: errorMessage,
       },
       { status: 500 }
     );

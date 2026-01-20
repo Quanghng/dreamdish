@@ -50,3 +50,27 @@ export enum MistralModel {
   SMALL = 'mistral-small-latest',
   MODERATION = 'mistral-moderation-latest',
 }
+
+// Requête pour la génération complète (prompt + image)
+export interface GenerateFullRequest {
+  ingredients: string[];
+  style?: string;
+  presentation?: string;
+}
+
+// Réponse de la génération complète
+export interface GenerateFullResponse {
+  prompt: string;
+  imageUrl: string;
+  model: string;
+  tokensUsed: number;
+  generatedAt: string;
+}
+
+// Résultat de la modération
+export interface ModerationResult {
+  isValid: boolean;
+  flaggedCategories: string[];
+  confidence: number;
+  reason?: string;
+}
