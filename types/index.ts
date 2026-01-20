@@ -117,3 +117,156 @@ export interface GenerateImageResponse {
   prompt: string;
   generatedAt: string;
 }
+
+// ============================================
+// Types pour la génération de recettes (Vision-to-Recipe)
+// ============================================
+
+// Structure d'une recette générée
+export interface GeneratedRecipe {
+  /** Titre créatif et unique de la recette */
+  title: string;
+  /** Description courte du plat */
+  description: string;
+  /** Temps de préparation estimé en minutes */
+  prepTime: number;
+  /** Temps de cuisson estimé en minutes */
+  cookTime: number;
+  /** Nombre de portions */
+  servings: number;
+  /** Niveau de difficulté */
+  difficulty: 'facile' | 'moyen' | 'difficile' | 'expert';
+  /** Liste des ingrédients avec quantités */
+  ingredients: RecipeIngredient[];
+  /** Instructions étape par étape */
+  instructions: RecipeStep[];
+  /** Guide de dressage/présentation */
+  platingGuide: string;
+  /** Tags culinaires */
+  tags: string[];
+}
+
+// Ingrédient de recette avec quantité
+export interface RecipeIngredient {
+  name: string;
+  quantity: string;
+  unit: string;
+  isOriginal: boolean; // True si fourni par l'utilisateur
+  category: 'principal' | 'condiment' | 'épice' | 'garniture' | 'sauce';
+}
+
+// Étape d'instruction
+export interface RecipeStep {
+  stepNumber: number;
+  title: string;
+  instruction: string;
+  duration?: number; // en minutes
+  tips?: string;
+}
+
+// Estimation nutritionnelle
+export interface NutritionalInfo {
+  calories: number;
+  protein: number; // en grammes
+  carbohydrates: number; // en grammes
+  fat: number; // en grammes
+  fiber: number; // en grammes
+  sodium: number; // en mg
+  disclaimer: string;
+}
+
+// Suggestion d'accord mets-vin/boisson
+export interface DrinkPairing {
+  type: 'vin' | 'bière' | 'cocktail' | 'sans-alcool';
+  name: string;
+  description: string;
+  reason: string;
+  alternatives: string[];
+}
+
+// Entrée du livre de recettes
+export interface CookbookEntry {
+  id: string;
+  recipe: GeneratedRecipe;
+  imageUrl: string;
+  originalIngredients: string[];
+  nutritionalInfo?: NutritionalInfo;
+  drinkPairings?: DrinkPairing[];
+  createdAt: string;
+  notes?: string;
+  rating?: number;
+  isFavorite: boolean;
+}
+
+// Requête pour générer une recette
+export interface GenerateRecipeRequest {
+  imageUrl: string;
+  originalIngredients: string[];
+  imageBase64?: string;
+}
+
+// Réponse de la génération de recette
+export interface GenerateRecipeResponse {
+  recipe: GeneratedRecipe;
+  nutritionalInfo: NutritionalInfo;
+  drinkPairings: DrinkPairing[];
+  model: string;
+  tokensUsed: number;
+  generatedAt: string;
+}
+
+// ============================================
+// Types supplémentaires pour la compatibilité
+// ============================================
+
+// Styles culinaires disponibles
+export type CulinaryStyle = 'modern' | 'classic' | 'fusion' | 'molecular' | 'rustic';
+
+// Styles de présentation
+export type PresentationStyle = 'minimalist' | 'elaborate' | 'artistic' | 'traditional';
+
+// Prompt construit
+export interface BuiltPrompt {
+  systemPrompt: string;
+  userPrompt: string;
+  metadata: {
+    style: CulinaryStyle;
+    presentation: PresentationStyle;
+    ingredientCount: number;
+  };
+}
+
+// Codes d'erreur AI
+export type AIErrorCode =
+  | 'RATE_LIMIT'
+  | 'INVALID_API_KEY'
+  | 'MODEL_UNAVAILABLE'
+  | 'CONTENT_FILTERED'
+  | 'TIMEOUT'
+  | 'NETWORK_ERROR'
+  | 'UNKNOWN';
+
+// Erreur AI structurée
+export interface AIError extends Error {
+  code: AIErrorCode;
+  retryable: boolean;
+  retryAfter?: number;
+}
+
+// Statut de santé AI
+export interface AIHealthStatus {
+  status: 'healthy' | 'degraded' | 'unhealthy';
+  mistral: {
+    connected: boolean;
+    latency?: number;
+  };
+  imageGeneration: {
+    available: boolean;
+    provider: string;
+  };
+  metrics?: {
+    totalRequests: number;
+    successRate: number;
+    averageLatency: number;
+  };
+}

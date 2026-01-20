@@ -7,10 +7,12 @@ import FilterBar from './components/FilterBar';
 import IngredientCard from './components/IngredientCard';
 import Footer from './components/Footer';
 import CookingLoadingScreen from './components/CookingLoadingScreen';
+import RecipeLoadingScreen from './components/RecipeLoadingScreen';
+import RecipeDisplay from './components/RecipeDisplay';
 import { ingredientsData } from '../data/ingredients';
 import { useSuggestions } from '@/hooks/useSuggestions';
 import { useGenerate } from '@/hooks/useGenerate';
-import type { FilterSelection } from '@/types';
+import { useRecipe } from '@/hooks/useRecipe';
 
 interface Ingredient {
   id: string;
@@ -23,10 +25,6 @@ const DEFAULT_INGREDIENTS: Ingredient[] = [
   { id: '2', icon: '🍫', label: 'Chocolat' },
   { id: '3', icon: '🐟', label: 'Saumon' },
 ];
-const DEFAULT_INGREDIENT_IDS = new Set(DEFAULT_INGREDIENTS.map(ing => ing.id));
-const DEFAULT_INGREDIENT_LABELS = new Set(
-  DEFAULT_INGREDIENTS.map(ing => ing.label.toLowerCase())
-);
 
 export default function Home() {
   const [ingredients, setIngredients] = useState<Ingredient[]>(DEFAULT_INGREDIENTS);
@@ -35,6 +33,8 @@ export default function Home() {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [showResult, setShowResult] = useState(false);
+  const [showRecipe, setShowRecipe] = useState(false);
+  const [isRecipeSaved, setIsRecipeSaved] = useState(false);
 
   const { 
     suggestions, 
@@ -54,8 +54,16 @@ export default function Home() {
     reset: resetGenerate 
   } = useGenerate();
 
+  const {
+    recipeResult,
+    isLoading: recipeLoading,
+    error: recipeError,
+    generateRecipe,
+    reset: resetRecipe,
+    saveToCoookbook,
+  } = useRecipe();
+
   const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [hasClearedDefaults, setHasClearedDefaults] = useState(false);
   const [filterSelection, setFilterSelection] = useState<FilterSelection>({
     category: '',
     cuisson: '',
@@ -127,7 +135,7 @@ export default function Home() {
   });
 
   // Filtrer les ingrédients selon la categorie uniquement
-  // - Catégories: OBLIGATOIRE si sélectionné (légume, poisson, etc)
+  // - Catégories: OBLIGATOIRE si sélectionnée (légume, poisson, etc)
   // - Autres filtres: servent aux recommandations, pas au filtrage ici
   const selectedIngredientNames = new Set(ingredients.map(i => i.label.toLowerCase()));
   
@@ -221,6 +229,35 @@ export default function Home() {
     }
   };
 
+  const handleGenerateRecipe = async () => {
+    if (!generateResult?.imageUrl) return;
+    
+    const ingredientLabels = ingredients.map(i => i.label);
+    const result = await generateRecipe(generateResult.imageUrl, ingredientLabels);
+    
+    if (result) {
+      setShowRecipe(true);
+      setIsRecipeSaved(false);
+    }
+  };
+
+  const handleSaveRecipe = () => {
+    if (recipeResult && generateResult) {
+      saveToCoookbook(
+        recipeResult.recipe,
+        generateResult.imageUrl,
+        ingredients.map(i => i.label),
+        recipeResult.nutritionalInfo,
+        recipeResult.drinkPairings
+      );
+      setIsRecipeSaved(true);
+    }
+  };
+
+  const handleCloseRecipe = () => {
+    setShowRecipe(false);
+  };
+
   const handleSelectSuggestion = (suggestion: string) => {
     handleAddIngredient(suggestion);
   };
@@ -239,7 +276,10 @@ export default function Home() {
       
       {showResult && generateResult && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden relative">
+            {/* Recipe Loading Screen - inside the modal */}
+            {recipeLoading && <RecipeLoadingScreen imageUrl={generateResult?.imageUrl} />}
+            
             <div className="p-6 border-b border-amber-100">
               <div className="flex items-center justify-between">
                 <h3 className="text-2xl font-bold text-amber-900">🍽️ Votre plat de rêve</h3>
@@ -263,6 +303,52 @@ export default function Home() {
                     alt="Plat généré"
                     className="w-full rounded-2xl shadow-lg"
                   />
+                </div>
+              )}
+
+              {/* Selected Ingredients with Tags */}
+              <div className="mb-6">
+                <h4 className="text-sm font-semibold text-amber-800 mb-3 flex items-center gap-2">
+                  <span>🧺</span> Ingrédients utilisés
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {ingredients.map((ing) => {
+                    const ingredientData = ingredientsWithTags.find(
+                      i => i.name.toLowerCase() === ing.label.toLowerCase()
+                    );
+                    const tags = ingredientData?.tags?.slice(0, 2) || [];
+                    
+                    return (
+                      <div
+                        key={ing.id}
+                        className="flex items-center gap-2 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl px-3 py-2"
+                      >
+                        <span className="text-lg">{ing.icon}</span>
+                        <div className="flex flex-col">
+                          <span className="text-sm font-medium text-amber-900">{ing.label}</span>
+                          {tags.length > 0 && (
+                            <div className="flex gap-1 mt-0.5">
+                              {tags.map((tag, idx) => (
+                                <span
+                                  key={idx}
+                                  className="text-[10px] px-1.5 py-0.5 bg-amber-100 text-amber-600 rounded-full"
+                                >
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+              
+              {/* Recipe Error */}
+              {recipeError && (
+                <div className="mb-4 bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-red-700 text-sm">
+                  ⚠️ {recipeError}
                 </div>
               )}
               
@@ -313,25 +399,38 @@ export default function Home() {
                 </div>
               </details>
               
-              <div className="mt-4 flex gap-3">
+              {/* Generate Recipe Button - Primary CTA */}
+              {generateResult.imageUrl && (
+                <button
+                  onClick={handleGenerateRecipe}
+                  disabled={recipeLoading}
+                  className="w-full mt-4 py-4 px-6 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:from-gray-300 disabled:to-gray-400 text-white rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl disabled:shadow-none transition-all flex items-center justify-center gap-3"
+                >
+                  <span className="text-2xl">📖</span>
+                  <span>Générer la Recette</span>
+                  <span className="text-sm opacity-75">(avec IA Vision)</span>
+                </button>
+              )}
+              
+              <div className="mt-4 flex flex-wrap gap-3">
                 {generateResult.imageUrl && (
                   <a
                     href={generateResult.imageUrl}
                     download="dreamdish-creation.png"
-                    className="flex-1 py-3 px-4 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-xl font-medium transition-colors text-center"
+                    className="flex-1 min-w-[140px] py-3 px-4 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-xl font-medium transition-colors text-center"
                   >
                     💾 Télécharger
                   </a>
                 )}
                 <button
                   onClick={() => navigator.clipboard.writeText(generateResult.prompt)}
-                  className="flex-1 py-3 px-4 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-xl font-medium transition-colors"
+                  className="flex-1 min-w-[140px] py-3 px-4 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-xl font-medium transition-colors"
                 >
                   📋 Copier le prompt
                 </button>
                 <button
                   onClick={handleCloseResult}
-                  className="flex-1 py-3 px-4 bg-gradient-to-r from-orange-400 to-amber-500 hover:from-orange-500 hover:to-amber-600 text-white rounded-xl font-medium transition-colors"
+                  className="flex-1 min-w-[140px] py-3 px-4 bg-gradient-to-r from-orange-400 to-amber-500 hover:from-orange-500 hover:to-amber-600 text-white rounded-xl font-medium transition-colors"
                 >
                   ✨ Nouveau plat
                 </button>
@@ -339,6 +438,18 @@ export default function Home() {
             </div>
           </div>
         </div>
+      )}
+
+      {showRecipe && recipeResult && generateResult?.imageUrl && (
+        <RecipeDisplay
+          recipe={recipeResult.recipe}
+          nutritionalInfo={recipeResult.nutritionalInfo}
+          drinkPairings={recipeResult.drinkPairings}
+          imageUrl={generateResult.imageUrl}
+          onClose={handleCloseRecipe}
+          onSaveToCookbook={handleSaveRecipe}
+          isSaved={isRecipeSaved}
+        />
       )}
 
       <main className="flex flex-col items-center justify-center min-h-screen pt-32 pb-48">
