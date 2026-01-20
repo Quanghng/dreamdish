@@ -36,7 +36,6 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
     const nextSelection: FilterSelection = { ...selection };
 
     if (CATEGORIES.includes(filter)) {
-      // Single-select category: select or deselect
       nextSelection.category = selection.category === filter ? '' : filter;
     } else if (CUISSON.includes(filter)) {
       nextSelection.cuisson = selection.cuisson === filter ? '' : filter;

@@ -44,8 +44,6 @@ interface UseRecipeReturn {
   updateRecipeRating: (id: string, rating: number) => void;
   /** Mettre à jour la catégorie d'une recette */
   updateRecipeCategory: (id: string, category: string) => void;
-  /** Basculer le favori d'une recette */
-  toggleFavorite: (id: string) => void;
   /** Recharger les recettes du livre */
   fetchCookbook: () => Promise<void>;
 }
@@ -209,18 +207,6 @@ export function useRecipe(): UseRecipeReturn {
     await fetchCookbook();
   }, [fetchCookbook]);
 
-  /**
-   * Bascule le statut favori d'une recette
-   */
-  const toggleFavorite = useCallback(async (id: string) => {
-    const entry = cookbook.find(item => item.id === id);
-    await fetch(`/api/user/cookbook/${id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ isFavorite: !(entry?.isFavorite ?? false) }),
-    });
-    await fetchCookbook();
-  }, [cookbook, fetchCookbook]);
 
   return {
     recipeResult,
@@ -234,7 +220,6 @@ export function useRecipe(): UseRecipeReturn {
     updateRecipeNotes,
     updateRecipeRating,
     updateRecipeCategory,
-    toggleFavorite,
     fetchCookbook,
   };
 }

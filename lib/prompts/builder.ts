@@ -55,8 +55,13 @@ export function buildVisualPrompt(options: PromptBuilderOptions): BuiltPrompt {
   }
 
   return {
-    system: systemPrompt,
-    user: userPrompt,
+    systemPrompt: systemPrompt,
+    userPrompt: userPrompt,
+    metadata: {
+      ingredientCount: ingredients.length,
+      style,
+      presentation,
+    },
   };
 }
 

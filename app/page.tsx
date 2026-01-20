@@ -22,6 +22,40 @@ interface Ingredient {
   label: string;
 }
 
+// Tag color configurations for filter selections
+const FILTER_TAG_COLORS = {
+  type: {
+    bg: 'bg-orange-100',
+    border: 'border-orange-300',
+    text: 'text-orange-800',
+    icon: '🍽️',
+  },
+  style: {
+    bg: 'bg-yellow-100',
+    border: 'border-yellow-300',
+    text: 'text-yellow-800',
+    icon: '🌍',
+  },
+  cuisson: {
+    bg: 'bg-red-100',
+    border: 'border-red-300',
+    text: 'text-red-800',
+    icon: '🔥',
+  },
+  regime: {
+    bg: 'bg-green-100',
+    border: 'border-green-300',
+    text: 'text-green-800',
+    icon: '🥗',
+  },
+  category: {
+    bg: 'bg-purple-100',
+    border: 'border-purple-300',
+    text: 'text-purple-800',
+    icon: '📦',
+  },
+};
+
 const DEFAULT_INGREDIENTS: Ingredient[] = [
   { id: '1', icon: '🍌', label: 'Banane' },
   { id: '2', icon: '🍫', label: 'Chocolat' },
@@ -94,7 +128,7 @@ export default function Home() {
     reset: resetGenerate 
   } = useGenerate();
 
-  const {
+  const { 
     recipeResult,
     isLoading: recipeLoading,
     error: recipeError,
@@ -102,10 +136,12 @@ export default function Home() {
     reset: resetRecipe,
     saveToCoookbook,
     cookbook,
-    toggleFavorite,
     updateRecipeCategory,
     fetchCookbook,
   } = useRecipe();
+
+  // State for viewing a saved recipe from cookbook (must be after cookbook is defined)
+  const [viewingCookbookEntry, setViewingCookbookEntry] = useState<typeof cookbook[number] | null>(null);
 
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [filterSelection, setFilterSelection] = useState<FilterSelection>({
@@ -207,6 +243,23 @@ export default function Home() {
     setIngredients(prev => prev.filter(ing => !DEFAULT_INGREDIENT_IDS.has(ing.id)));
     setHasClearedDefaults(true);
   }, [hasClearedDefaults, ingredients]);
+
+  // Helper to remove a specific filter
+  const handleRemoveFilter = (filterType: keyof FilterSelection) => {
+    const nextSelection = { ...filterSelection, [filterType]: '' };
+    setFilterSelection(nextSelection);
+    if (filterType === 'category') {
+      setSelectedCategory('');
+    }
+    setActiveFilters(
+      [nextSelection.cuisson, nextSelection.style, nextSelection.regime, nextSelection.type].filter(Boolean) as string[]
+    );
+  };
+
+  // Get active filter selections for display
+  const activeFilterSelections = Object.entries(filterSelection)
+    .filter(([_, val]) => val && val !== '')
+    .map(([key, val]) => ({ type: key as keyof FilterSelection, value: val as string }));
 
   const loadUserProfile = async () => {
     const response = await fetch('/api/user/profile');
@@ -688,6 +741,18 @@ export default function Home() {
         />
       )}
 
+      {/* Display saved recipe from cookbook */}
+      {viewingCookbookEntry && (
+        <RecipeDisplay
+          recipe={viewingCookbookEntry.recipe}
+          nutritionalInfo={viewingCookbookEntry.nutritionalInfo}
+          drinkPairings={viewingCookbookEntry.drinkPairings}
+          imageUrl={viewingCookbookEntry.imageUrl}
+          onClose={() => setViewingCookbookEntry(null)}
+          isSaved={true}
+        />
+      )}
+
       {isUserPanelOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4 py-10">
           <div className="w-full max-w-4xl bg-white/95 rounded-3xl shadow-2xl border border-amber-100 max-h-[90vh] overflow-hidden">
@@ -883,6 +948,10 @@ export default function Home() {
                     </div>
                   </div>
 
+                  <div className="flex items-center justify-between">
+                    <h5 className="text-sm font-semibold text-amber-900">Mes catégories</h5>
+                  </div>
+
                   <div className="flex flex-wrap items-center gap-3">
                     <input
                       type="text"
@@ -908,7 +977,11 @@ export default function Home() {
                       {visibleCookbook.map(entry => (
                         <div
                           key={entry.id}
-                          className="rounded-2xl border border-amber-100 bg-white p-4 shadow-sm"
+                          className="rounded-2xl border border-amber-100 bg-white p-4 shadow-sm hover:shadow-md hover:border-amber-200 transition-all cursor-pointer"
+                          onClick={() => {
+                            setViewingCookbookEntry(entry);
+                            setIsUserPanelOpen(false);
+                          }}
                         >
                           <div className="flex gap-4">
                             <img
@@ -919,29 +992,19 @@ export default function Home() {
                             <div className="flex-1">
                               <div className="flex items-center justify-between">
                                 <div>
-                                  <h6 className="text-base font-semibold text-amber-900">
+                                  <h6 className="text-base font-semibold text-amber-900 hover:text-amber-700 transition-colors">
                                     {entry.recipe.title}
                                   </h6>
                                   <p className="text-xs text-amber-600 line-clamp-2">
                                     {entry.recipe.description}
                                   </p>
                                 </div>
-                                <button
-                                  onClick={() => toggleFavorite(entry.id)}
-                                  className={`h-9 w-9 rounded-full border flex items-center justify-center transition ${
-                                    entry.isFavorite
-                                      ? 'border-amber-400 bg-amber-100 text-amber-700'
-                                      : 'border-amber-200 text-amber-500 hover:bg-amber-50'
-                                  }`}
-                                  title="Épingler"
-                                >
-                                  ★
-                                </button>
                               </div>
 
                               <div className="mt-3 flex flex-wrap items-center gap-3">
                                 <select
                                   value={entry.category || ''}
+                                  onClick={(e) => e.stopPropagation()}
                                   onChange={(event) => updateRecipeCategory(entry.id, event.target.value)}
                                   className="rounded-full border border-amber-200 bg-white px-3 py-1 text-xs text-amber-700"
                                 >
@@ -962,6 +1025,9 @@ export default function Home() {
                                     </span>
                                   ))}
                                 </div>
+                                <span className="text-xs text-amber-500 ml-auto">
+                                  Cliquez pour voir la recette →
+                                </span>
                               </div>
                             </div>
                           </div>
@@ -1110,6 +1176,28 @@ export default function Home() {
           )}
           
           <div className="flex flex-wrap gap-3 min-h-[3rem] items-center">
+            {/* Filter Selection Tags */}
+            {activeFilterSelections.map(({ type, value: tagValue }) => {
+              const colors = FILTER_TAG_COLORS[type];
+              return (
+                <div
+                  key={type}
+                  className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border-2 ${colors.bg} ${colors.border} ${colors.text} text-sm font-medium transition-all duration-200`}
+                >
+                  <span>{colors.icon}</span>
+                  <span>{tagValue}</span>
+                  <button
+                    onClick={() => handleRemoveFilter(type)}
+                    className="ml-1 w-5 h-5 rounded-full flex items-center justify-center hover:bg-black/10 transition-colors text-xs font-bold"
+                    title={`Retirer ce filtre`}
+                  >
+                    ✕
+                  </button>
+                </div>
+              );
+            })}
+            
+            {/* Ingredient Tags */}
             {ingredients.map((ingredient) => (
               <IngredientTag
                 key={ingredient.id}
@@ -1118,7 +1206,7 @@ export default function Home() {
                 onRemove={() => handleRemoveIngredient(ingredient.id)}
               />
             ))}
-            {ingredients.length === 0 && (
+            {ingredients.length === 0 && activeFilterSelections.length === 0 && (
               <span className="text-amber-400 italic">
                 Ajoutez des ingrédients pour commencer...
               </span>

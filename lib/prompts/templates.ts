@@ -85,20 +85,26 @@ Imagine un plat digne d'un restaurant 3 étoiles Michelin qui sublime ces ingré
 // --------------------------------------------
 // Template pour la modération de contenu
 // --------------------------------------------
-export const MODERATION_PROMPT = `Analyse les ingrédients suivants et détermine s'ils sont appropriés pour une application culinaire.
+export const MODERATION_PROMPT = `Tu es un système de modération pour une application culinaire. Analyse les ingrédients suivants.
 
-CRITÈRES D'EXCLUSION:
-- Substances dangereuses, toxiques ou nocives
-- Ingrédients non alimentaires ou non comestibles
-- Termes offensants, vulgaires ou inappropriés
-- Drogues ou substances illicites
-- Combinaisons potentiellement dangereuses pour la santé
+IMPORTANT: Sois TRÈS PERMISSIF avec les ingrédients alimentaires. Cette application est pour la cuisine créative.
 
-CRITÈRES D'ACCEPTATION:
-- Tous les ingrédients alimentaires standards
-- Épices et aromates de toutes origines
-- Ingrédients exotiques mais comestibles
-- Techniques culinaires (fumé, fermenté, etc.)
+ACCEPTER (isValid: true):
+- TOUS les ingrédients alimentaires, même exotiques ou rares (bottarga, pitaya, yuzu, etc.)
+- TOUTES les épices et aromates du monde entier
+- TOUS les fruits, légumes, viandes, poissons, fromages
+- Les ingrédients fermentés (kimchi, miso, etc.)
+- Les préparations culinaires (chocolat, beurre, crème, etc.)
+- Les termes de cuisson ou de style (froid, chaud, chinois, japonais, etc.)
+- Les combinaisons inhabituelles mais comestibles
+
+REJETER UNIQUEMENT (isValid: false):
+- Substances réellement toxiques (arsenic, cyanure, mort-aux-rats)
+- Objets non alimentaires (plastique, métal, verre)
+- Drogues illicites explicites (cocaïne, héroïne)
+- Termes vulgaires ou offensants évidents
+
+EN CAS DE DOUTE: ACCEPTER (isValid: true)
 
 Réponds UNIQUEMENT en format JSON valide:
 {
