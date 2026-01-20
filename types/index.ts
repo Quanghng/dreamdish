@@ -74,3 +74,21 @@ export interface ModerationResult {
   confidence: number;
   reason?: string;
 }
+
+// Requête pour les suggestions d'ingrédients
+export interface SuggestionRequest {
+  partialInput: string;
+  currentIngredients?: string[];
+}
+
+// Réponse des suggestions d'ingrédients
+export interface SuggestionResponse {
+  suggestions: string[];
+}
+
+// Réponse de la génération d'image
+export interface GenerateImageResponse {
+  imageUrl: string;
+  prompt: string;
+  generatedAt: string;
+}

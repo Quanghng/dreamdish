@@ -126,7 +126,7 @@ class RateLimiter {
     this.windowMs = windowMs;
   }
 
-  check(key: string): { allowed: boolean; resetAt: number } {
+  check(key: string): { allowed: boolean; resetAt: number; remaining: number } {
     const now = Date.now();
     const windowStart = now - this.windowMs;
 
@@ -138,6 +138,7 @@ class RateLimiter {
       return {
         allowed: false,
         resetAt: recent[0] + this.windowMs,
+        remaining: 0,
       };
     }
 
@@ -148,9 +149,36 @@ class RateLimiter {
     return {
       allowed: true,
       resetAt: now + this.windowMs,
+      remaining: this.maxRequests - recent.length,
     };
   }
 }
 
 // Instance globale du rate limiter pour les appels AI
 export const aiRateLimiter = new RateLimiter(10, 60000); // 10 requêtes par minute
+
+/**
+ * Parse la réponse de suggestions de l'AI
+ * Extrait une liste de suggestions d'ingrédients à partir du texte
+ */
+export function parseSuggestionsResponse(content: string): string[] {
+  // Essayer de parser comme JSON d'abord
+  const jsonParsed = safeJsonParse<string[] | { suggestions: string[] }>(content);
+
+  if (jsonParsed) {
+    if (Array.isArray(jsonParsed)) {
+      return jsonParsed.filter(item => typeof item === 'string').slice(0, 10);
+    }
+    if (Array.isArray(jsonParsed.suggestions)) {
+      return jsonParsed.suggestions.filter(item => typeof item === 'string').slice(0, 10);
+    }
+  }
+
+  // Sinon, parser comme liste de texte (une suggestion par ligne)
+  const lines = content
+    .split(/[\n,]/)
+    .map(line => line.replace(/^[-*•\d.)\s]+/, '').trim())
+    .filter(line => line.length > 0 && line.length < 50);
+
+  return lines.slice(0, 10);
+}

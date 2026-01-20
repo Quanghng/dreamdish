@@ -153,16 +153,6 @@ export default function Home() {
     return true;
   });
 
-  useEffect(() => {
-    if (hasClearedDefaults) return;
-    const hasCustomIngredient = ingredients.some(
-      ing => !DEFAULT_INGREDIENT_LABELS.has(ing.label.toLowerCase())
-    );
-    if (!hasCustomIngredient) return;
-    setIngredients(prev => prev.filter(ing => !DEFAULT_INGREDIENT_IDS.has(ing.id)));
-    setHasClearedDefaults(true);
-  }, [hasClearedDefaults, ingredients]);
-
   const handleFilterSelection = (nextSelection: FilterSelection) => {
     setFilterSelection(nextSelection);
     setActiveFilters(

@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getIngredientSuggestions, getLocalSuggestions } from '@/lib/suggestions';
 import { mistralConfig } from '@/config/mistral.config';
-import { apiRateLimiter } from '@/lib/utils';
+import { aiRateLimiter } from '@/lib/utils';
 import type { SuggestionRequest, SuggestionResponse } from '@/types';
 
 // --------------------------------------------
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
   try {
     // Rate limiting (plus permissif que pour la génération)
     const clientIp = request.headers.get('x-forwarded-for') || 'anonymous';
-    const rateLimitResult = apiRateLimiter.check(`suggestions:${clientIp}`);
+    const rateLimitResult = aiRateLimiter.check(`suggestions:${clientIp}`);
 
     if (!rateLimitResult.allowed) {
       // Pour les suggestions, on retourne un tableau vide plutôt qu'une erreur
