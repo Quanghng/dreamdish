@@ -8,16 +8,12 @@ Cette documentation explique l'organisation du projet et le rôle de chaque doss
 
 ```
 app/
-├── api/                  # API Routes (Backend serverless)
-│   ├── generate/         # Endpoint de génération de prompts
-│   │   └── route.ts      # POST /api/generate
-│   ├── suggestions/      # Endpoint de suggestions d'ingrédients
-│   │   └── route.ts      # POST|GET /api/suggestions
-│   └── health/           # Endpoint de monitoring
-│       └── route.ts      # GET /api/health
-├── layout.tsx            # Layout racine (Header, Footer, providers)
-├── page.tsx              # Page d'accueil (/)
-└── globals.css           # Styles globaux CSS/Tailwind
+├── api/              # API Routes (Backend serverless)
+│   └── generate/     # Endpoint de génération de prompts
+│       └── route.ts  # POST /api/generate
+├── layout.tsx        # Layout racine (Header, Footer, providers)
+├── page.tsx          # Page d'accueil (/)
+└── globals.css       # Styles globaux CSS/Tailwind
 ```
 
 **Rôle** : Contient toutes les pages et routes de l'application selon l'App Router de Next.js.
@@ -46,61 +42,47 @@ components/
 - PascalCase pour les noms
 - Index.tsx pour l'export principal
 
-### `/lib` - Services et Utilitaires AI
+### `/lib` - Bibliothèques et Utilitaires
 
 ```
 lib/
-├── mistral.ts            # Client Mistral AI principal
-├── moderation.ts         # Service de modération de contenu
-├── suggestions.ts        # Service de suggestions avec cache
-├── errors.ts             # Gestion des erreurs AI
-├── utils.ts              # Fonctions utilitaires générales
-└── prompts/              # Ingénierie des prompts
-    ├── templates.ts      # Templates de prompts
-    └── builder.ts        # Constructeur dynamique de prompts
+├── mistral.ts       # Client Mistral AI configuré
+└── utils.ts         # Fonctions utilitaires générales
 ```
 
-**Rôle** : Code partagé, services AI et configurations.
+**Rôle** : Code partagé et configurations des services externes.
 
-**Contenu détaillé** :
-- `mistral.ts` : Client Mistral AI, génération de prompts visuels, métriques
-- `moderation.ts` : Vérification de contenu (blocklist + AI)
-- `suggestions.ts` : Suggestions d'ingrédients en temps réel avec cache
-- `errors.ts` : Types d'erreurs standardisés et messages utilisateur
-- `utils.ts` : Helpers (validation, retry, rate limiting, parsing)
-- `prompts/templates.ts` : Templates de prompts pour chaque cas d'usage
-- `prompts/builder.ts` : Construction dynamique des prompts
+**Contenu actuel** :
+- `mistral.ts` : Client Mistral AI initialisé avec la clé API
+- `utils.ts` : Helpers (formatage, validation, etc.)
 
 ### `/types` - Définitions TypeScript
 
 ```
 types/
-└── index.ts              # Tous les types et interfaces AI
+└── index.ts         # Tous les types et interfaces
 ```
 
 **Rôle** : Centralise toutes les définitions de types TypeScript.
 
-**Types principaux** :
-- `GeneratePromptRequest/Response` : API de génération
-- `SuggestionRequest/Response` : API de suggestions
-- `ModerationResult` : Résultat de modération
-- `AIError`, `AIMetrics`, `AIHealthStatus` : Monitoring
-- `CulinaryStyle`, `PresentationStyle` : Options de style
+**Contenu** :
+- Interfaces pour les données (Ingredient, Prompt, etc.)
+- Types pour les API requests/responses
+- Enums (MistralModel, IngredientCategory)
 
 ### `/config` - Configuration de l'Application
 
 ```
 config/
-└── mistral.config.ts     # Configuration centralisée Mistral AI
+└── mistral.config.ts    # Configuration des modèles Mistral
 ```
 
-**Rôle** : Paramètres centralisés pour l'intégration AI.
+**Rôle** : Fichiers de configuration centralisés.
 
 **Contenu** :
-- Sélection des modèles (large, small, moderation)
-- Paramètres de génération (temperature, maxTokens, topP)
-- Configuration du retry et rate limiting
-- Feature flags (modération, suggestions, logs)
+- Paramètres des modèles IA
+- Prompts système
+- Constantes de configuration
 
 ### `/public` - Fichiers Statiques
 
@@ -117,23 +99,6 @@ public/
 **Rôle** : Assets statiques accessibles publiquement.
 
 **Note** : Les fichiers sont servis depuis `/` (ex: `/ingredients/tomate.jpg`)
-
-### `/__tests__` - Tests Automatisés
-
-```
-__tests__/
-├── setup.ts              # Configuration globale des tests
-├── lib/
-│   ├── mistral.test.ts   # Tests du client Mistral
-│   ├── moderation.test.ts # Tests de modération
-│   └── suggestions.test.ts # Tests de suggestions
-├── api/
-│   └── generate.test.ts  # Tests d'intégration API
-└── prompts/
-    └── quality.test.ts   # Tests de qualité des prompts
-```
-
-**Rôle** : Tests unitaires et d'intégration avec Vitest.
 
 ## 🔄 Flux de Données
 
@@ -154,44 +119,6 @@ Frontend → POST /api/generate → Mistral AI → Response → Display
 │  /components    │  HTTP  │  /app/api        │  SDK   │  (External) │
 └─────────────────┘ <----- └──────────────────┘ <----- └─────────────┘
      JSON Request            Server-side only         API Response
-```
-
-### Flux de Génération de Prompt
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                              CLIENT (Browser)                            │
-│  1. Sélection des ingrédients                                           │
-│  2. Choix du style (modern, classic, fusion, molecular, rustic)         │
-│  3. Choix de présentation (minimalist, elaborate, artistic, traditional)│
-└─────────────────────────────────────────────────────────────────────────┘
-                                     │
-                                     ▼ POST /api/generate
-┌─────────────────────────────────────────────────────────────────────────┐
-│                              SERVEUR (Next.js)                           │
-│                                                                          │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐                  │
-│  │ Validation  │───▶│ Modération  │───▶│ Génération  │                  │
-│  │ des entrées │    │ (blocklist  │    │ du prompt   │                  │
-│  │             │    │  + AI)      │    │ visuel      │                  │
-│  └─────────────┘    └─────────────┘    └─────────────┘                  │
-│         │                  │                  │                          │
-│         ▼                  ▼                  ▼                          │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐                  │
-│  │ Rate        │    │ Prompt      │    │ Retry avec  │                  │
-│  │ Limiting    │    │ Builder     │    │ Backoff     │                  │
-│  └─────────────┘    └─────────────┘    └─────────────┘                  │
-└─────────────────────────────────────────────────────────────────────────┘
-                                     │
-                                     ▼ API Mistral
-┌─────────────────────────────────────────────────────────────────────────┐
-│                           MISTRAL AI                                     │
-│                                                                          │
-│  ┌───────────────────┐  ┌───────────────────┐  ┌───────────────────┐   │
-│  │  mistral-large    │  │  mistral-small    │  │ mistral-moderation│   │
-│  │  (Génération)     │  │  (Suggestions)    │  │ (Sécurité)        │   │
-│  └───────────────────┘  └───────────────────┘  └───────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## 📋 Bonnes Pratiques Appliquées
@@ -217,126 +144,43 @@ Frontend → POST /api/generate → Mistral AI → Response → Display
 - Interfaces explicites pour les API
 - Enums pour les valeurs constantes
 
-### Stratégies de Résilience
+## 🚀 Évolution Future
 
-1. **Retry avec Backoff Exponentiel**
-   - 3 tentatives maximum
-   - Délai initial: 1s, max: 10s
-   - Multiplicateur: 2x
+### Extensions Prévues
 
-2. **Rate Limiting**
-   - API: 30 requêtes/minute
-   - AI: 10 appels/minute
-   - Headers informatifs (X-RateLimit-Remaining)
-
-3. **Cache des Suggestions**
-   - TTL: 5 minutes
-   - Clé basée sur contexte + recherche
-   - Nettoyage automatique
-
-4. **Fail-Open pour la Modération**
-   - Blocklist local en premier
-   - Fallback si AI indisponible
-
-## 🔒 Sécurité
-
-### Protection des Clés API
-- Clé Mistral côté serveur uniquement
-- Variables d'environnement dans `.env.local`
-- Fichier `.env.example` pour documentation
-
-### Modération de Contenu
-1. **Vérification Blocklist** (rapide)
-   - Termes dangereux/toxiques
-   - Substances illicites
-   - Non-alimentaire
-
-2. **Modération AI** (avancée)
-   - Analyse contextuelle
-   - Combinaisons dangereuses
-   - Réponse JSON structurée
-
-### Validation des Entrées
-- 1-15 ingrédients requis
-- Styles et présentations validés
-- Sanitisation des strings
-
-## 📊 Monitoring
-
-### Endpoint Health Check
-`GET /api/health`
-
-Retourne:
-- Statut de connexion Mistral
-- Validité de la clé API
-- Features activées
-- Métriques (latence, succès, tokens)
-
-### Métriques Collectées
-- Durée des requêtes (ms)
-- Tokens utilisés
-- Taux de succès
-- Codes d'erreur
-
-## 🧪 Tests
-
-### Commandes
-```bash
-npm test              # Mode watch
-npm run test:run      # Exécution unique
-npm run test:coverage # Avec couverture
-npm run test:ui       # Interface graphique
+```
+dreamdish/
+├── components/
+│   ├── ImageGenerator/    # Génération d'images
+│   ├── Gallery/           # Galerie de plats
+│   └── History/           # Historique des prompts
+├── app/
+│   ├── gallery/           # Page galerie
+│   ├── history/           # Page historique
+│   └── api/
+│       ├── images/        # Génération d'images
+│       └── moderation/    # Modération de contenu
+└── lib/
+    └── database.ts        # Connexion DB (future)
 ```
 
-### Couverture
-- **lib/** : Services AI
-- **app/api/** : Routes API
-- **prompts/** : Qualité des prompts
-
-## 🚀 Démarrage Rapide
-
-### 1. Configuration
-```bash
-# Copier le fichier d'environnement
-cp .env.example .env.local
-
-# Ajouter votre clé API Mistral
-# MISTRAL_API_KEY=votre_clé_ici
-```
-
-### 2. Installation
-```bash
-npm install
-```
-
-### 3. Développement
-```bash
-npm run dev
-```
-
-### 4. Tests
-```bash
-npm test
-```
-
-## 📝 Conventions de Nommage
+## 📝 Naming Conventions
 
 ### Fichiers
-- **Composants React** : `PascalCase.tsx`
-- **Services/Utils** : `camelCase.ts`
+- **Composants React** : `PascalCase.tsx` (ex: `IngredientCard.tsx`)
+- **Utilitaires** : `camelCase.ts` (ex: `utils.ts`)
 - **Types** : `index.ts` dans `/types`
-- **Tests** : `*.test.ts`
+- **API Routes** : `route.ts` dans `/app/api/[endpoint]`
 
 ### Code
-- **Composants** : `PascalCase`
-- **Fonctions** : `camelCase`
-- **Constantes** : `UPPER_SNAKE_CASE`
-- **Interfaces** : `PascalCase`
-- **Commentaires** : Français
+- **Composants** : `PascalCase` (ex: `IngredientSelector`)
+- **Fonctions** : `camelCase` (ex: `formatIngredientsList`)
+- **Constantes** : `UPPER_SNAKE_CASE` (ex: `MISTRAL_CONFIG`)
+- **Interfaces** : `PascalCase` (ex: `GeneratePromptRequest`)
+- **Types** : `PascalCase` (ex: `MistralClient`)
 
 ## 🔗 Ressources
 
 - [Next.js App Router](https://nextjs.org/docs/app)
-- [Mistral AI Documentation](https://docs.mistral.ai/)
-- [Vitest Documentation](https://vitest.dev/)
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/)
+- [React Best Practices](https://react.dev/learn)

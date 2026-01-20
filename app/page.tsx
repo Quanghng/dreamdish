@@ -1,6 +1,5 @@
 'use client';
-
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import DishCard from './components/DishCard';
 import IngredientTag from './components/IngredientTag';
@@ -18,12 +17,26 @@ interface Ingredient {
   label: string;
 }
 
+const DEFAULT_INGREDIENTS: Ingredient[] = [
+  { id: '1', icon: '🍌', label: 'Banane' },
+  { id: '2', icon: '🍫', label: 'Chocolat' },
+  { id: '3', icon: '🐟', label: 'Saumon' },
+];
+const DEFAULT_INGREDIENT_IDS = new Set(DEFAULT_INGREDIENTS.map(ing => ing.id));
+const DEFAULT_INGREDIENT_LABELS = new Set(
+  DEFAULT_INGREDIENTS.map(ing => ing.label.toLowerCase())
+);
+
+interface FilterSelection {
+  category: string;
+  cuisson: string;
+  style: string;
+  regime: string;
+  type: string;
+}
+
 export default function Home() {
-  const [ingredients, setIngredients] = useState<Ingredient[]>([
-    { id: '1', icon: '🍌', label: 'Banane' },
-    { id: '2', icon: '🍫', label: 'Chocolat' },
-    { id: '3', icon: '🐟', label: 'Saumon' },
-  ]);
+  const [ingredients, setIngredients] = useState<Ingredient[]>(DEFAULT_INGREDIENTS);
   
   const [inputValue, setInputValue] = useState('');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
@@ -48,6 +61,16 @@ export default function Home() {
     reset: resetGenerate 
   } = useGenerate();
 
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [hasClearedDefaults, setHasClearedDefaults] = useState(false);
+  const [filterSelection, setFilterSelection] = useState<FilterSelection>({
+    category: '',
+    cuisson: '',
+    style: '',
+    regime: '',
+    type: '',
+  });
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const dishes = [
     { image: '🍝', title: 'Pasta' },
     { image: '🍕', title: 'Pizza' },
@@ -110,9 +133,24 @@ export default function Home() {
     return { ...ing, tags: defaultTags };
   });
 
+  // Filtrer les ingrédients selon la categorie uniquement
+  // - Catégories: OBLIGATOIRE si sélectionné (légume, poisson, etc)
+  // - Autres filtres: servent aux recommandations, pas au filtrage ici
+  const selectedIngredientNames = new Set(ingredients.map(i => i.label.toLowerCase()));
+  
   const filteredIngredients = ingredientsWithTags.filter(ingredient => {
-    if (activeFilters.length === 0) return true;
-    return activeFilters.every(filter => ingredient.tags?.includes(filter));
+    // Exclure les ingrédients déjà sélectionnés
+    if (selectedIngredientNames.has(ingredient.name.toLowerCase())) {
+      return false;
+    }
+    
+    // Si une catégorie est sélectionnée, l'ingrédient DOIT avoir ce tag de catégorie
+    if (selectedCategory) {
+      if (!ingredient.tags?.includes(selectedCategory)) {
+        return false;
+      }
+    }
+    return true;
   });
 
   const handleAddIngredient = (label?: string) => {
@@ -122,12 +160,47 @@ export default function Home() {
         return;
       }
       
+  useEffect(() => {
+    if (hasClearedDefaults) return;
+    const hasCustomIngredient = ingredients.some(
+      ing => !DEFAULT_INGREDIENT_LABELS.has(ing.label.toLowerCase())
+    );
+    if (!hasCustomIngredient) return;
+    setIngredients(prev => prev.filter(ing => !DEFAULT_INGREDIENT_IDS.has(ing.id)));
+    setHasClearedDefaults(true);
+  }, [hasClearedDefaults, ingredients]);
+
+  const handleFilterSelection = (nextSelection: FilterSelection) => {
+    setFilterSelection(nextSelection);
+    setActiveFilters(
+      [nextSelection.cuisson, nextSelection.style, nextSelection.regime, nextSelection.type].filter(Boolean)
+    );
+    setSelectedCategory(nextSelection.category || '');
+  };
+
+  const handleSelectIngredient = (ing: any) => {
+    const name = ing.name || ing.label;
+    setIngredients(prev => {
+      if (prev.some(i => i.label.toLowerCase() === name.toLowerCase())) return prev;
+      const newIngredient: Ingredient = {
+        id: `${Date.now()}_${name}`,
+        icon: ing.icon || '🥗',
+        label: name,
+      };
+      return [...prev, newIngredient];
+    });
+  };
+
+  const handleAddIngredient = () => {
+    if (inputValue.trim()) {
       const newIngredient: Ingredient = {
         id: Date.now().toString(),
         icon: '🥗',
         label: ingredientLabel,
       };
-      setIngredients([...ingredients, newIngredient]);
+      setIngredients(prev => {
+        return [...prev, newIngredient];
+      });
       setInputValue('');
       setShowSuggestions(false);
       clearSuggestions();
@@ -280,7 +353,7 @@ export default function Home() {
         
         <section className="w-full max-w-7xl mx-auto px-8 py-20">
           <div className="mb-12">
-            <FilterBar onFilterChange={setActiveFilters} />
+            <FilterBar value={filterSelection} onValueChange={handleFilterSelection} />
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -290,6 +363,7 @@ export default function Home() {
                 name={ingredient.name}
                 color={ingredient.color}
                 icon={ingredient.icon}
+                onSelect={() => handleSelectIngredient(ingredient)}
               />
             ))}
           </div>
@@ -394,6 +468,50 @@ export default function Home() {
         </div>
       </div>
 
+      <div className="fixed bottom-36 right-6 md:bottom-14 md:right-10 z-40 flex flex-col items-end gap-3">
+        {isFilterOpen && (
+          <div className="w-[320px] md:w-[400px] max-h-[60vh] overflow-y-auto bg-gradient-to-br from-white via-amber-50 to-white rounded-2xl border border-amber-200/70 shadow-xl p-5">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-semibold tracking-wide text-amber-900 uppercase">Filtres</h3>
+              <button
+                onClick={() => setIsFilterOpen(false)}
+                className="w-8 h-8 rounded-full border border-amber-200 text-amber-700 hover:bg-amber-50 transition"
+                aria-label="Fermer"
+              >
+                ✕
+              </button>
+            </div>
+            <FilterBar
+              value={filterSelection}
+              onValueChange={handleFilterSelection}
+              collapsible
+            />
+          </div>
+        )}
+        <button
+          onClick={() => setIsFilterOpen(prev => !prev)}
+          aria-label="Ouvrir les filtres"
+          className="w-16 h-16 rounded-full bg-white border-2 border-black text-black shadow-lg hover:shadow-xl transition-all flex items-center justify-center"
+        >
+          <svg
+            width="26"
+            height="26"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M3 5h18" />
+            <path d="M7 12h10" />
+            <path d="M10 19h4" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Footer */}
       <Footer />
     </div>
   );
