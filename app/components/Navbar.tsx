@@ -1,6 +1,11 @@
 import Image from 'next/image';
 
-export default function Navbar() {
+interface NavbarProps {
+  onUserClick?: () => void;
+  userAvatar?: string;
+}
+
+export default function Navbar({ onUserClick, userAvatar }: NavbarProps) {
   return (
     <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-7xl">
       <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg px-6 py-4 flex items-center justify-between">
@@ -30,21 +35,32 @@ export default function Navbar() {
           </button>
           
           {/* Profile Icon */}
-          <button className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-amber-500 hover:from-orange-500 hover:to-amber-600 transition-colors flex items-center justify-center text-white shadow-md">
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              fill="none" 
-              viewBox="0 0 24 24" 
-              strokeWidth={2} 
-              stroke="currentColor" 
-              className="w-6 h-6"
-            >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" 
-              />
-            </svg>
+          <button
+            onClick={onUserClick}
+            className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-amber-500 hover:from-orange-500 hover:to-amber-600 transition-colors flex items-center justify-center text-white shadow-md"
+          >
+            {userAvatar ? (
+              userAvatar.startsWith('blob:') || userAvatar.startsWith('data:') ? (
+                <img src={userAvatar} alt="Avatar" className="h-8 w-8 rounded-full object-cover" />
+              ) : (
+                <span className="text-lg">{userAvatar}</span>
+              )
+            ) : (
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                strokeWidth={2} 
+                stroke="currentColor" 
+                className="w-6 h-6"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" 
+                />
+              </svg>
+            )}
           </button>
         </div>
       </div>
