@@ -14,8 +14,8 @@ export const mistralConfig = {
     // Modèle principal pour la génération de prompts - le plus performant
     promptGeneration: process.env.MISTRAL_MODEL_LARGE || 'mistral-large-latest',
 
-    // Modèle pour la modération de contenu
-    moderation: process.env.MISTRAL_MODEL_MODERATION || 'mistral-moderation-latest',
+    // Modèle pour la modération de contenu (using small model, moderation-specific model doesn't exist)
+    moderation: process.env.MISTRAL_MODEL_MODERATION || 'mistral-small-latest',
 
     // Modèle rapide pour les suggestions en temps réel
     suggestions: process.env.MISTRAL_MODEL_SMALL || 'mistral-small-latest',
