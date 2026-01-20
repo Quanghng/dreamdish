@@ -29,10 +29,25 @@ export interface GeneratePromptResponse {
   timestamp: number;
 }
 
+// Styles culinaires disponibles
+export type CulinaryStyle =
+  | 'modern'
+  | 'classic'
+  | 'fusion'
+  | 'molecular'
+  | 'rustic';
+
+// Styles de présentation disponibles
+export type PresentationStyle =
+  | 'minimalist'
+  | 'elaborate'
+  | 'artistic'
+  | 'traditional';
+
 // Requête pour générer un prompt
 export interface GeneratePromptRequest {
   ingredients: string[];
-  style?: string;
+  style?: CulinaryStyle;
   options?: PromptOptions;
 }
 
@@ -54,8 +69,18 @@ export enum MistralModel {
 // Requête pour la génération complète (prompt + image)
 export interface GenerateFullRequest {
   ingredients: string[];
+  style?: CulinaryStyle;
+  presentation?: PresentationStyle;
+  filters?: FilterSelection;
+}
+
+// Sélection des filtres culinaires
+export interface FilterSelection {
+  category?: string;
+  cuisson?: string;
   style?: string;
-  presentation?: string;
+  regime?: string;
+  type?: string;
 }
 
 // Réponse de la génération complète

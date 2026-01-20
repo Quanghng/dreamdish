@@ -7,7 +7,8 @@ import { useState, useCallback } from 'react';
 import type {
   CulinaryStyle,
   PresentationStyle,
-  GenerateFullResponse
+  GenerateFullResponse,
+  FilterSelection
 } from '@/types';
 
 interface UseGenerateOptions {
@@ -31,6 +32,7 @@ interface UseGenerateReturn {
       style?: CulinaryStyle;
       presentation?: PresentationStyle;
       additionalContext?: string;
+      filters?: FilterSelection;
     }
   ) => Promise<GenerateFullResponse | null>;
   /** Fonction pour réinitialiser l'état */
@@ -62,6 +64,7 @@ export function useGenerate(options: UseGenerateOptions = {}): UseGenerateReturn
       style?: CulinaryStyle;
       presentation?: PresentationStyle;
       additionalContext?: string;
+      filters?: FilterSelection;
     }
   ): Promise<GenerateFullResponse | null> => {
     // Validation des ingrédients
@@ -89,6 +92,7 @@ export function useGenerate(options: UseGenerateOptions = {}): UseGenerateReturn
           ingredients,
           style: genOptions?.style || defaultStyle,
           presentation: genOptions?.presentation || defaultPresentation,
+          filters: genOptions?.filters || {},
         }),
       });
 
