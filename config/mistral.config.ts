@@ -19,6 +19,9 @@ export const mistralConfig = {
 
     // Modèle rapide pour les suggestions en temps réel
     suggestions: process.env.MISTRAL_MODEL_SMALL || 'mistral-small-latest',
+
+    // Modèle multimodal Pixtral pour l'analyse d'images (Vision-to-Recipe)
+    vision: process.env.MISTRAL_MODEL_VISION || 'pixtral-large-latest',
   },
 
   // --------------------------------------------
@@ -39,6 +42,17 @@ export const mistralConfig = {
     temperature: 0.3,        // Bas pour des réponses cohérentes
     maxTokens: 256,          // Court pour la rapidité
     topP: 0.9,
+  },
+
+  // --------------------------------------------
+  // Paramètres pour la génération de recettes (Vision-to-Recipe)
+  // --------------------------------------------
+  recipeGeneration: {
+    temperature: 0.85,       // Élevé pour des recettes créatives et uniques
+    maxTokens: 4096,         // Long pour des recettes détaillées
+    topP: 0.92,
+    presencePenalty: 0.2,    // Éviter les répétitions dans les instructions
+    frequencyPenalty: 0.15,
   },
 
   // --------------------------------------------
