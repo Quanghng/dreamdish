@@ -26,6 +26,7 @@ model User {
 
   accounts      Account[]
   sessions      Session[]
+  cookbookEntries CookbookEntry[]
 }
 
 model Account {
@@ -62,4 +63,21 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model CookbookEntry {
+  id                String   @id @default(cuid())
+  userId            String
+  recipe            Json
+  imageUrl          String
+  originalIngredients Json
+  nutritionalInfo   Json?
+  drinkPairings     Json?
+  createdAt         DateTime @default(now())
+  notes             String?
+  rating            Int?
+  isFavorite        Boolean  @default(false)
+  category          String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

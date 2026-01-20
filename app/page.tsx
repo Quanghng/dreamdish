@@ -104,6 +104,7 @@ export default function Home() {
     cookbook,
     toggleFavorite,
     updateRecipeCategory,
+    fetchCookbook,
   } = useRecipe();
 
   const [selectedCategory, setSelectedCategory] = useState<string>('');
@@ -209,7 +210,8 @@ export default function Home() {
 
   const loadUserProfile = async () => {
     const response = await fetch('/api/user/profile');
-    if (!response.ok) return;
+    if (response.status === 404) return false;
+    if (!response.ok) return false;
     const data = await response.json();
     const categories = Array.isArray(data.preferences?.categories)
       ? data.preferences.categories
@@ -222,6 +224,7 @@ export default function Home() {
       preferences: { categories },
     });
     setCategoryOptions(categories);
+    return true;
   };
 
   const persistProfile = async (nextProfile: {
@@ -261,10 +264,15 @@ export default function Home() {
       setUserProfile(null);
       return;
     }
-    setUserMode('profile');
-    loadUserProfile();
+    if (!isUserPanelOpen) return;
+    loadUserProfile().then(async (ok) => {
+      if (ok) {
+        await fetchCookbook();
+        setUserMode('profile');
+      }
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session?.user?.id]);
+  }, [session?.user?.id, isUserPanelOpen]);
 
   const handleFilterSelection = (nextSelection: FilterSelection) => {
     setFilterSelection(nextSelection);
@@ -343,9 +351,9 @@ export default function Home() {
     }
   };
 
-  const handleSaveRecipe = () => {
+  const handleSaveRecipe = async () => {
     if (recipeResult && generateResult) {
-      saveToCoookbook(
+      await saveToCoookbook(
         recipeResult.recipe,
         generateResult.imageUrl,
         ingredients.map(i => i.label),
@@ -370,7 +378,7 @@ export default function Home() {
   };
 
   const handleOpenUserPanel = () => {
-    setUserMode(session?.user?.id ? 'profile' : 'login');
+    setUserMode(session?.user?.id && userProfile ? 'profile' : 'login');
     setIsUserPanelOpen(true);
     setAuthError(null);
   };

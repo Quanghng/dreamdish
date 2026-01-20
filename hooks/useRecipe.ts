@@ -12,9 +12,6 @@ import type {
   CookbookEntry
 } from '@/types';
 
-// Clé de stockage local pour le livre de recettes
-const COOKBOOK_STORAGE_KEY = 'dreamdish_cookbook';
-
 interface UseRecipeReturn {
   /** Résultat de la génération de recette */
   recipeResult: GenerateRecipeResponse | null;
@@ -38,7 +35,7 @@ interface UseRecipeReturn {
     originalIngredients: string[],
     nutritionalInfo?: NutritionalInfo,
     drinkPairings?: DrinkPairing[]
-  ) => CookbookEntry;
+  ) => Promise<CookbookEntry>;
   /** Supprimer une recette du livre */
   removeFromCookbook: (id: string) => void;
   /** Mettre à jour les notes d'une recette */
@@ -49,6 +46,8 @@ interface UseRecipeReturn {
   updateRecipeCategory: (id: string, category: string) => void;
   /** Basculer le favori d'une recette */
   toggleFavorite: (id: string) => void;
+  /** Recharger les recettes du livre */
+  fetchCookbook: () => Promise<void>;
 }
 
 /**
@@ -59,23 +58,15 @@ export function useRecipe(): UseRecipeReturn {
   const [recipeResult, setRecipeResult] = useState<GenerateRecipeResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [cookbook, setCookbook] = useState<CookbookEntry[]>(() => {
-    // Charger le livre de recettes depuis le localStorage
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(COOKBOOK_STORAGE_KEY);
-      return saved ? JSON.parse(saved) : [];
-    }
-    return [];
-  });
+  const [cookbook, setCookbook] = useState<CookbookEntry[]>([]);
 
-  /**
-   * Sauvegarde le livre de recettes dans le localStorage
-   */
-  const saveCookbook = useCallback((entries: CookbookEntry[]) => {
-    setCookbook(entries);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(COOKBOOK_STORAGE_KEY, JSON.stringify(entries));
+  const fetchCookbook = useCallback(async () => {
+    const response = await fetch('/api/user/cookbook');
+    if (!response.ok) {
+      return;
     }
+    const data = await response.json();
+    setCookbook(Array.isArray(data) ? data : []);
   }, []);
 
   /**
@@ -147,76 +138,89 @@ export function useRecipe(): UseRecipeReturn {
   /**
    * Sauvegarde une recette dans le livre de recettes
    */
-  const saveToCoookbook = useCallback((
+  const saveToCoookbook = useCallback(async (
     recipe: GeneratedRecipe,
     imageUrl: string,
     originalIngredients: string[],
     nutritionalInfo?: NutritionalInfo,
     drinkPairings?: DrinkPairing[]
-  ): CookbookEntry => {
-    const entry: CookbookEntry = {
-      id: `recipe_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      recipe,
-      imageUrl,
-      originalIngredients,
-      nutritionalInfo,
-      drinkPairings,
-      createdAt: new Date().toISOString(),
-      isFavorite: false,
-    };
+  ): Promise<CookbookEntry> => {
+    const response = await fetch('/api/user/cookbook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        recipe,
+        imageUrl,
+        originalIngredients,
+        nutritionalInfo,
+        drinkPairings,
+      }),
+    });
 
-    const newCookbook = [entry, ...cookbook];
-    saveCookbook(newCookbook);
-    return entry;
-  }, [cookbook, saveCookbook]);
+    if (!response.ok) {
+      throw new Error('Impossible de sauvegarder la recette.');
+    }
+    const entry = await response.json();
+    await fetchCookbook();
+    return entry as CookbookEntry;
+  }, [fetchCookbook]);
 
   /**
    * Supprime une recette du livre
    */
-  const removeFromCookbook = useCallback((id: string) => {
-    const newCookbook = cookbook.filter(entry => entry.id !== id);
-    saveCookbook(newCookbook);
-  }, [cookbook, saveCookbook]);
+  const removeFromCookbook = useCallback(async (id: string) => {
+    await fetch(`/api/user/cookbook/${id}`, { method: 'DELETE' });
+    await fetchCookbook();
+  }, [fetchCookbook]);
 
   /**
    * Met à jour les notes d'une recette
    */
-  const updateRecipeNotes = useCallback((id: string, notes: string) => {
-    const newCookbook = cookbook.map(entry =>
-      entry.id === id ? { ...entry, notes } : entry
-    );
-    saveCookbook(newCookbook);
-  }, [cookbook, saveCookbook]);
+  const updateRecipeNotes = useCallback(async (id: string, notes: string) => {
+    await fetch(`/api/user/cookbook/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ notes }),
+    });
+    await fetchCookbook();
+  }, [fetchCookbook]);
 
   /**
    * Met à jour la note d'une recette (1-5 étoiles)
    */
-  const updateRecipeRating = useCallback((id: string, rating: number) => {
-    const newCookbook = cookbook.map(entry =>
-      entry.id === id ? { ...entry, rating: Math.min(5, Math.max(1, rating)) } : entry
-    );
-    saveCookbook(newCookbook);
-  }, [cookbook, saveCookbook]);
+  const updateRecipeRating = useCallback(async (id: string, rating: number) => {
+    await fetch(`/api/user/cookbook/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rating: Math.min(5, Math.max(1, rating)) }),
+    });
+    await fetchCookbook();
+  }, [fetchCookbook]);
 
   /**
    * Met à jour la catégorie d'une recette
    */
-  const updateRecipeCategory = useCallback((id: string, category: string) => {
-    const newCookbook = cookbook.map(entry =>
-      entry.id === id ? { ...entry, category } : entry
-    );
-    saveCookbook(newCookbook);
-  }, [cookbook, saveCookbook]);
+  const updateRecipeCategory = useCallback(async (id: string, category: string) => {
+    await fetch(`/api/user/cookbook/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ category }),
+    });
+    await fetchCookbook();
+  }, [fetchCookbook]);
 
   /**
    * Bascule le statut favori d'une recette
    */
-  const toggleFavorite = useCallback((id: string) => {
-    const newCookbook = cookbook.map(entry =>
-      entry.id === id ? { ...entry, isFavorite: !entry.isFavorite } : entry
-    );
-    saveCookbook(newCookbook);
-  }, [cookbook, saveCookbook]);
+  const toggleFavorite = useCallback(async (id: string) => {
+    const entry = cookbook.find(item => item.id === id);
+    await fetch(`/api/user/cookbook/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ isFavorite: !(entry?.isFavorite ?? false) }),
+    });
+    await fetchCookbook();
+  }, [cookbook, fetchCookbook]);
 
   return {
     recipeResult,
@@ -231,6 +235,7 @@ export function useRecipe(): UseRecipeReturn {
     updateRecipeRating,
     updateRecipeCategory,
     toggleFavorite,
+    fetchCookbook,
   };
 }
 
