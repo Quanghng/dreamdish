@@ -195,6 +195,7 @@ export interface CookbookEntry {
   createdAt: string;
   notes?: string;
   rating?: number;
+  category?: string;
   isFavorite: boolean;
 }
 

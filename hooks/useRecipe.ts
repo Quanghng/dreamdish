@@ -45,6 +45,8 @@ interface UseRecipeReturn {
   updateRecipeNotes: (id: string, notes: string) => void;
   /** Mettre à jour la note d'une recette */
   updateRecipeRating: (id: string, rating: number) => void;
+  /** Mettre à jour la catégorie d'une recette */
+  updateRecipeCategory: (id: string, category: string) => void;
   /** Basculer le favori d'une recette */
   toggleFavorite: (id: string) => void;
 }
@@ -197,6 +199,16 @@ export function useRecipe(): UseRecipeReturn {
   }, [cookbook, saveCookbook]);
 
   /**
+   * Met à jour la catégorie d'une recette
+   */
+  const updateRecipeCategory = useCallback((id: string, category: string) => {
+    const newCookbook = cookbook.map(entry =>
+      entry.id === id ? { ...entry, category } : entry
+    );
+    saveCookbook(newCookbook);
+  }, [cookbook, saveCookbook]);
+
+  /**
    * Bascule le statut favori d'une recette
    */
   const toggleFavorite = useCallback((id: string) => {
@@ -217,6 +229,7 @@ export function useRecipe(): UseRecipeReturn {
     removeFromCookbook,
     updateRecipeNotes,
     updateRecipeRating,
+    updateRecipeCategory,
     toggleFavorite,
   };
 }
