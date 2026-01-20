@@ -1,20 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import type { FilterSelection } from '@/types';
 
 const CATEGORIES = ['viande', 'poisson', 'légume', 'fruit', 'produit laitier', 'céréale'];
 const CUISSON = ['chaud', 'froid', 'ambiant'];
 const STYLE = ['français', 'italien', 'japonais', 'chinois', 'indien', 'mexicain', 'américain', 'méditerranéen'];
 const REGIME = ['végétarien', 'vegan', 'sans gluten', 'sans lactose', 'halal', 'casher'];
 const TYPE = ['entrée', 'plat principal', 'dessert', 'apéritif', 'petit-déjeuner'];
-
-interface FilterSelection {
-  category: string;
-  cuisson: string;
-  style: string;
-  regime: string;
-  type: string;
-}
 
 interface FilterBarProps {
   value?: FilterSelection;

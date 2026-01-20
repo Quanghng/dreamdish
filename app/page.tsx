@@ -10,6 +10,7 @@ import CookingLoadingScreen from './components/CookingLoadingScreen';
 import { ingredientsData } from '../data/ingredients';
 import { useSuggestions } from '@/hooks/useSuggestions';
 import { useGenerate } from '@/hooks/useGenerate';
+import type { FilterSelection } from '@/types';
 
 interface Ingredient {
   id: string;
@@ -26,14 +27,6 @@ const DEFAULT_INGREDIENT_IDS = new Set(DEFAULT_INGREDIENTS.map(ing => ing.id));
 const DEFAULT_INGREDIENT_LABELS = new Set(
   DEFAULT_INGREDIENTS.map(ing => ing.label.toLowerCase())
 );
-
-interface FilterSelection {
-  category: string;
-  cuisson: string;
-  style: string;
-  regime: string;
-  type: string;
-}
 
 export default function Home() {
   const [ingredients, setIngredients] = useState<Ingredient[]>(DEFAULT_INGREDIENTS);
@@ -153,10 +146,20 @@ export default function Home() {
     return true;
   });
 
+  useEffect(() => {
+    if (hasClearedDefaults) return;
+    const hasCustomIngredient = ingredients.some(
+      ing => !DEFAULT_INGREDIENT_LABELS.has(ing.label.toLowerCase())
+    );
+    if (!hasCustomIngredient) return;
+    setIngredients(prev => prev.filter(ing => !DEFAULT_INGREDIENT_IDS.has(ing.id)));
+    setHasClearedDefaults(true);
+  }, [hasClearedDefaults, ingredients]);
+
   const handleFilterSelection = (nextSelection: FilterSelection) => {
     setFilterSelection(nextSelection);
     setActiveFilters(
-      [nextSelection.cuisson, nextSelection.style, nextSelection.regime, nextSelection.type].filter(Boolean)
+      [nextSelection.cuisson, nextSelection.style, nextSelection.regime, nextSelection.type].filter(Boolean) as string[]
     );
     setSelectedCategory(nextSelection.category || '');
   };
@@ -210,6 +213,7 @@ export default function Home() {
     const ingredientLabels = ingredients.map(i => i.label);
     const result = await generate(ingredientLabels, {
       additionalContext: inputValue.trim() || undefined,
+      filters: filterSelection,
     });
     
     if (result) {
@@ -261,6 +265,41 @@ export default function Home() {
                   />
                 </div>
               )}
+              
+              {/* Keywords / Filtres utilisés */}
+              <div className="mb-6 p-4 bg-gradient-to-br from-orange-50 to-amber-100 rounded-2xl border-2 border-amber-200">
+                <h4 className="text-sm font-bold text-amber-900 mb-3">🏷️ Vos sélections</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium text-amber-800 min-w-[80px]">Ingrédients:</span>
+                    <span className="text-amber-700">{ingredients.map(i => i.label).join(', ')}</span>
+                  </div>
+                  {filterSelection.type && (
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-amber-800 min-w-[80px]">Type:</span>
+                      <span className="inline-block px-3 py-1 bg-orange-200 text-orange-900 rounded-full text-xs font-medium">{filterSelection.type}</span>
+                    </div>
+                  )}
+                  {filterSelection.style && (
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-amber-800 min-w-[80px]">Style:</span>
+                      <span className="inline-block px-3 py-1 bg-yellow-200 text-yellow-900 rounded-full text-xs font-medium">{filterSelection.style}</span>
+                    </div>
+                  )}
+                  {filterSelection.cuisson && (
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-amber-800 min-w-[80px]">Cuisson:</span>
+                      <span className="inline-block px-3 py-1 bg-red-200 text-red-900 rounded-full text-xs font-medium">{filterSelection.cuisson}</span>
+                    </div>
+                  )}
+                  {filterSelection.regime && (
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-amber-800 min-w-[80px]">Régime:</span>
+                      <span className="inline-block px-3 py-1 bg-green-200 text-green-900 rounded-full text-xs font-medium">{filterSelection.regime}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
               
               {/* Prompt Description (collapsible) */}
               <details className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl">

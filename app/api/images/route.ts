@@ -44,14 +44,13 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Parsing et validation du body
-    const body = await request.json();
-    const validationError = validateRequest(body);
+    const parsed = parseRequest(await request.json());
 
-    if (validationError) {
-      return NextResponse.json({ error: validationError }, { status: 400 });
+    if (!parsed.ok) {
+      return NextResponse.json({ error: parsed.error }, { status: 400 });
     }
 
-    const { ingredients, style, presentation } = body as GenerateFullRequest;
+    const { ingredients, style, presentation, filters } = parsed.data;
 
     // 4. Modération du contenu (si activée)
     if (mistralConfig.features.enableModeration) {
@@ -71,7 +70,7 @@ export async function POST(request: NextRequest) {
     // 5. Génération du prompt via Mistral
     console.log('[API Images] Génération du prompt pour:', ingredients);
     const promptResult = await withRetry(() =>
-      generateVisualPrompt({ ingredients, style, presentation })
+      generateVisualPrompt({ ingredients, style, presentation, filters })
     );
 
     console.log('[API Images] Prompt généré:', promptResult.prompt.substring(0, 100) + '...');
@@ -122,13 +121,20 @@ export async function POST(request: NextRequest) {
 // Validation de la requête
 // --------------------------------------------
 
-function validateRequest(body: unknown): string | null {
+function parseRequest(
+  body: unknown
+): { ok: true; data: GenerateFullRequest } | { ok: false; error: string } {
   if (!body || typeof body !== 'object') {
-    return 'Le corps de la requête doit être un objet JSON';
+    return { ok: false, error: 'Le corps de la requête doit être un objet JSON' };
   }
 
   const { ingredients } = body as Record<string, unknown>;
-  return validateIngredients(ingredients);
+  const error = validateIngredients(ingredients);
+  if (error) {
+    return { ok: false, error };
+  }
+
+  return { ok: true, data: body as GenerateFullRequest };
 }
 
 // --------------------------------------------
