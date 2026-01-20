@@ -170,11 +170,18 @@ Sois créatif et audacieux!`;
 
     const contentText = typeof content === 'string'
       ? content
-      : content.map((chunk: any) => chunk.text || '').join('');
+      : content
+          .map((chunk: unknown) => {
+            if (chunk && typeof chunk === 'object' && 'text' in chunk) {
+              return String((chunk as { text?: string }).text || '');
+            }
+            return '';
+          })
+          .join('');
 
-    let parsedResponse: any;
+    let parsedResponse: { error?: string } & Record<string, unknown>;
     try {
-      parsedResponse = JSON.parse(contentText);
+      parsedResponse = JSON.parse(contentText) as { error?: string } & Record<string, unknown>;
     } catch (parseError) {
       console.error('[API Recipe] Erreur de parsing JSON:', parseError);
       console.error('[API Recipe] Contenu reçu:', contentText.substring(0, 500));
@@ -192,8 +199,10 @@ Sois créatif et audacieux!`;
       );
     }
 
+    const recipe = parsedResponse.recipe as { title?: string } | undefined;
+
     // 8. Validation de la structure de la réponse
-    if (!parsedResponse.recipe || !parsedResponse.recipe.title) {
+    if (!recipe?.title) {
       throw new Error('Structure de recette invalide');
     }
 

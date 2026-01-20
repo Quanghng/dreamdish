@@ -58,9 +58,16 @@ Le style de présentation doit être ${style}.`;
     }
 
     // Conversion en string si nécessaire
-    const promptText = typeof generatedPrompt === 'string' 
-      ? generatedPrompt 
-      : generatedPrompt.map((chunk: any) => chunk.text || '').join('');
+    const promptText = typeof generatedPrompt === 'string'
+      ? generatedPrompt
+      : generatedPrompt
+          .map((chunk: unknown) => {
+            if (chunk && typeof chunk === 'object' && 'text' in chunk) {
+              return String((chunk as { text?: string }).text || '');
+            }
+            return '';
+          })
+          .join('');
 
     // Construction de la réponse
     const responseData: GeneratePromptResponse = {
