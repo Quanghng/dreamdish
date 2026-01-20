@@ -6,7 +6,10 @@ import IngredientTag from './components/IngredientTag';
 import FilterBar from './components/FilterBar';
 import IngredientCard from './components/IngredientCard';
 import Footer from './components/Footer';
+import CookingLoadingScreen from './components/CookingLoadingScreen';
 import { ingredientsData } from '../data/ingredients';
+import { useSuggestions } from '@/hooks/useSuggestions';
+import { useGenerate } from '@/hooks/useGenerate';
 
 interface Ingredient {
   id: string;
@@ -37,6 +40,27 @@ export default function Home() {
   
   const [inputValue, setInputValue] = useState('');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showResult, setShowResult] = useState(false);
+
+  const { 
+    suggestions, 
+    isLoading: suggestionsLoading,
+    clearSuggestions 
+  } = useSuggestions(
+    inputValue, 
+    ingredients.map(i => i.label),
+    { debounceDelay: 300, minChars: 2 }
+  );
+
+  const { 
+    result: generateResult, 
+    isLoading: generateLoading, 
+    error: generateError,
+    generate,
+    reset: resetGenerate 
+  } = useGenerate();
+
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [hasClearedDefaults, setHasClearedDefaults] = useState(false);
   const [filterSelection, setFilterSelection] = useState<FilterSelection>({
@@ -65,14 +89,11 @@ export default function Home() {
     { image: '🍖', title: 'Viande' },
   ];
 
-  // Ajouter des tags par défaut aux ingrédients qui n'en ont pas
   const ingredientsWithTags = ingredientsData.map(ing => {
     if (ing.tags) return ing;
     
-    // Tags par défaut basés sur le nom et le type
     const defaultTags: string[] = ['plat principal'];
     
-    // Ajout automatique de tags selon le type d'ingrédient
     if (['Champignon', 'Carotte', 'Laitue', 'Poivron', 'Oignon', 'Ail', 'Aubergine', 'Pomme de terre', 'Concombre', 'Épinards', 'Chou', 'Maïs', 'Piment', 'Basilic', 'Persil', 'Coriandre', 'Thym', 'Romarin', 'Menthe', 'Courge', 'Courgette', 'Betterave', 'Navet', 'Radis', 'Céleri', 'Fenouil', 'Artichaut', 'Asperge'].includes(ing.name)) {
       defaultTags.push('légume', 'végétarien', 'vegan', 'sans gluten');
       if (['Laitue', 'Concombre', 'Tomate', 'Avocat', 'Radis'].includes(ing.name)) {
@@ -132,6 +153,13 @@ export default function Home() {
     return true;
   });
 
+  const handleAddIngredient = (label?: string) => {
+    const ingredientLabel = label || inputValue.trim();
+    if (ingredientLabel) {
+      if (ingredients.some(ing => ing.label.toLowerCase() === ingredientLabel.toLowerCase())) {
+        return;
+      }
+      
   useEffect(() => {
     if (hasClearedDefaults) return;
     const hasCustomIngredient = ingredients.some(
@@ -168,12 +196,14 @@ export default function Home() {
       const newIngredient: Ingredient = {
         id: Date.now().toString(),
         icon: '🥗',
-        label: inputValue.trim(),
+        label: ingredientLabel,
       };
       setIngredients(prev => {
         return [...prev, newIngredient];
       });
       setInputValue('');
+      setShowSuggestions(false);
+      clearSuggestions();
     }
   };
 
@@ -187,18 +217,109 @@ export default function Home() {
     }
   };
 
+  const handleGenerate = async () => {
+    if (ingredients.length === 0) return;
+    
+    const ingredientLabels = ingredients.map(i => i.label);
+    const result = await generate(ingredientLabels, {
+      additionalContext: inputValue.trim() || undefined,
+    });
+    
+    if (result) {
+      setShowResult(true);
+    }
+  };
+
+  const handleSelectSuggestion = (suggestion: string) => {
+    handleAddIngredient(suggestion);
+  };
+
+  const handleCloseResult = () => {
+    setShowResult(false);
+    resetGenerate();
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 relative overflow-hidden">
       <Navbar />
       
-      {/* Main Content */}
+      {/* Loading Screen */}
+      {generateLoading && <CookingLoadingScreen ingredients={ingredients.map(i => i.label)} />}
+      
+      {showResult && generateResult && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+            <div className="p-6 border-b border-amber-100">
+              <div className="flex items-center justify-between">
+                <h3 className="text-2xl font-bold text-amber-900">🍽️ Votre plat de rêve</h3>
+                <button
+                  onClick={handleCloseResult}
+                  className="w-10 h-10 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-700 flex items-center justify-center transition-colors"
+                >
+                  ✕
+                </button>
+              </div>
+              <p className="text-sm text-amber-600 mt-1">
+                Généré avec {generateResult.model} • {generateResult.tokensUsed} tokens
+              </p>
+            </div>
+            <div className="p-6 overflow-y-auto max-h-[70vh]">
+              {/* Generated Image */}
+              {generateResult.imageUrl && (
+                <div className="mb-6">
+                  <img
+                    src={generateResult.imageUrl}
+                    alt="Plat généré"
+                    className="w-full rounded-2xl shadow-lg"
+                  />
+                </div>
+              )}
+              
+              {/* Prompt Description (collapsible) */}
+              <details className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl">
+                <summary className="p-4 cursor-pointer text-amber-800 font-medium hover:bg-amber-100/50 rounded-2xl transition-colors">
+                  📝 Voir la description du plat
+                </summary>
+                <div className="px-6 pb-6">
+                  <p className="text-amber-900 leading-relaxed whitespace-pre-wrap text-sm">
+                    {generateResult.prompt}
+                  </p>
+                </div>
+              </details>
+              
+              <div className="mt-4 flex gap-3">
+                {generateResult.imageUrl && (
+                  <a
+                    href={generateResult.imageUrl}
+                    download="dreamdish-creation.png"
+                    className="flex-1 py-3 px-4 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-xl font-medium transition-colors text-center"
+                  >
+                    💾 Télécharger
+                  </a>
+                )}
+                <button
+                  onClick={() => navigator.clipboard.writeText(generateResult.prompt)}
+                  className="flex-1 py-3 px-4 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-xl font-medium transition-colors"
+                >
+                  📋 Copier le prompt
+                </button>
+                <button
+                  onClick={handleCloseResult}
+                  className="flex-1 py-3 px-4 bg-gradient-to-r from-orange-400 to-amber-500 hover:from-orange-500 hover:to-amber-600 text-white rounded-xl font-medium transition-colors"
+                >
+                  ✨ Nouveau plat
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <main className="flex flex-col items-center justify-center min-h-screen pt-32 pb-48">
-        {/* Hero Title */}
         <h1 className="text-7xl font-bold text-amber-900 mb-16 text-center">
           Crée ton plat de rêve
         </h1>
         
-        {/* Dish Cards Grid with Perspective */}
         <div 
           className="w-full max-w-7xl mb-20"
           style={{
@@ -224,7 +345,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Ingredients Gallery Section */}
         <div className="w-full bg-black py-12 mb-8 relative z-10">
           <h2 className="text-4xl font-bold text-white text-center">
             Choisissez parmi des centaines d'ingrédients
@@ -232,12 +352,10 @@ export default function Home() {
         </div>
         
         <section className="w-full max-w-7xl mx-auto px-8 py-20">
-          {/* Filter Bar */}
           <div className="mb-12">
             <FilterBar value={filterSelection} onValueChange={handleFilterSelection} />
           </div>
 
-          {/* Ingredients Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {filteredIngredients.map((ingredient, index) => (
               <IngredientCard
@@ -250,7 +368,6 @@ export default function Home() {
             ))}
           </div>
           
-          {/* Message si aucun résultat */}
           {filteredIngredients.length === 0 && (
             <div className="text-center py-12">
               <p className="text-2xl text-amber-600">
@@ -264,10 +381,14 @@ export default function Home() {
         </section>
       </main>
 
-      {/* Bottom Interaction Zone */}
       <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-4xl z-20">
         <div className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-6 space-y-4">
-          {/* Ingredient Tags */}
+          {generateError && (
+            <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-red-700 text-sm">
+              ⚠️ {generateError}
+            </div>
+          )}
+          
           <div className="flex flex-wrap gap-3 min-h-[3rem] items-center">
             {ingredients.map((ingredient) => (
               <IngredientTag
@@ -277,24 +398,72 @@ export default function Home() {
                 onRemove={() => handleRemoveIngredient(ingredient.id)}
               />
             ))}
+            {ingredients.length === 0 && (
+              <span className="text-amber-400 italic">
+                Ajoutez des ingrédients pour commencer...
+              </span>
+            )}
           </div>
+          
+          <div className="relative">
+            <div className="flex items-center gap-3 bg-gradient-to-r from-orange-50 to-amber-50 rounded-full px-6 py-4 border-2 border-amber-200 focus-within:border-amber-400 transition-colors">
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => {
+                  setInputValue(e.target.value);
+                  setShowSuggestions(true);
+                }}
+                onFocus={() => setShowSuggestions(true)}
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                onKeyPress={handleKeyPress}
+                placeholder="Avez-vous une demande particulière pour votre plat ?"
+                className="flex-1 bg-transparent outline-none text-amber-900 placeholder:text-amber-400"
+              />
+              <button
+                onClick={() => handleAddIngredient()}
+                className="w-10 h-10 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-600 font-bold text-xl transition-all flex items-center justify-center"
+                title="Ajouter un ingrédient"
+              >
+                +
+              </button>
+              <button
+                onClick={handleGenerate}
+                disabled={ingredients.length === 0 || generateLoading}
+                className="px-6 h-12 rounded-full bg-gradient-to-br from-orange-400 to-amber-500 hover:from-orange-500 hover:to-amber-600 disabled:from-gray-300 disabled:to-gray-400 text-white font-bold shadow-lg hover:shadow-xl disabled:shadow-none transition-all flex items-center justify-center gap-2"
+                title="Générer votre plat"
+              >
+                <span>✨</span>
+                <span>Générer</span>
+              </button>
+            </div>
 
-          {/* Input Bar */}
-          <div className="flex items-center gap-3 bg-gradient-to-r from-orange-50 to-amber-50 rounded-full px-6 py-4 border-2 border-amber-200 focus-within:border-amber-400 transition-colors">
-            <input
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Avez-vous une demande particulière pour votre plat ?"
-              className="flex-1 bg-transparent outline-none text-amber-900 placeholder:text-amber-400"
-            />
-            <button
-              onClick={handleAddIngredient}
-              className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-400 to-amber-500 hover:from-orange-500 hover:to-amber-600 text-white font-bold text-2xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center"
-            >
-              +
-            </button>
+            {showSuggestions && suggestions.length > 0 && (
+              <div className="absolute bottom-full left-0 right-0 mb-2 bg-white rounded-2xl shadow-xl border border-amber-100 overflow-hidden">
+                <div className="p-2">
+                  <p className="text-xs text-amber-500 px-3 py-1">Suggestions</p>
+                  {suggestions.map((suggestion, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleSelectSuggestion(suggestion)}
+                      className="w-full text-left px-4 py-3 hover:bg-amber-50 rounded-xl text-amber-900 transition-colors flex items-center gap-3"
+                    >
+                      <span className="text-lg">🥗</span>
+                      <span>{suggestion}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {suggestionsLoading && inputValue.length >= 2 && (
+              <div className="absolute bottom-full left-0 right-0 mb-2 bg-white rounded-2xl shadow-xl border border-amber-100 p-4">
+                <div className="flex items-center gap-3 text-amber-600">
+                  <div className="w-5 h-5 border-2 border-amber-400 border-t-transparent rounded-full animate-spin"></div>
+                  <span>Recherche de suggestions...</span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
