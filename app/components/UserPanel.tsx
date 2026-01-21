@@ -308,7 +308,7 @@ export default function UserPanel({
               )}
 
               {userMode === 'login' && (
-                <form onSubmit={handleLoginSubmit} className="grid gap-4 max-w-md">
+                <form onSubmit={handleLoginSubmit} className="mx-auto grid w-full max-w-md gap-4">
                   <div>
                     <label className="block text-sm font-medium text-amber-800 mb-1">Email</label>
                     <input

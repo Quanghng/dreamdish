@@ -86,24 +86,26 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
   };
 
   return (
-    <div className="space-y-6 px-6 md:px-8">
+    <div className="space-y-6 px-4 md:px-6">
       {/* Catégories */}
-      <div className="grid gap-3 md:grid-cols-[160px_1fr] items-start">
+      <div className="grid gap-3 md:grid-cols-[220px_1fr] items-start">
         {collapsible ? (
           <button
             type="button"
             onClick={() =>
               setOpenSections(prev => ({ ...prev, category: !prev.category }))
             }
-            className="flex items-center gap-2 text-left text-lg font-semibold text-amber-900"
+            className="flex w-full items-center justify-start gap-3 rounded-full border border-amber-200 bg-amber-50 px-5 py-2 text-left text-sm font-semibold text-amber-900 shadow-sm hover:border-amber-300 min-h-[40px]"
           >
-            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-amber-50 text-amber-700">
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-white text-amber-700">
               {openSections.category ? '−' : '+'}
             </span>
             Catégories
           </button>
         ) : (
-          <h3 className="text-lg font-semibold text-amber-900">Catégories</h3>
+          <h3 className="inline-flex items-center justify-center rounded-full border border-amber-200 bg-amber-50 px-5 py-2 text-center text-sm font-semibold text-amber-900 shadow-sm min-h-[40px]">
+            Catégories
+          </h3>
         )}
         {(!collapsible || openSections.category) && (
           <div className="flex flex-wrap gap-2">
@@ -118,22 +120,24 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
       </div>
 
       {/* Cuisson */}
-      <div className="grid gap-3 md:grid-cols-[160px_1fr] items-start">
+      <div className="grid gap-3 md:grid-cols-[220px_1fr] items-start">
         {collapsible ? (
           <button
             type="button"
             onClick={() =>
               setOpenSections(prev => ({ ...prev, cuisson: !prev.cuisson }))
             }
-            className="flex items-center gap-2 text-left text-lg font-semibold text-amber-900"
+            className="flex w-full items-center justify-start gap-3 rounded-full border border-amber-200 bg-amber-50 px-5 py-2 text-left text-sm font-semibold text-amber-900 shadow-sm hover:border-amber-300 min-h-[40px]"
           >
-            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-amber-50 text-amber-700">
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-white text-amber-700">
               {openSections.cuisson ? '−' : '+'}
             </span>
             Cuisson
           </button>
         ) : (
-          <h3 className="text-lg font-semibold text-amber-900">Cuisson</h3>
+          <h3 className="inline-flex items-center justify-center rounded-full border border-amber-200 bg-amber-50 px-5 py-2 text-center text-sm font-semibold text-amber-900 shadow-sm min-h-[40px]">
+            Cuisson
+          </h3>
         )}
         {(!collapsible || openSections.cuisson) && (
           <div className="flex flex-wrap gap-2">
@@ -145,22 +149,24 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
       </div>
 
       {/* Style de cuisine */}
-      <div className="grid gap-3 md:grid-cols-[160px_1fr] items-start">
+      <div className="grid gap-3 md:grid-cols-[220px_1fr] items-start">
         {collapsible ? (
           <button
             type="button"
             onClick={() =>
               setOpenSections(prev => ({ ...prev, style: !prev.style }))
             }
-            className="flex items-center gap-2 text-left text-lg font-semibold text-amber-900"
+            className="flex w-full items-center justify-start gap-3 rounded-full border border-amber-200 bg-amber-50 px-5 py-2 text-left text-sm font-semibold text-amber-900 shadow-sm hover:border-amber-300 min-h-[40px]"
           >
-            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-amber-50 text-amber-700">
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-white text-amber-700">
               {openSections.style ? '−' : '+'}
             </span>
             Style de cuisine
           </button>
         ) : (
-          <h3 className="text-lg font-semibold text-amber-900">Style de cuisine</h3>
+          <h3 className="inline-flex items-center justify-center rounded-full border border-amber-200 bg-amber-50 px-5 py-2 text-center text-sm font-semibold text-amber-900 shadow-sm min-h-[40px]">
+            Style de cuisine
+          </h3>
         )}
         {(!collapsible || openSections.style) && (
           <div className="flex flex-wrap gap-2">
@@ -177,22 +183,24 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
       </div>
 
       {/* Régime alimentaire */}
-      <div className="grid gap-3 md:grid-cols-[160px_1fr] items-start">
+      <div className="grid gap-3 md:grid-cols-[220px_1fr] items-start">
         {collapsible ? (
           <button
             type="button"
             onClick={() =>
               setOpenSections(prev => ({ ...prev, regime: !prev.regime }))
             }
-            className="flex items-center gap-2 text-left text-lg font-semibold text-amber-900"
+            className="flex w-full items-center justify-start gap-3 rounded-full border border-amber-200 bg-amber-50 px-5 py-2 text-left text-sm font-semibold text-amber-900 shadow-sm hover:border-amber-300 min-h-[40px]"
           >
-            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-amber-50 text-amber-700">
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-white text-amber-700">
               {openSections.regime ? '−' : '+'}
             </span>
             Régime
           </button>
         ) : (
-          <h3 className="text-lg font-semibold text-amber-900">Régime</h3>
+          <h3 className="inline-flex items-center justify-center rounded-full border border-amber-200 bg-amber-50 px-5 py-2 text-center text-sm font-semibold text-amber-900 shadow-sm min-h-[40px]">
+            Régime
+          </h3>
         )}
         {(!collapsible || openSections.regime) && (
           <div className="flex flex-wrap gap-2">
@@ -207,22 +215,24 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
       </div>
 
       {/* Type de plat */}
-      <div className="grid gap-3 md:grid-cols-[160px_1fr] items-start">
+      <div className="grid gap-3 md:grid-cols-[220px_1fr] items-start">
         {collapsible ? (
           <button
             type="button"
             onClick={() =>
               setOpenSections(prev => ({ ...prev, type: !prev.type }))
             }
-            className="flex items-center gap-2 text-left text-lg font-semibold text-amber-900"
+            className="flex w-full items-center justify-start gap-3 rounded-full border border-amber-200 bg-amber-50 px-5 py-2 text-left text-sm font-semibold text-amber-900 shadow-sm hover:border-amber-300 min-h-[40px]"
           >
-            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-amber-50 text-amber-700">
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-white text-amber-700">
               {openSections.type ? '−' : '+'}
             </span>
             Type de plat
           </button>
         ) : (
-          <h3 className="text-lg font-semibold text-amber-900">Type de plat</h3>
+          <h3 className="inline-flex items-center justify-center rounded-full border border-amber-200 bg-amber-50 px-5 py-2 text-center text-sm font-semibold text-amber-900 shadow-sm min-h-[40px]">
+            Type de plat
+          </h3>
         )}
         {(!collapsible || openSections.type) && (
           <div className="flex flex-wrap gap-2">
