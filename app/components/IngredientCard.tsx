@@ -55,7 +55,7 @@ export default function IngredientCard({ name, color, icon, onSelect }: Ingredie
               }}
             />
             {icon && (
-              <span className="text-5xl hidden">{icon}</span>
+              <span className="text-6xl hidden items-center justify-center">{icon}</span>
             )}
           </div>
         </div>

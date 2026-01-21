@@ -56,11 +56,7 @@ const FILTER_TAG_COLORS = {
   },
 };
 
-const DEFAULT_INGREDIENTS: Ingredient[] = [
-  { id: '1', icon: '🍌', label: 'Banane' },
-  { id: '2', icon: '🍫', label: 'Chocolat' },
-  { id: '3', icon: '🐟', label: 'Saumon' },
-];
+const DEFAULT_INGREDIENTS: Ingredient[] = [];
 const DEFAULT_AVATARS = ['🍜', '🍣', '🍕', '🥗', '🍩', '🥐', '🍔', '🍤', '🍱', '🍞'];
 const DEFAULT_INGREDIENT_IDS = new Set(DEFAULT_INGREDIENTS.map(ing => ing.id));
 const DEFAULT_INGREDIENT_LABELS = new Set(
@@ -1193,9 +1189,9 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {filteredIngredients.map((ingredient, index) => (
+            {filteredIngredients.map((ingredient) => (
               <IngredientCard
-                key={index}
+                key={ingredient.name}
                 name={ingredient.name}
                 color={ingredient.color}
                 icon={ingredient.icon}
