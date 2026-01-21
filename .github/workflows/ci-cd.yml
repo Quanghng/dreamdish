@@ -28,7 +28,9 @@ jobs:
       # This creates the typescript definitions based on your schema.
       - name: Prisma Generate
         run: npx prisma generate
-        
+        env:
+          DATABASE_URL: "file:./test.db"
+          
   build:
     name: Unit test
     runs-on: ubuntu-latest
@@ -50,6 +52,8 @@ jobs:
       # 2. Generate Prisma Client
       - name: Prisma Generate
         run: npx prisma generate
+        env:
+          DATABASE_URL: "file:./test.db"
       
       - name: Initialize Test Database
         run: npx prisma db push
