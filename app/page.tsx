@@ -335,14 +335,14 @@ export default function Home() {
     setSelectedCategory(nextSelection.category || '');
   };
 
-  const handleSelectIngredient = (ing: any) => {
+  const handleSelectIngredient = (ing: { name?: string; label?: string; icon?: string }) => {
     const name = ing.name || ing.label;
     setIngredients(prev => {
-      if (prev.some(i => i.label.toLowerCase() === name.toLowerCase())) return prev;
+      if (!name || prev.some(i => i.label.toLowerCase() === name.toLowerCase())) return prev;
       const newIngredient: Ingredient = {
         id: `${Date.now()}_${name}`,
         icon: ing.icon || '🥗',
-        label: name,
+        label: name || 'Unknown',
       };
       return [...prev, newIngredient];
     });
@@ -1133,7 +1133,7 @@ export default function Home() {
 
         <div className="w-full bg-black py-12 mb-8 relative z-10">
           <h2 className="text-4xl font-bold text-white text-center">
-            Choisissez parmi des centaines d'ingrédients
+            Choisissez parmi des centaines d&apos;ingrédients
           </h2>
         </div>
         

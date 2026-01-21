@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 
 interface CookingLoadingScreenProps {
   ingredients: string[];
@@ -15,9 +15,23 @@ const cookingSteps = [
   { emoji: '🍽️', text: 'Dressage du plat...' },
 ];
 
+const ingredientEmojis = ['🥕', '🍅', '🧅', '🥦', '🍗', '🧄', '🌶️', '🥬', '🍋', '🧈'];
+
+// Pre-generate floating ingredient positions to avoid hydration issues
+function generateFloatingIngredients(count: number) {
+  return Array.from({ length: count }, (_, i) => ({
+    id: i,
+    emoji: ingredientEmojis[i % ingredientEmojis.length],
+    x: ((i * 13 + 10) % 80) + 10,
+    delay: (i * 0.17) % 2,
+  }));
+}
+
 export default function CookingLoadingScreen({ ingredients }: CookingLoadingScreenProps) {
   const [currentStep, setCurrentStep] = useState(0);
-  const [floatingIngredients, setFloatingIngredients] = useState<{ id: number; emoji: string; x: number; delay: number }[]>([]);
+
+  // Use useMemo to generate stable floating ingredients
+  const floatingIngredients = useMemo(() => generateFloatingIngredients(12), []);
 
   // Cycle through cooking steps
   useEffect(() => {
@@ -25,18 +39,6 @@ export default function CookingLoadingScreen({ ingredients }: CookingLoadingScre
       setCurrentStep((prev) => (prev + 1) % cookingSteps.length);
     }, 2000);
     return () => clearInterval(interval);
-  }, []);
-
-  // Generate floating ingredients
-  useEffect(() => {
-    const ingredientEmojis = ['🥕', '🍅', '🧅', '🥦', '🍗', '🧄', '🌶️', '🥬', '🍋', '🧈'];
-    const items = Array.from({ length: 12 }, (_, i) => ({
-      id: i,
-      emoji: ingredientEmojis[i % ingredientEmojis.length],
-      x: Math.random() * 80 + 10,
-      delay: Math.random() * 2,
-    }));
-    setFloatingIngredients(items);
   }, []);
 
   return (

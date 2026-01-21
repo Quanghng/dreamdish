@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 
 interface RecipeLoadingScreenProps {
   imageUrl?: string;
@@ -22,10 +22,27 @@ const CHEF_QUOTES = [
   "Les meilleurs plats naissent de la créativité...",
 ];
 
+const PARTICLE_EMOJIS = ['🍳', '🥘', '🍲', '🥗', '🍜', '🍝', '🥧', '🎂'];
+
+// Pre-generate particle positions to avoid hydration mismatches
+function generateParticles(count: number) {
+  return Array.from({ length: count }, (_, i) => ({
+    id: i,
+    left: ((i * 17 + 13) % 100),
+    top: ((i * 23 + 7) % 100),
+    animationDelay: ((i * 0.7) % 5),
+    animationDuration: 5 + ((i * 0.5) % 5),
+    emoji: PARTICLE_EMOJIS[i % PARTICLE_EMOJIS.length],
+  }));
+}
+
 export default function RecipeLoadingScreen({ imageUrl }: RecipeLoadingScreenProps) {
   const [currentStep, setCurrentStep] = useState(0);
-  const [quote, setQuote] = useState(CHEF_QUOTES[0]);
+  const [quoteIndex, setQuoteIndex] = useState(0);
   const [progress, setProgress] = useState(0);
+
+  // Memoize particles to keep them stable across renders
+  const particles = useMemo(() => generateParticles(12), []);
 
   useEffect(() => {
     const stepInterval = setInterval(() => {
@@ -33,13 +50,13 @@ export default function RecipeLoadingScreen({ imageUrl }: RecipeLoadingScreenPro
     }, 2000);
 
     const quoteInterval = setInterval(() => {
-      setQuote(CHEF_QUOTES[Math.floor(Math.random() * CHEF_QUOTES.length)]);
+      setQuoteIndex((prev) => (prev + 1) % CHEF_QUOTES.length);
     }, 4000);
 
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 95) return prev;
-        return prev + Math.random() * 3;
+        return prev + 2;
       });
     }, 200);
 
@@ -54,19 +71,19 @@ export default function RecipeLoadingScreen({ imageUrl }: RecipeLoadingScreenPro
     <div className="absolute inset-0 bg-gradient-to-br from-purple-900/95 via-purple-800/95 to-pink-900/95 z-[60] flex items-center justify-center rounded-3xl overflow-hidden">
       {/* Animated background particles */}
       <div className="absolute inset-0 overflow-hidden">
-        {[...Array(12)].map((_, i) => (
+        {particles.map((particle) => (
           <div
-            key={i}
+            key={particle.id}
             className="absolute animate-float"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${5 + Math.random() * 5}s`,
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
+              animationDelay: `${particle.animationDelay}s`,
+              animationDuration: `${particle.animationDuration}s`,
             }}
           >
             <span className="text-2xl opacity-20">
-              {['🍳', '🥘', '🍲', '🥗', '🍜', '🍝', '🥧', '🎂'][Math.floor(Math.random() * 8)]}
+              {particle.emoji}
             </span>
           </div>
         ))}
@@ -112,7 +129,7 @@ export default function RecipeLoadingScreen({ imageUrl }: RecipeLoadingScreenPro
         
         {/* Quote */}
         <p className="text-purple-200 text-center text-xs italic mb-4 transition-opacity duration-500">
-          "{quote}"
+          &quot;{CHEF_QUOTES[quoteIndex]}&quot;
         </p>
 
         {/* Current step indicator */}

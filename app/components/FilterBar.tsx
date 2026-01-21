@@ -9,6 +9,38 @@ const STYLE = ['français', 'italien', 'japonais', 'chinois', 'indien', 'mexicai
 const REGIME = ['végétarien', 'vegan', 'sans gluten', 'sans lactose', 'halal', 'casher'];
 const TYPE = ['entrée', 'plat principal', 'dessert', 'apéritif', 'petit-déjeuner'];
 
+interface FilterChipProps {
+  label: string;
+  group: 'category' | 'cuisson' | 'style' | 'regime' | 'type';
+  selection: FilterSelection;
+  onToggle: (filter: string) => void;
+}
+
+function FilterChip({ label, group, selection, onToggle }: FilterChipProps) {
+  const isActive =
+    group === 'category'
+      ? selection.category === label
+      : group === 'cuisson'
+        ? selection.cuisson === label
+        : group === 'style'
+          ? selection.style === label
+          : group === 'regime'
+            ? selection.regime === label
+            : selection.type === label;
+  return (
+    <button
+      onClick={() => onToggle(label)}
+      className={`px-5 py-2 rounded-full border-2 transition-all duration-300 text-sm font-medium ${
+        isActive
+          ? 'bg-amber-500 border-amber-500 text-white shadow-md'
+          : 'bg-white border-amber-200 text-amber-900 hover:border-amber-400'
+      }`}
+    >
+      {label}
+    </button>
+  );
+}
+
 interface FilterBarProps {
   value?: FilterSelection;
   onValueChange?: (value: FilterSelection) => void;
@@ -53,37 +85,6 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
     onValueChange?.(nextSelection);
   };
 
-  const FilterChip = ({
-    label,
-    group,
-  }: {
-    label: string;
-    group: 'category' | 'cuisson' | 'style' | 'regime' | 'type';
-  }) => {
-    const isActive =
-      group === 'category'
-        ? selection.category === label
-        : group === 'cuisson'
-          ? selection.cuisson === label
-          : group === 'style'
-            ? selection.style === label
-            : group === 'regime'
-              ? selection.regime === label
-              : selection.type === label;
-    return (
-      <button
-        onClick={() => toggleFilter(label)}
-        className={`px-5 py-2 rounded-full border-2 transition-all duration-300 text-sm font-medium ${
-          isActive
-            ? 'bg-amber-500 border-amber-500 text-white shadow-md'
-            : 'bg-white border-amber-200 text-amber-900 hover:border-amber-400'
-        }`}
-      >
-        {label}
-      </button>
-    );
-  };
-
   return (
     <div className="space-y-6 px-6 md:px-8">
       {/* Catégories */}
@@ -106,12 +107,12 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
         )}
         {(!collapsible || openSections.category) && (
           <div className="flex flex-wrap gap-2">
-            <FilterChip label="viande" group="category" />
-            <FilterChip label="poisson" group="category" />
-            <FilterChip label="légume" group="category" />
-            <FilterChip label="fruit" group="category" />
-            <FilterChip label="produit laitier" group="category" />
-            <FilterChip label="céréale" group="category" />
+            <FilterChip label="viande" group="category" selection={selection} onToggle={toggleFilter} />
+            <FilterChip label="poisson" group="category" selection={selection} onToggle={toggleFilter} />
+            <FilterChip label="légume" group="category" selection={selection} onToggle={toggleFilter} />
+            <FilterChip label="fruit" group="category" selection={selection} onToggle={toggleFilter} />
+            <FilterChip label="produit laitier" group="category" selection={selection} onToggle={toggleFilter} />
+            <FilterChip label="céréale" group="category" selection={selection} onToggle={toggleFilter} />
           </div>
         )}
       </div>
@@ -136,9 +137,9 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
         )}
         {(!collapsible || openSections.cuisson) && (
           <div className="flex flex-wrap gap-2">
-            <FilterChip label="chaud" group="cuisson" />
-            <FilterChip label="froid" group="cuisson" />
-            <FilterChip label="ambiant" group="cuisson" />
+            <FilterChip label="chaud" group="cuisson" selection={selection} onToggle={toggleFilter} />
+            <FilterChip label="froid" group="cuisson" selection={selection} onToggle={toggleFilter} />
+            <FilterChip label="ambiant" group="cuisson" selection={selection} onToggle={toggleFilter} />
           </div>
         )}
       </div>
@@ -163,14 +164,14 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
         )}
         {(!collapsible || openSections.style) && (
           <div className="flex flex-wrap gap-2">
-            <FilterChip label="français" group="style" />
-            <FilterChip label="italien" group="style" />
-            <FilterChip label="japonais" group="style" />
-            <FilterChip label="chinois" group="style" />
-            <FilterChip label="indien" group="style" />
-            <FilterChip label="mexicain" group="style" />
-            <FilterChip label="américain" group="style" />
-            <FilterChip label="méditerranéen" group="style" />
+            <FilterChip label="français" group="style" selection={selection} onToggle={toggleFilter} />
+            <FilterChip label="italien" group="style" selection={selection} onToggle={toggleFilter} />
+            <FilterChip label="japonais" group="style" selection={selection} onToggle={toggleFilter} />
+            <FilterChip label="chinois" group="style" selection={selection} onToggle={toggleFilter} />
+            <FilterChip label="indien" group="style" selection={selection} onToggle={toggleFilter} />
+            <FilterChip label="mexicain" group="style" selection={selection} onToggle={toggleFilter} />
+            <FilterChip label="américain" group="style" selection={selection} onToggle={toggleFilter} />
+            <FilterChip label="méditerranéen" group="style" selection={selection} onToggle={toggleFilter} />
           </div>
         )}
       </div>
@@ -195,12 +196,12 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
         )}
         {(!collapsible || openSections.regime) && (
           <div className="flex flex-wrap gap-2">
-            <FilterChip label="végétarien" group="regime" />
-            <FilterChip label="vegan" group="regime" />
-            <FilterChip label="sans gluten" group="regime" />
-            <FilterChip label="sans lactose" group="regime" />
-            <FilterChip label="halal" group="regime" />
-            <FilterChip label="casher" group="regime" />
+            <FilterChip label="végétarien" group="regime" selection={selection} onToggle={toggleFilter} />
+            <FilterChip label="vegan" group="regime" selection={selection} onToggle={toggleFilter} />
+            <FilterChip label="sans gluten" group="regime" selection={selection} onToggle={toggleFilter} />
+            <FilterChip label="sans lactose" group="regime" selection={selection} onToggle={toggleFilter} />
+            <FilterChip label="halal" group="regime" selection={selection} onToggle={toggleFilter} />
+            <FilterChip label="casher" group="regime" selection={selection} onToggle={toggleFilter} />
           </div>
         )}
       </div>
@@ -225,11 +226,11 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
         )}
         {(!collapsible || openSections.type) && (
           <div className="flex flex-wrap gap-2">
-            <FilterChip label="entrée" group="type" />
-            <FilterChip label="plat principal" group="type" />
-            <FilterChip label="dessert" group="type" />
-            <FilterChip label="apéritif" group="type" />
-            <FilterChip label="petit-déjeuner" group="type" />
+            <FilterChip label="entrée" group="type" selection={selection} onToggle={toggleFilter} />
+            <FilterChip label="plat principal" group="type" selection={selection} onToggle={toggleFilter} />
+            <FilterChip label="dessert" group="type" selection={selection} onToggle={toggleFilter} />
+            <FilterChip label="apéritif" group="type" selection={selection} onToggle={toggleFilter} />
+            <FilterChip label="petit-déjeuner" group="type" selection={selection} onToggle={toggleFilter} />
           </div>
         )}
       </div>
