@@ -56,11 +56,7 @@ const FILTER_TAG_COLORS = {
   },
 };
 
-const DEFAULT_INGREDIENTS: Ingredient[] = [
-  { id: '1', icon: '🍌', label: 'Banane' },
-  { id: '2', icon: '🍫', label: 'Chocolat' },
-  { id: '3', icon: '🐟', label: 'Saumon' },
-];
+const DEFAULT_INGREDIENTS: Ingredient[] = [];
 const DEFAULT_AVATARS = ['🍜', '🍣', '🍕', '🥗', '🍩', '🥐', '🍔', '🍤', '🍱', '🍞'];
 const DEFAULT_INGREDIENT_IDS = new Set(DEFAULT_INGREDIENTS.map(ing => ing.id));
 const DEFAULT_INGREDIENT_LABELS = new Set(
@@ -231,6 +227,59 @@ export default function Home() {
         return false;
       }
     }
+    
+    // Exclusions basées sur le régime alimentaire
+    if (filterSelection.regime) {
+      const regime = filterSelection.regime.toLowerCase();
+      const ingredientTags = ingredient.tags?.map(t => t.toLowerCase()) || [];
+      
+      // Si vegan: exclure viande, poisson, produit laitier, et tout ce qui n'a pas le tag vegan
+      if (regime === 'vegan') {
+        const excludedCategories = ['viande', 'poisson', 'produit laitier'];
+        const hasExcludedCategory = excludedCategories.some(cat => ingredientTags.includes(cat));
+        if (hasExcludedCategory || !ingredientTags.includes('vegan')) {
+          return false;
+        }
+      }
+      
+      // Si végétarien: exclure viande et poisson
+      if (regime === 'végétarien') {
+        const excludedCategories = ['viande', 'poisson'];
+        const hasExcludedCategory = excludedCategories.some(cat => ingredientTags.includes(cat));
+        if (hasExcludedCategory) {
+          return false;
+        }
+      }
+      
+      // Si sans gluten: exclure tout ce qui n'a pas le tag "sans gluten"
+      if (regime === 'sans gluten') {
+        if (!ingredientTags.includes('sans gluten')) {
+          return false;
+        }
+      }
+      
+      // Si sans lactose: exclure tout ce qui n'a pas le tag "sans lactose"
+      if (regime === 'sans lactose') {
+        if (!ingredientTags.includes('sans lactose')) {
+          return false;
+        }
+      }
+      
+      // Si halal: exclure les ingrédients sans le tag halal qui sont de la viande
+      if (regime === 'halal') {
+        if (ingredientTags.includes('viande') && !ingredientTags.includes('halal')) {
+          return false;
+        }
+      }
+      
+      // Si casher: exclure les ingrédients sans le tag casher qui sont de la viande
+      if (regime === 'casher') {
+        if (ingredientTags.includes('viande') && !ingredientTags.includes('casher')) {
+          return false;
+        }
+      }
+    }
+    
     return true;
   });
 
@@ -587,11 +636,11 @@ export default function Home() {
             <div className="p-6 overflow-y-auto max-h-[70vh]">
               {/* Generated Image */}
               {generateResult.imageUrl && (
-                <div className="mb-6">
+                <div className="mb-6 -mx-6">
                   <img
                     src={generateResult.imageUrl}
                     alt="Plat généré"
-                    className="w-full rounded-2xl shadow-lg"
+                    className="w-full max-h-[420px] object-cover"
                   />
                 </div>
               )}
@@ -996,6 +1045,10 @@ export default function Home() {
                                     {entry.recipe.description}
                                   </p>
                                 </div>
+                                <div className="ml-4 shrink-0 inline-flex items-center gap-1 rounded-full bg-pink-50 border border-pink-200 px-3 py-1 text-xs font-semibold text-pink-700">
+                                  <span>❤️</span>
+                                  <span>{typeof entry.likesCount === 'number' ? entry.likesCount : 0}</span>
+                                </div>
                               </div>
 
                               <div className="mt-3 flex flex-wrap items-center gap-3">
@@ -1140,9 +1193,9 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {filteredIngredients.map((ingredient, index) => (
+            {filteredIngredients.map((ingredient) => (
               <IngredientCard
-                key={index}
+                key={ingredient.name}
                 name={ingredient.name}
                 color={ingredient.color}
                 icon={ingredient.icon}
@@ -1179,9 +1232,9 @@ export default function Home() {
               return (
                 <div
                   key={type}
-                  className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border-2 ${colors.bg} ${colors.border} ${colors.text} text-sm font-medium transition-all duration-200`}
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border shadow-md ${colors.bg} ${colors.border} ${colors.text} text-base font-medium hover:shadow-lg transition-shadow duration-200`}
                 >
-                  <span>{colors.icon}</span>
+                  <span className="text-2xl">{colors.icon}</span>
                   <span>{tagValue}</span>
                   <button
                     onClick={() => handleRemoveFilter(type)}

@@ -1,0 +1,2265 @@
+{
+  "timestamp": "2026-01-21T13:13:55.908Z",
+  "summary": {
+    "total": 479,
+    "renamed": 451,
+    "remaining": 0
+  },
+  "renamedFiles": [
+    {
+      "old": "53728850-9820-4d07-85ca-a9d85f13c22a.webp",
+      "new": "raisin.webp",
+      "ingredient": "Raisin"
+    },
+    {
+      "old": "75705383-c7bb-4b21-b15e-5512a2b7a44e.webp",
+      "new": "fraise.webp",
+      "ingredient": "Fraise"
+    },
+    {
+      "old": "a58c96ca-ad24-4f11-9130-041858f6b920.webp",
+      "new": "citron.webp",
+      "ingredient": "Citron"
+    },
+    {
+      "old": "ac884103-2494-433f-a423-6dd109afdef3.webp",
+      "new": "carotte.webp",
+      "ingredient": "carotte"
+    },
+    {
+      "old": "baa7e76b-0c88-4b09-9495-b0511ac4eecb.webp",
+      "new": "banane.webp",
+      "ingredient": "banane"
+    },
+    {
+      "old": "bf5fc00a-4c9c-40f4-a5ec-76d69a0121f6.webp",
+      "new": "fromage.webp",
+      "ingredient": "fromage"
+    },
+    {
+      "old": "cec737a1-5e77-4f96-a6d1-e8d2575b4962.webp",
+      "new": "riz.webp",
+      "ingredient": "riz"
+    },
+    {
+      "old": "dd1d0717-3f5b-4849-97b1-753ebabf27c6.webp",
+      "new": "brocoli.webp",
+      "ingredient": "Brocoli"
+    },
+    {
+      "old": "e0196361-2ed7-4f45-a0da-753a89cdf4dc.webp",
+      "new": "poulet.webp",
+      "ingredient": "Poulet"
+    },
+    {
+      "old": "ef5b8b91-b7c4-4233-8d6d-4cfdb4e7b63d.webp",
+      "new": "oeuf.webp",
+      "ingredient": "Œuf"
+    },
+    {
+      "old": "1f17452c-e714-40c0-8a64-b7e84759dc53.webp",
+      "new": "amarante.webp",
+      "ingredient": "Amarante"
+    },
+    {
+      "old": "02ef58b6-3145-4f2c-95cf-fb842907ea60.webp",
+      "new": "avoine.webp",
+      "ingredient": "Avoine"
+    },
+    {
+      "old": "2c57565e-60d5-4c53-94a7-b3961e11cb0a.webp",
+      "new": "tofu-ferme.webp",
+      "ingredient": "Tofu ferme"
+    },
+    {
+      "old": "3b092fca-96a1-4866-9576-dafb1016dd88.webp",
+      "new": "ble-dur.webp",
+      "ingredient": "Blé dur"
+    },
+    {
+      "old": "6cbc083f-b9b4-4a03-8fe4-a7ac559ae0ea.webp",
+      "new": "tofu-soyeux.webp",
+      "ingredient": "Tofu soyeux"
+    },
+    {
+      "old": "385fd02b-a4a3-4dc6-b79c-4b48002a80cd.webp",
+      "new": "kamut.webp",
+      "ingredient": "Kamut"
+    },
+    {
+      "old": "1262a868-2bc5-4ca6-9910-2810b662ecbd.webp",
+      "new": "millet.webp",
+      "ingredient": "Millet"
+    },
+    {
+      "old": "841b46d8-b845-4434-ae79-c9e6bd7c34bd.webp",
+      "new": "champignon-de-paris.webp",
+      "ingredient": "Champignon de Paris"
+    },
+    {
+      "old": "4171b824-aed3-4dc1-b27e-30622eba590d.webp",
+      "new": "tofu-fume.webp",
+      "ingredient": "Tofu fumé"
+    },
+    {
+      "old": "63593eb0-f053-4eff-b399-71e5e81c2a16.webp",
+      "new": "son-davoine.webp",
+      "ingredient": "Son d'avoine"
+    },
+    {
+      "old": "982653d6-4beb-442c-9e3a-5d95f9d6107f.webp",
+      "new": "seigle.webp",
+      "ingredient": "Seigle"
+    },
+    {
+      "old": "afcd5ad0-9483-4e6c-a97f-68f80e02dfb8.webp",
+      "new": "farine-complete.webp",
+      "ingredient": "Farine complète"
+    },
+    {
+      "old": "c6eb62ce-3a20-42d7-a579-ddadbc75225f.webp",
+      "new": "oreille-de-judas.webp",
+      "ingredient": "Oreille de Judas"
+    },
+    {
+      "old": "c7817e57-72a6-4b10-8db5-1e902ad1a2ee.webp",
+      "new": "shirataki.webp",
+      "ingredient": "Shirataki"
+    },
+    {
+      "old": "c82aafb7-2e0d-4b4d-9cf1-cb122991235d.webp",
+      "new": "edamame.webp",
+      "ingredient": "Edamame"
+    },
+    {
+      "old": "ceccfb64-2813-4866-b840-80c157984250.webp",
+      "new": "sorgho.webp",
+      "ingredient": "Sorgho"
+    },
+    {
+      "old": "dabe4fcb-efc7-4f32-8880-c43cb57c8aa6.webp",
+      "new": "champignon-noir.webp",
+      "ingredient": "Champignon noir"
+    },
+    {
+      "old": "f6fd2ef0-9da2-4714-a635-338119e7230f.webp",
+      "new": "teff.webp",
+      "ingredient": "Teff"
+    },
+    {
+      "old": "ffbf35a0-2d47-4b5e-a802-bbb0f395604a.webp",
+      "new": "epeautre.webp",
+      "ingredient": "Épeautre"
+    },
+    {
+      "old": "67c4db42-9192-459c-b49e-3f33bac203c6.webp",
+      "new": "linguine.webp",
+      "ingredient": "Linguine"
+    },
+    {
+      "old": "2c39760a-79f5-4a9c-80bb-84846b4ad371.webp",
+      "new": "fettuccine.webp",
+      "ingredient": "Fettuccine"
+    },
+    {
+      "old": "6087b8c5-5da3-4277-90f7-b13c268a6d1f.webp",
+      "new": "tagliatelles.webp",
+      "ingredient": "Tagliatelles"
+    },
+    {
+      "old": "87546836-3edf-4f68-b0c5-363b56c3a416.webp",
+      "new": "spaghetti.webp",
+      "ingredient": "Spaghetti"
+    },
+    {
+      "old": "a9f36ef9-cec1-4a11-8242-0fdc51219aaf.webp",
+      "new": "amaretto.webp",
+      "ingredient": "Amaretto"
+    },
+    {
+      "old": "5d193836-77c8-4449-af93-d29ca065911f.webp",
+      "new": "rhum.webp",
+      "ingredient": "Rhum"
+    },
+    {
+      "old": "879a7e4d-a5e2-48e6-97eb-bddb151ac9b9.webp",
+      "new": "cognac.webp",
+      "ingredient": "Cognac"
+    },
+    {
+      "old": "06b02b72-a4f4-4945-83f9-99ab19390a7f.webp",
+      "new": "grand-marnier.webp",
+      "ingredient": "Grand Marnier"
+    },
+    {
+      "old": "f09d6463-e9fb-4c51-9571-b061dec585d9.webp",
+      "new": "eau-de-rose.webp",
+      "ingredient": "Eau de rose"
+    },
+    {
+      "old": "873b25ed-25a5-4fdd-8921-0b847fd032d6.webp",
+      "new": "eau-de-fleur-doranger.webp",
+      "ingredient": "Eau de fleur d'oranger"
+    },
+    {
+      "old": "85d64a80-98c0-4178-bb92-499207806a35.webp",
+      "new": "extrait-damande.webp",
+      "ingredient": "Extrait d'amande"
+    },
+    {
+      "old": "7b5e1443-9783-4267-a976-600cf86297fd.webp",
+      "new": "vanille.webp",
+      "ingredient": "Vanille"
+    },
+    {
+      "old": "1cba0a2a-f590-4b9d-991d-e0bc63da47aa.webp",
+      "new": "sucre-glace.webp",
+      "ingredient": "Sucre glace"
+    },
+    {
+      "old": "70db073b-e147-44d7-ae5e-3ef023feae82.webp",
+      "new": "sucre-perle.webp",
+      "ingredient": "Sucre perlé"
+    },
+    {
+      "old": "c840c41c-d8ca-4ad8-93f7-9ca327135bc2.webp",
+      "new": "extrait-de-vanille.webp",
+      "ingredient": "Extrait de vanille"
+    },
+    {
+      "old": "425073a4-f12c-4749-8fb1-5e85b3b4aa40.webp",
+      "new": "sucre-vanille.webp",
+      "ingredient": "Sucre vanillé"
+    },
+    {
+      "old": "0ca8696e-1850-4a51-a9c7-3666e7731e59.webp",
+      "new": "cassonade.webp",
+      "ingredient": "Cassonade"
+    },
+    {
+      "old": "123661a4-bf69-4343-a230-071336f428f7.webp",
+      "new": "sucre-roux.webp",
+      "ingredient": "Sucre roux"
+    },
+    {
+      "old": "bf38669e-0372-4bbb-845b-8a6cda2e040d.webp",
+      "new": "melasse.webp",
+      "ingredient": "Mélasse"
+    },
+    {
+      "old": "971e623e-c206-4e91-9815-c1d8f5337744.webp",
+      "new": "sirop-dagave.webp",
+      "ingredient": "Sirop d'agave"
+    },
+    {
+      "old": "7eec8938-de82-46de-a5cc-9e7543afa07f.webp",
+      "new": "sirop-derable.webp",
+      "ingredient": "Sirop d'érable"
+    },
+    {
+      "old": "0a0497c5-6536-40a4-8030-d528e6f1d699.webp",
+      "new": "dulce-de-leche.webp",
+      "ingredient": "Dulce de leche"
+    },
+    {
+      "old": "9a90f7e8-ca65-46c6-a15a-17a281b262ae.webp",
+      "new": "caramel.webp",
+      "ingredient": "Caramel"
+    },
+    {
+      "old": "fb8ed209-b2e4-44b0-b3f4-4399514ff71e.webp",
+      "new": "caramel-au-beurre-sale.webp",
+      "ingredient": "Caramel au beurre salé"
+    },
+    {
+      "old": "cce33f5c-13e4-4901-b683-73f6cd079775.webp",
+      "new": "gianduja.webp",
+      "ingredient": "Gianduja"
+    },
+    {
+      "old": "07331157-233f-41d0-9de1-36158b5e87d0.webp",
+      "new": "praline.webp",
+      "ingredient": "Praliné"
+    },
+    {
+      "old": "8764cb94-d450-4d49-8ab0-b3be08d72a2b.webp",
+      "new": "nutella.webp",
+      "ingredient": "Nutella"
+    },
+    {
+      "old": "11ab7ce7-131e-4d9a-b405-8ba714e43f64.webp",
+      "new": "pate-a-tartiner.webp",
+      "ingredient": "Pâte à tartiner"
+    },
+    {
+      "old": "04aabbfe-9681-4729-b252-e3946f0d44e3.webp",
+      "new": "massepain.webp",
+      "ingredient": "Massepain"
+    },
+    {
+      "old": "4f6135ab-8b63-417d-8ff7-7d2f74b74c4c.webp",
+      "new": "pate-a-choux.webp",
+      "ingredient": "Pâte à choux"
+    },
+    {
+      "old": "a3f6edb3-73aa-43a8-86a7-b5c2f5ff4d5e.webp",
+      "new": "pate-damandes.webp",
+      "ingredient": "Pâte d'amandes"
+    },
+    {
+      "old": "56e63c5a-74dd-4fae-b6b5-24c147706f1e.webp",
+      "new": "pate-sablee.webp",
+      "ingredient": "Pâte sablée"
+    },
+    {
+      "old": "1048f063-1201-49bc-9a0d-9d89502d1087.webp",
+      "new": "blanc-doeuf.webp",
+      "ingredient": "Blanc d'œuf"
+    },
+    {
+      "old": "26915f4a-b20d-4f3e-84d3-8e405cbfe0a2.webp",
+      "new": "pate-feuilletee.webp",
+      "ingredient": "Pâte feuilletée"
+    },
+    {
+      "old": "34914d35-c29e-4b7a-b5c8-74e8314e2e47.webp",
+      "new": "jaune-doeuf.webp",
+      "ingredient": "Jaune d'œuf"
+    },
+    {
+      "old": "b69f1af1-1af5-4abb-9a51-e9678a3f2439.webp",
+      "new": "pate-brisee.webp",
+      "ingredient": "Pâte brisée"
+    },
+    {
+      "old": "4397442b-785f-4c9d-9800-d32df35fbdca.webp",
+      "new": "meringue.webp",
+      "ingredient": "Meringue"
+    },
+    {
+      "old": "3f72dd3e-dd13-48b0-bcbf-d38ac97edd3d.webp",
+      "new": "creme-de-coco.webp",
+      "ingredient": "Crème de coco"
+    },
+    {
+      "old": "f361a571-4ac3-43cf-9610-d583031d2000.webp",
+      "new": "lait-de-coco.webp",
+      "ingredient": "Lait de coco"
+    },
+    {
+      "old": "38cdf670-2d43-4ee4-8d86-c34346184083.webp",
+      "new": "lait-concentre.webp",
+      "ingredient": "Lait concentré"
+    },
+    {
+      "old": "65b92356-ff50-46e6-94e1-cd0948c285f6.webp",
+      "new": "creme-chantilly.webp",
+      "ingredient": "Crème chantilly"
+    },
+    {
+      "old": "2ea8f732-71b5-40ff-a81c-b52f43a10da5.webp",
+      "new": "creme-fraiche.webp",
+      "ingredient": "Crème fraîche"
+    },
+    {
+      "old": "9df27dfa-0eb6-4c6e-8ffd-2e969886555e.webp",
+      "new": "ricotta.webp",
+      "ingredient": "Ricotta"
+    },
+    {
+      "old": "adb78a9f-c0b5-4347-974a-c36d43aedf02.webp",
+      "new": "mascarpone.webp",
+      "ingredient": "Mascarpone"
+    },
+    {
+      "old": "94fd5890-7955-4b33-a0dd-ed4727df5177.webp",
+      "new": "escalope.webp",
+      "ingredient": "Escalope"
+    },
+    {
+      "old": "8cea688f-d222-470a-a2e6-f352699e3d64.webp",
+      "new": "schnitzel.webp",
+      "ingredient": "Schnitzel"
+    },
+    {
+      "old": "5ecdb309-73a7-43d9-b04f-b77a95a26065.webp",
+      "new": "carpaccio.webp",
+      "ingredient": "Carpaccio"
+    },
+    {
+      "old": "e4c473f2-8a70-4f33-a329-df7fe6be5f5f.webp",
+      "new": "tartare.webp",
+      "ingredient": "Tartare"
+    },
+    {
+      "old": "dd431fdb-9922-4501-a193-011c2b9171c9.webp",
+      "new": "chili-con-carne.webp",
+      "ingredient": "Chili con carne"
+    },
+    {
+      "old": "e2efdcd0-52c4-4723-b96e-19fa50d43e90.webp",
+      "new": "goulash.webp",
+      "ingredient": "Goulash"
+    },
+    {
+      "old": "d0dc0c00-1c79-437f-9214-efc90141bc36.webp",
+      "new": "bourguignon.webp",
+      "ingredient": "Bourguignon"
+    },
+    {
+      "old": "42ac046e-a1c0-4df1-bd5f-931751634229.webp",
+      "new": "blanquette.webp",
+      "ingredient": "Blanquette"
+    },
+    {
+      "old": "aba361df-2dd6-406f-8783-fc27fbd693b8.webp",
+      "new": "osso-buco.webp",
+      "ingredient": "Osso buco"
+    },
+    {
+      "old": "5319cdf9-3942-44f2-bb8a-8beb688c11e1.webp",
+      "new": "queue-de-boeuf.webp",
+      "ingredient": "Queue de bœuf"
+    },
+    {
+      "old": "fc8a34e5-334e-4f62-a9e7-08772aaeeaad.webp",
+      "new": "joue-de-boeuf.webp",
+      "ingredient": "Joue de bœuf"
+    },
+    {
+      "old": "0c39c6b2-bcc9-4f8e-8482-6b2e7d535055.webp",
+      "new": "osso-buco-1.webp",
+      "ingredient": "Osso buco"
+    },
+    {
+      "old": "71c66785-62aa-433a-bec8-34537acb8a99.webp",
+      "new": "langue.webp",
+      "ingredient": "Langue"
+    },
+    {
+      "old": "fa5f8015-d96b-4a29-bcc0-67212c721c87.webp",
+      "new": "cervelle.webp",
+      "ingredient": "Cervelle"
+    },
+    {
+      "old": "d98228bf-7898-4f79-b349-42e686dc283a.webp",
+      "new": "rognons.webp",
+      "ingredient": "Rognons"
+    },
+    {
+      "old": "d41eb7e5-1ea9-44b6-8fa5-9717332def1c.webp",
+      "new": "foie-de-veau.webp",
+      "ingredient": "Foie de veau"
+    },
+    {
+      "old": "9692d12c-3792-4676-8d4f-bc90cc74a40f.webp",
+      "new": "ris-de-veau.webp",
+      "ingredient": "Ris de veau"
+    },
+    {
+      "old": "4b61143f-74b7-4a93-9acd-b98f1d2a9c0a.webp",
+      "new": "t-bone.webp",
+      "ingredient": "T-bone"
+    },
+    {
+      "old": "ef26853d-92a6-447d-8f8a-b5be2e5903e9.webp",
+      "new": "cote-de-boeuf.webp",
+      "ingredient": "Côte de bœuf"
+    },
+    {
+      "old": "74ceb922-4e39-4358-998b-a6d323b19da1.webp",
+      "new": "chateaubriand.webp",
+      "ingredient": "Châteaubriand"
+    },
+    {
+      "old": "2f7ee336-fa1a-4a1f-9ec2-f152addd9810.webp",
+      "new": "onglet.webp",
+      "ingredient": "Onglet"
+    },
+    {
+      "old": "453f8e8d-be57-4686-a452-3d1c6b55b97e.webp",
+      "new": "hampe.webp",
+      "ingredient": "Hampe"
+    },
+    {
+      "old": "5b6c13cb-9ac9-4fac-8faf-0b3b3d3ec689.webp",
+      "new": "bavette.webp",
+      "ingredient": "Bavette"
+    },
+    {
+      "old": "200c2ac0-7171-4638-9995-78891741e557.webp",
+      "new": "rumsteck.webp",
+      "ingredient": "Rumsteck"
+    },
+    {
+      "old": "a7986bce-20e6-4c84-9ae1-9a0c53222315.webp",
+      "new": "faux-filet.webp",
+      "ingredient": "Faux-filet"
+    },
+    {
+      "old": "479e23af-238f-4f73-80ac-ce105b68e566.webp",
+      "new": "entrecote.webp",
+      "ingredient": "Entrecôte"
+    },
+    {
+      "old": "5a62313d-5a2f-43d6-8d33-6eceb29619fd.webp",
+      "new": "viande-sechee.webp",
+      "ingredient": "Viande séchée"
+    },
+    {
+      "old": "5a558867-dd0d-4b06-9619-a81d7009eff5.webp",
+      "new": "biltong.webp",
+      "ingredient": "Biltong"
+    },
+    {
+      "old": "56abf8f8-a4f3-4bb3-87e7-4a29bcd91835.webp",
+      "new": "viande-sechee-1.webp",
+      "ingredient": "Viande séchée"
+    },
+    {
+      "old": "f1edc813-699a-4d67-a75a-6f75f1707bea.webp",
+      "new": "corned-beef.webp",
+      "ingredient": "Corned beef"
+    },
+    {
+      "old": "d3c175dc-9688-40ab-b256-5c10f7bf2592.webp",
+      "new": "tournedos.webp",
+      "ingredient": "Tournedos"
+    },
+    {
+      "old": "641f6a0e-bbfa-4c88-984d-7fd4df6e88c6.webp",
+      "new": "pastrami.webp",
+      "ingredient": "Pastrami"
+    },
+    {
+      "old": "768d9930-bc55-4d33-aa39-9294803b9404.webp",
+      "new": "bresaola.webp",
+      "ingredient": "Bresaola"
+    },
+    {
+      "old": "262329b1-e996-4519-ab9c-50971a28d319.webp",
+      "new": "jambon-iberico.webp",
+      "ingredient": "Jambon Ibérico"
+    },
+    {
+      "old": "8abe2430-4469-44ae-98b7-3a80062998b1.webp",
+      "new": "jambon-de-bayonne.webp",
+      "ingredient": "Jambon de Bayonne"
+    },
+    {
+      "old": "857d1262-5000-43dd-9d24-84ef64f71eb2.webp",
+      "new": "jambon-serrano.webp",
+      "ingredient": "Jambon serrano"
+    },
+    {
+      "old": "bb80ec73-f131-4245-96bc-873b7d27011d.webp",
+      "new": "prosciutto.webp",
+      "ingredient": "Prosciutto"
+    },
+    {
+      "old": "1ffad619-9ccc-4840-9ee4-ef7711b848fc.webp",
+      "new": "poitrine-fumee.webp",
+      "ingredient": "Poitrine fumée"
+    },
+    {
+      "old": "46f0b550-de42-46f0-868f-a63a52b28580.webp",
+      "new": "lardons.webp",
+      "ingredient": "Lardons"
+    },
+    {
+      "old": "fa15160d-0cce-4ebb-b18c-245e31cad7b4.webp",
+      "new": "lard.webp",
+      "ingredient": "Lard"
+    },
+    {
+      "old": "4289896f-1250-4b86-b2d8-a9257452879a.webp",
+      "new": "guanciale.webp",
+      "ingredient": "Guanciale"
+    },
+    {
+      "old": "da1badde-3f9e-4896-9601-b1352076989e.webp",
+      "new": "pancetta.webp",
+      "ingredient": "Pancetta"
+    },
+    {
+      "old": "7916203e-0e41-4e96-bfc4-9e678f663c26.webp",
+      "new": "coppa.webp",
+      "ingredient": "Coppa"
+    },
+    {
+      "old": "fd636ebb-43ee-4a26-9015-01f6ffe86e49.webp",
+      "new": "salami.webp",
+      "ingredient": "Salami"
+    },
+    {
+      "old": "eaf9bb77-cf46-478a-918f-f7e7758b826e.webp",
+      "new": "saucisson-sec.webp",
+      "ingredient": "Saucisson sec"
+    },
+    {
+      "old": "86179166-36ca-4e78-b6f0-699e07666741.webp",
+      "new": "merguez.webp",
+      "ingredient": "Merguez"
+    },
+    {
+      "old": "68ef4605-cf19-4604-9f1c-608e2fc2c2f9.webp",
+      "new": "chorizo.webp",
+      "ingredient": "Chorizo"
+    },
+    {
+      "old": "21a2f150-9647-4b60-be12-fd68a5b149ab.webp",
+      "new": "andouille.webp",
+      "ingredient": "Andouille"
+    },
+    {
+      "old": "e25c6477-32cc-40a0-b1db-4c04dfdad6db.webp",
+      "new": "andouille.webp",
+      "ingredient": "Andouille"
+    },
+    {
+      "old": "6776d7f6-a4ca-44ea-a99f-832c4c484c2d.webp",
+      "new": "boudin-blanc.webp",
+      "ingredient": "Boudin blanc"
+    },
+    {
+      "old": "d745485b-80e4-460b-8901-95dd70c164dd.webp",
+      "new": "boudin-noir.webp",
+      "ingredient": "Boudin noir"
+    },
+    {
+      "old": "3e1842bc-9c97-4d64-b037-03f86cd3aa75.webp",
+      "new": "terrine.webp",
+      "ingredient": "Terrine"
+    },
+    {
+      "old": "5e75aadf-4b09-40ea-8824-19ef7e7d1de0.webp",
+      "new": "pate.webp",
+      "ingredient": "Pâté"
+    },
+    {
+      "old": "5fec8427-9c41-4ea2-89bd-7eab7c5d09ea.webp",
+      "new": "confit.webp",
+      "ingredient": "Confit"
+    },
+    {
+      "old": "c5380d67-daae-4bf8-be4a-1b309cfe53e5.webp",
+      "new": "rillettes.webp",
+      "ingredient": "Rillettes"
+    },
+    {
+      "old": "c9bf469d-2d25-4f6e-8f98-d517486d98dc.webp",
+      "new": "magret.webp",
+      "ingredient": "Magret"
+    },
+    {
+      "old": "b3e25501-cb25-4da1-9de7-fb4892995222.webp",
+      "new": "foie-gras.webp",
+      "ingredient": "Foie gras"
+    },
+    {
+      "old": "32315c00-7d56-4cc3-af05-0f06e232ee53.webp",
+      "new": "crabe.webp",
+      "ingredient": "Crabe"
+    },
+    {
+      "old": "031a3957-6f6f-497d-9697-cbf3821b867b.webp",
+      "new": "araignee-de-mer.webp",
+      "ingredient": "Araignée de mer"
+    },
+    {
+      "old": "acee6e16-82b4-487b-9eac-847d34c8261c.webp",
+      "new": "tourteau.webp",
+      "ingredient": "Tourteau"
+    },
+    {
+      "old": "b12b5447-cdb5-4cd2-b0fc-a8e31b994333.webp",
+      "new": "langoustine.webp",
+      "ingredient": "Langoustine"
+    },
+    {
+      "old": "52ed3ce6-e6f6-4f1a-b418-7c980212b579.webp",
+      "new": "langouste.webp",
+      "ingredient": "Langouste"
+    },
+    {
+      "old": "8d44b665-6947-451c-83bd-7acb0d99ea58.webp",
+      "new": "ecrevisse.webp",
+      "ingredient": "Écrevisse"
+    },
+    {
+      "old": "785d5c48-39a1-4afd-94fb-b2ed3452bb41.webp",
+      "new": "ombre-chevalier.webp",
+      "ingredient": "Ombre chevalier"
+    },
+    {
+      "old": "8c20ecd5-954f-4180-a1ad-404649cee818.webp",
+      "new": "fera.webp",
+      "ingredient": "Féra"
+    },
+    {
+      "old": "ad22aeab-1acd-481e-a4a6-1f5668e5e2e7.webp",
+      "new": "sandre.webp",
+      "ingredient": "Sandre"
+    },
+    {
+      "old": "f6b9f3c7-d8f0-485a-accf-c294a3686227.webp",
+      "new": "silure.webp",
+      "ingredient": "Silure"
+    },
+    {
+      "old": "3c26383b-4813-4567-99bd-031cd3d285a4.webp",
+      "new": "carpe.webp",
+      "ingredient": "Carpe"
+    },
+    {
+      "old": "2cf1e08e-6441-4a5e-aed4-9759556af1b5.webp",
+      "new": "brochet.webp",
+      "ingredient": "Brochet"
+    },
+    {
+      "old": "3d20154b-3887-4841-b40d-bd6cc464f881.webp",
+      "new": "perche.webp",
+      "ingredient": "Perche"
+    },
+    {
+      "old": "edf45b9c-f571-4e2f-8c23-a78e475045f3.webp",
+      "new": "pangasius.webp",
+      "ingredient": "Pangasius"
+    },
+    {
+      "old": "cfe594d6-2a6d-487e-89fa-c2a65f8022c9.webp",
+      "new": "tilapia.webp",
+      "ingredient": "Tilapia"
+    },
+    {
+      "old": "6e42da16-c6f0-4550-ab1d-baeed07fdd5d.webp",
+      "new": "vivaneau.webp",
+      "ingredient": "Vivaneau"
+    },
+    {
+      "old": "66bad08b-e847-4f33-a64d-a6f41c5d1308.webp",
+      "new": "merou.webp",
+      "ingredient": "Mérou"
+    },
+    {
+      "old": "0666ad11-08df-42e6-95c2-0a410f2f0a07.webp",
+      "new": "requin.webp",
+      "ingredient": "Requin"
+    },
+    {
+      "old": "4ea07fb7-4270-44f4-af4b-ef2cc24a18fc.webp",
+      "new": "raie.webp",
+      "ingredient": "Raie"
+    },
+    {
+      "old": "73525287-a233-4939-866d-3238d3966332.webp",
+      "new": "espadon.webp",
+      "ingredient": "Espadon"
+    },
+    {
+      "old": "1251f847-8bb5-498e-9367-99085600ac7e.webp",
+      "new": "congre.webp",
+      "ingredient": "Congre"
+    },
+    {
+      "old": "57dc1c6f-c689-47f2-b7c8-82685f2a4dce.webp",
+      "new": "anguille.webp",
+      "ingredient": "Anguille"
+    },
+    {
+      "old": "7f1f3751-1bf5-4a48-aba3-fd4e63ed52dc.webp",
+      "new": "ombre-chevalier-1.webp",
+      "ingredient": "Ombre chevalier"
+    },
+    {
+      "old": "af4010ec-a76a-428d-95f7-2aeb7357ddb6.webp",
+      "new": "tilapia-1.webp",
+      "ingredient": "Tilapia"
+    },
+    {
+      "old": "a4be9788-1e79-4c60-871c-75d05d932525.webp",
+      "new": "anguille-1.webp",
+      "ingredient": "Anguille"
+    },
+    {
+      "old": "1e0c09a4-4457-4b43-914f-8b18c2e18e55.webp",
+      "new": "anguille.webp",
+      "ingredient": "Anguille"
+    },
+    {
+      "old": "35667049-e34d-4ed5-ad24-b14116abd1ee.webp",
+      "new": "coque.webp",
+      "ingredient": "Coque"
+    },
+    {
+      "old": "2d757a5c-48a6-4e5b-886b-ec0643260e69.webp",
+      "new": "lotte.webp",
+      "ingredient": "Lotte"
+    },
+    {
+      "old": "3cf12320-24f3-494c-9397-b61b04e93c1e.webp",
+      "new": "saint-jacques.webp",
+      "ingredient": "Saint-Jacques"
+    },
+    {
+      "old": "9c63cbe1-c149-40f7-bcba-e114a9ae1845.webp",
+      "new": "bottarga.webp",
+      "ingredient": "Bottarga"
+    },
+    {
+      "old": "87b56669-dcb9-480c-8be0-63103667e6df.webp",
+      "new": "tarama.webp",
+      "ingredient": "Tarama"
+    },
+    {
+      "old": "3f7d759e-51f1-46e6-af9d-e9b2f5ff337e.webp",
+      "new": "oeufs-de-saumon.webp",
+      "ingredient": "Œufs de saumon"
+    },
+    {
+      "old": "4bc694d2-c785-4d75-a746-44e517cae85f.webp",
+      "new": "oeufs-de-lump.webp",
+      "ingredient": "Œufs de lump"
+    },
+    {
+      "old": "aab74e02-5a2f-4867-8b89-a4e6ecf73780.webp",
+      "new": "caviar.webp",
+      "ingredient": "Caviar"
+    },
+    {
+      "old": "edd2d9d5-8b4f-4757-9374-e6459cd3a17f.webp",
+      "new": "oursin.webp",
+      "ingredient": "Oursin"
+    },
+    {
+      "old": "343a16e7-4484-4cbc-9a57-1a43b1774575.webp",
+      "new": "bigorneau.webp",
+      "ingredient": "Bigorneau"
+    },
+    {
+      "old": "dc3be874-b01c-4e03-b07d-8e403be6bcb0.webp",
+      "new": "bulot.webp",
+      "ingredient": "Bulot"
+    },
+    {
+      "old": "d8eeeec3-9bf1-481b-9ddc-92b54ab96f43.webp",
+      "new": "palourde.webp",
+      "ingredient": "Palourde"
+    },
+    {
+      "old": "7b5bc7a6-3c80-4ee4-88b8-68467f7030f1.webp",
+      "new": "turbot.webp",
+      "ingredient": "Turbot"
+    },
+    {
+      "old": "d3c57a45-1476-4d58-8cb1-511fdc610c2d.webp",
+      "new": "sole.webp",
+      "ingredient": "Sole"
+    },
+    {
+      "old": "7cdff203-8f31-45dc-b329-26e9a77d96e7.webp",
+      "new": "daurade.webp",
+      "ingredient": "Daurade"
+    },
+    {
+      "old": "17c0432f-0f29-4397-b1a2-d877014d0ca0.webp",
+      "new": "bar.webp",
+      "ingredient": "Bar"
+    },
+    {
+      "old": "d1ba82ff-4766-4302-ab5e-bbbf174bc2bf.webp",
+      "new": "maquereau.webp",
+      "ingredient": "Maquereau"
+    },
+    {
+      "old": "27006000-fa50-40be-99ef-9c2c480f3683.webp",
+      "new": "hareng.webp",
+      "ingredient": "Hareng"
+    },
+    {
+      "old": "dcafa4cb-481a-412d-bb06-008f7739b6d7.webp",
+      "new": "anchois-marines.webp",
+      "ingredient": "Anchois marinés"
+    },
+    {
+      "old": "6c0a2d86-8863-4c09-b116-5a1c9746f4ec.webp",
+      "new": "olive-kalamata.webp",
+      "ingredient": "Olive Kalamata"
+    },
+    {
+      "old": "3d6c67c6-60a6-4d8a-a4f7-787d0467f59e.webp",
+      "new": "olive-noire.webp",
+      "ingredient": "Olive noire"
+    },
+    {
+      "old": "78d8c5dc-1386-41db-b485-28a6ee5e012c.webp",
+      "new": "capre.webp",
+      "ingredient": "Câpre"
+    },
+    {
+      "old": "e88952ad-66fb-4e15-9066-9085b784d0e3.webp",
+      "new": "olive-verte.webp",
+      "ingredient": "Olive verte"
+    },
+    {
+      "old": "cdec1562-731a-46ac-8ea7-e2bf1af85d3b.webp",
+      "new": "cornichon.webp",
+      "ingredient": "Cornichon"
+    },
+    {
+      "old": "d3dacd0d-7a71-4846-856a-910622a31997.webp",
+      "new": "kimchi.webp",
+      "ingredient": "Kimchi"
+    },
+    {
+      "old": "4cd76025-ff7d-4c57-9dfe-a640f7a6b940.webp",
+      "new": "choucroute.webp",
+      "ingredient": "Choucroute"
+    },
+    {
+      "old": "ef2845c2-9da5-4213-a743-39cd5447b8cb.webp",
+      "new": "gochujang.webp",
+      "ingredient": "Gochujang"
+    },
+    {
+      "old": "1a685af5-666f-4fff-81e3-fc20c1796fd4.webp",
+      "new": "sriracha.webp",
+      "ingredient": "Sriracha"
+    },
+    {
+      "old": "699fe53c-9e43-4475-b8a1-977684872a8c.webp",
+      "new": "sambal.webp",
+      "ingredient": "Sambal"
+    },
+    {
+      "old": "350bb863-3951-4f40-b5b8-38cc72489179.webp",
+      "new": "harissa.webp",
+      "ingredient": "Harissa"
+    },
+    {
+      "old": "21be17c2-e40d-44cf-bf17-df94022d7ab9.webp",
+      "new": "berbere.webp",
+      "ingredient": "Berbéré"
+    },
+    {
+      "old": "207741eb-be74-47af-992d-35c9c829b7fb.webp",
+      "new": "sumac.webp",
+      "ingredient": "Sumac"
+    },
+    {
+      "old": "80ead3dd-db85-4c9b-a5cb-b2a0f9051152.webp",
+      "new": "zaatar.webp",
+      "ingredient": "Zaatar"
+    },
+    {
+      "old": "f9d85ee5-9ea7-473d-8042-1264603eafb3.webp",
+      "new": "baharat.webp",
+      "ingredient": "Baharat"
+    },
+    {
+      "old": "95cb8c6e-95c8-4afc-97cc-e9a176a3af9c.webp",
+      "new": "ras-el-hanout.webp",
+      "ingredient": "Ras-el-hanout"
+    },
+    {
+      "old": "409b2d9d-ec6c-477c-a24b-e51a6272f8e5.webp",
+      "new": "tandoori.webp",
+      "ingredient": "Tandoori"
+    },
+    {
+      "old": "108b3d95-9170-4f93-b0b0-93ac7cbcace4.webp",
+      "new": "garam-masala.webp",
+      "ingredient": "Garam masala"
+    },
+    {
+      "old": "0eeaf917-70ee-48b6-894f-4e0d862e4de1.webp",
+      "new": "pate-de-curry-jaune.webp",
+      "ingredient": "Pâte de curry jaune"
+    },
+    {
+      "old": "9bab4106-3756-4546-8ee8-68ef95bf0497.webp",
+      "new": "pate-de-curry-vert.webp",
+      "ingredient": "Pâte de curry vert"
+    },
+    {
+      "old": "d3eb0d51-cb9e-4972-9fd7-46915c568e4d.webp",
+      "new": "pate-de-curry-rouge.webp",
+      "ingredient": "Pâte de curry rouge"
+    },
+    {
+      "old": "353917ba-5651-4067-87d1-33f6362b674a.webp",
+      "new": "pate-de-miso.webp",
+      "ingredient": "Pâte de miso"
+    },
+    {
+      "old": "5d9e720b-e92a-4a5b-9ee7-ba0916a16c67.webp",
+      "new": "nuoc-mam.webp",
+      "ingredient": "Nuoc-mâm"
+    },
+    {
+      "old": "9b9f4e08-c524-48fb-b2fa-730a2b19e14b.webp",
+      "new": "sauce-de-poisson.webp",
+      "ingredient": "Sauce de poisson"
+    },
+    {
+      "old": "6e4e98a4-6c79-4881-b725-c7aedf477725.webp",
+      "new": "sauce-aux-huitres.webp",
+      "ingredient": "Sauce aux huîtres"
+    },
+    {
+      "old": "b9c06d71-5e00-467b-9570-cbebff3d3bb4.webp",
+      "new": "sauce-hoisin.webp",
+      "ingredient": "Sauce hoisin"
+    },
+    {
+      "old": "9c55d37a-c975-4c63-8f52-57aa96e44e86.webp",
+      "new": "vinaigre-de-riz.webp",
+      "ingredient": "Vinaigre de riz"
+    },
+    {
+      "old": "619254da-c849-40c7-ad56-eef31d14f765.webp",
+      "new": "wasabi.webp",
+      "ingredient": "Wasabi"
+    },
+    {
+      "old": "8088aeb7-f770-46e9-8efc-086efbb48b69.webp",
+      "new": "raifort.webp",
+      "ingredient": "Raifort"
+    },
+    {
+      "old": "f1247c28-b7a4-4484-bf1f-61cec9cb8c64.webp",
+      "new": "mirin.webp",
+      "ingredient": "Mirin"
+    },
+    {
+      "old": "3ae2f27b-4d50-4a53-8817-d2fbb6f9edc3.webp",
+      "new": "sake.webp",
+      "ingredient": "Saké"
+    },
+    {
+      "old": "edb795ae-55ce-401d-bdda-5af329dea953.webp",
+      "new": "pruneau-dagen.webp",
+      "ingredient": "Pruneau d'Agen"
+    },
+    {
+      "old": "88340c73-3711-494a-bb33-509e7c55924f.webp",
+      "new": "reine-claude.webp",
+      "ingredient": "Reine-Claude"
+    },
+    {
+      "old": "b04d0449-d0a8-4044-88d3-60a201d3e7a2.webp",
+      "new": "quetsche.webp",
+      "ingredient": "Quetsche"
+    },
+    {
+      "old": "aabedb6e-51c7-48ee-b717-dc8d1f58b7f6.webp",
+      "new": "mirabelle.webp",
+      "ingredient": "Mirabelle"
+    },
+    {
+      "old": "0fda08a6-cf22-448a-a59b-081102da5d1a.webp",
+      "new": "brugnon.webp",
+      "ingredient": "Brugnon"
+    },
+    {
+      "old": "38ec2b82-ace8-43f9-8ede-acc750c67c35.webp",
+      "new": "brugnon-1.webp",
+      "ingredient": "Brugnon"
+    },
+    {
+      "old": "c61fbe9c-f47b-420e-91fd-9681b5ece55a.webp",
+      "new": "peche-de-vigne.webp",
+      "ingredient": "Pêche de vigne"
+    },
+    {
+      "old": "df81831b-4ff4-45d7-b8ca-010d4c1de43e.webp",
+      "new": "loquat.webp",
+      "ingredient": "Loquat"
+    },
+    {
+      "old": "32849b33-c555-480e-b329-87e43f1a1153.webp",
+      "new": "maracuja.webp",
+      "ingredient": "Maracuja"
+    },
+    {
+      "old": "79b6ec12-d42b-426a-a19b-bb1d79f49129.webp",
+      "new": "feijoa.webp",
+      "ingredient": "Feijoa"
+    },
+    {
+      "old": "7fe32460-a745-45a4-82ec-7427690702a2.webp",
+      "new": "jaboticaba.webp",
+      "ingredient": "Jaboticaba"
+    },
+    {
+      "old": "93afbe3e-a2bf-4ab7-9e5d-090735ae555f.webp",
+      "new": "sapote.webp",
+      "ingredient": "Sapote"
+    },
+    {
+      "old": "3e8d282c-29f8-4059-9d87-b47cc7ec7d54.webp",
+      "new": "cupuacu.webp",
+      "ingredient": "Cupuaçu"
+    },
+    {
+      "old": "b694288a-6452-4ecd-b37e-e13a48ae9425.webp",
+      "new": "corossol.webp",
+      "ingredient": "Corossol"
+    },
+    {
+      "old": "53c6fa44-9b30-42ad-897b-10ba94ccd810.webp",
+      "new": "cherimole.webp",
+      "ingredient": "Chérimole"
+    },
+    {
+      "old": "f1f58d7e-b38f-4d38-b709-d6aeebc3704a.webp",
+      "new": "atemoya.webp",
+      "ingredient": "Atemoya"
+    },
+    {
+      "old": "f941f1b5-bbef-478b-aa7f-458a30fc7de6.webp",
+      "new": "ramboutan.webp",
+      "ingredient": "Ramboutan"
+    },
+    {
+      "old": "b4a7fcc1-0f1f-4b32-899d-d69e8a462878.webp",
+      "new": "mangoustan.webp",
+      "ingredient": "Mangoustan"
+    },
+    {
+      "old": "6887157e-e3da-470e-a338-ddd4b84d9bd9.webp",
+      "new": "salak.webp",
+      "ingredient": "Salak"
+    },
+    {
+      "old": "efbf59e2-d488-4d75-aff7-64b8727db86a.webp",
+      "new": "longane.webp",
+      "ingredient": "Longane"
+    },
+    {
+      "old": "d190b3e5-ec46-45df-8108-db9ea2e888c8.webp",
+      "new": "durian.webp",
+      "ingredient": "Durian"
+    },
+    {
+      "old": "92ffe48a-b6ce-4b95-962b-9b16b5a4b89a.webp",
+      "new": "fruit-du-jacquier.webp",
+      "ingredient": "Fruit du jacquier"
+    },
+    {
+      "old": "dd3d5354-03fb-4926-905a-de10f4302792.webp",
+      "new": "tamarin.webp",
+      "ingredient": "Tamarin"
+    },
+    {
+      "old": "aad5b6c0-f381-4900-a71b-0bf1b39f8820.webp",
+      "new": "datte-medjool.webp",
+      "ingredient": "Datte Medjool"
+    },
+    {
+      "old": "ce8900ac-2562-4393-ab0a-b22852e13fe0.webp",
+      "new": "pad-thai.webp",
+      "ingredient": "Pad thaï"
+    },
+    {
+      "old": "b482864b-b050-4c48-ac28-58b745082589.webp",
+      "new": "nouilles-de-riz.webp",
+      "ingredient": "Nouilles de riz"
+    },
+    {
+      "old": "a825bb3b-ac5a-49e8-953c-d06147273bd6.webp",
+      "new": "vermicelles-de-riz.webp",
+      "ingredient": "Vermicelles de riz"
+    },
+    {
+      "old": "c519cf4e-942a-4189-9451-7939207cf074.webp",
+      "new": "nouilles-ramen.webp",
+      "ingredient": "Nouilles ramen"
+    },
+    {
+      "old": "a48b41de-fef0-47cf-afe8-bcc0f78755c6.webp",
+      "new": "agnolotti.webp",
+      "ingredient": "Agnolotti"
+    },
+    {
+      "old": "0a221979-1004-405d-b7d2-0365228792ea.webp",
+      "new": "nouilles-chinoises.webp",
+      "ingredient": "Nouilles chinoises"
+    },
+    {
+      "old": "032b23f6-885f-4ea2-b6ac-ad3252591071.webp",
+      "new": "nouilles-soba.webp",
+      "ingredient": "Nouilles soba"
+    },
+    {
+      "old": "9eabdc29-60b0-4fe0-81d5-95b62e2858f3.webp",
+      "new": "nouilles-udon.webp",
+      "ingredient": "Nouilles udon"
+    },
+    {
+      "old": "10bf2c3b-6b6b-4cb6-872c-125be1891d22.webp",
+      "new": "cappelletti.webp",
+      "ingredient": "Cappelletti"
+    },
+    {
+      "old": "2441e7aa-d7a2-4f07-9da2-47775b17d675.webp",
+      "new": "tortellini.webp",
+      "ingredient": "Tortellini"
+    },
+    {
+      "old": "07c35118-4a66-43d2-959a-debe49450b96.webp",
+      "new": "raviolis.webp",
+      "ingredient": "Raviolis"
+    },
+    {
+      "old": "dee62aa8-274d-493d-9f7d-1d37bcd84ea8.webp",
+      "new": "cannelloni.webp",
+      "ingredient": "Cannelloni"
+    },
+    {
+      "old": "22346e0e-ff86-4a5c-9562-bb70976402a5.webp",
+      "new": "lasagnes.webp",
+      "ingredient": "Lasagnes"
+    },
+    {
+      "old": "10691881-1079-4db2-9c21-f89874974676.webp",
+      "new": "gnocchi.webp",
+      "ingredient": "Gnocchi"
+    },
+    {
+      "old": "78a972f3-7d0e-41fd-83e0-23a1632907f9.webp",
+      "new": "orecchiette.webp",
+      "ingredient": "Orecchiette"
+    },
+    {
+      "old": "8452312e-7bc4-4635-86c3-ef66f23e2d82.webp",
+      "new": "conchiglie.webp",
+      "ingredient": "Conchiglie"
+    },
+    {
+      "old": "8732f6a6-0641-40cc-a61d-3a7397761f18.webp",
+      "new": "farfalle.webp",
+      "ingredient": "Farfalle"
+    },
+    {
+      "old": "bc17a988-c685-4859-b30c-69febc2c64a3.webp",
+      "new": "fusilli.webp",
+      "ingredient": "Fusilli"
+    },
+    {
+      "old": "b8991441-9e99-4d01-8dec-ee8d7c717e2e.webp",
+      "new": "rigatoni.webp",
+      "ingredient": "Rigatoni"
+    },
+    {
+      "old": "985080cd-8a28-4198-ad46-3d07fb8d4fe7.webp",
+      "new": "penne.webp",
+      "ingredient": "Penne"
+    },
+    {
+      "old": "6f054f9a-6729-4704-9259-5daa6df18b2f.webp",
+      "new": "kumquat.webp",
+      "ingredient": "Kumquat"
+    },
+    {
+      "old": "80fc337b-bd11-48e5-988c-4b848865c9fb.webp",
+      "new": "yuzu.webp",
+      "ingredient": "Yuzu"
+    },
+    {
+      "old": "6274a37d-a78f-470d-994d-720945cb29bd.webp",
+      "new": "cassis.webp",
+      "ingredient": "Cassis"
+    },
+    {
+      "old": "afbfdc05-330e-4050-8166-8c5129e501d1.webp",
+      "new": "groseille.webp",
+      "ingredient": "Groseille"
+    },
+    {
+      "old": "25d85554-0316-4bba-9965-fa6c1474deb9.webp",
+      "new": "coing.webp",
+      "ingredient": "Coing"
+    },
+    {
+      "old": "65f21fda-599e-4b5a-873c-e03868a79f9f.webp",
+      "new": "grenade.webp",
+      "ingredient": "Grenade"
+    },
+    {
+      "old": "80ce0b7d-a196-485f-bc42-bf80cf48eeb9.webp",
+      "new": "datte.webp",
+      "ingredient": "Datte"
+    },
+    {
+      "old": "d7a224c9-2f32-40b3-8b8f-442e44cca952.webp",
+      "new": "framboise.webp",
+      "ingredient": "Framboise"
+    },
+    {
+      "old": "3a334498-2af6-4d89-bfee-1e12b92f9364.webp",
+      "new": "mure.webp",
+      "ingredient": "Mûre"
+    },
+    {
+      "old": "5543cee1-5b08-469b-bb2d-dd0386670412.webp",
+      "new": "myrtille.webp",
+      "ingredient": "Myrtille"
+    },
+    {
+      "old": "e83ae4be-46c4-4748-9630-5b2be49a0b02.webp",
+      "new": "melon.webp",
+      "ingredient": "Melon"
+    },
+    {
+      "old": "992bfc70-5baf-4db3-b4c7-cc37867ca533.webp",
+      "new": "melon-1.webp",
+      "ingredient": "Melon"
+    },
+    {
+      "old": "bc96f655-934e-4511-b874-f6743dd01783.webp",
+      "new": "papaye.webp",
+      "ingredient": "Papaye"
+    },
+    {
+      "old": "89335879-0d82-4ada-a338-08cf4252a9d3.webp",
+      "new": "goyave.webp",
+      "ingredient": "Goyave"
+    },
+    {
+      "old": "76607322-a310-4d98-909e-3bdbf2b779d4.webp",
+      "new": "carambole.webp",
+      "ingredient": "Carambole"
+    },
+    {
+      "old": "e30ad4f3-db5c-42b4-b03e-971acf6d0546.webp",
+      "new": "pitaya.webp",
+      "ingredient": "Pitaya"
+    },
+    {
+      "old": "96687683-f10c-4d8d-abf9-27964e6df14d.webp",
+      "new": "litchi.webp",
+      "ingredient": "Litchi"
+    },
+    {
+      "old": "9f00e3b8-6676-4b39-92cb-c866767b84f9.webp",
+      "new": "fruit-de-la-passion.webp",
+      "ingredient": "Fruit de la passion"
+    },
+    {
+      "old": "200f8448-ee43-4643-b1af-e27e8c2aa8ae.webp",
+      "new": "poire.webp",
+      "ingredient": "Poire"
+    },
+    {
+      "old": "d0787519-88c2-4652-94ec-408ba884c465.webp",
+      "new": "abricot.webp",
+      "ingredient": "Abricot"
+    },
+    {
+      "old": "9d1c5cdf-4c44-48ba-a457-e1336e231160.webp",
+      "new": "figue-seche.webp",
+      "ingredient": "Figue sèche"
+    },
+    {
+      "old": "339d0704-c472-4514-8965-f4675d1eb8bb.webp",
+      "new": "abricot-sec.webp",
+      "ingredient": "Abricot sec"
+    },
+    {
+      "old": "e6b45ac0-e72e-4737-b034-e49b726a4840.webp",
+      "new": "raisin-sec.webp",
+      "ingredient": "Raisin sec"
+    },
+    {
+      "old": "3a223f23-732d-4d1b-8609-82ace11d05d6.webp",
+      "new": "pruneau.webp",
+      "ingredient": "Pruneau"
+    },
+    {
+      "old": "3bff9e73-2d44-4938-82b5-1f361863407c.webp",
+      "new": "goji.webp",
+      "ingredient": "Goji"
+    },
+    {
+      "old": "3ab4218d-fed6-4441-839a-6e00aa710338.webp",
+      "new": "cranberry.webp",
+      "ingredient": "Cranberry"
+    },
+    {
+      "old": "d4481a0c-8efa-48f5-a894-351184d2261c.webp",
+      "new": "argousier.webp",
+      "ingredient": "Argousier"
+    },
+    {
+      "old": "ef4b8887-7f27-4c8b-851e-29b2902c12ec.webp",
+      "new": "baie-de-sureau.webp",
+      "ingredient": "Baie de sureau"
+    },
+    {
+      "old": "7839b8b3-d610-4559-832d-f00785b6e911.webp",
+      "new": "acai.webp",
+      "ingredient": "Açaï"
+    },
+    {
+      "old": "5c803740-52db-47a8-aa2d-940151677137.webp",
+      "new": "baie-de-sureau-1.webp",
+      "ingredient": "Baie de sureau"
+    },
+    {
+      "old": "a6d4fd8d-3f48-4ffa-98f1-ffae8582e080.webp",
+      "new": "physalis.webp",
+      "ingredient": "Physalis"
+    },
+    {
+      "old": "c9b35723-f33d-4229-8c8f-56851ca46772.webp",
+      "new": "nefle.webp",
+      "ingredient": "Nèfle"
+    },
+    {
+      "old": "7e2b53f3-2336-4621-84af-1a8b885560bf.webp",
+      "new": "kaki.webp",
+      "ingredient": "Kaki"
+    },
+    {
+      "old": "ca2ced72-aa34-4a7a-bada-7540dca3fc46.webp",
+      "new": "jujube.webp",
+      "ingredient": "Jujube"
+    },
+    {
+      "old": "1f764643-adfa-476e-b960-9493c27a1265.webp",
+      "new": "nashi.webp",
+      "ingredient": "Nashi"
+    },
+    {
+      "old": "3d9b2f88-dea8-44f4-8b0b-af1853adabb9.webp",
+      "new": "lime.webp",
+      "ingredient": "Lime"
+    },
+    {
+      "old": "47c11b18-86cb-468a-8bcc-6dd5a49fb959.webp",
+      "new": "bergamote.webp",
+      "ingredient": "Bergamote"
+    },
+    {
+      "old": "651c4157-5f5c-4e31-abf9-74b216f300f2.webp",
+      "new": "pamplemousse.webp",
+      "ingredient": "Pamplemousse"
+    },
+    {
+      "old": "d822067a-4436-4a4b-92b0-0cf54b926ade.webp",
+      "new": "clementine.webp",
+      "ingredient": "Clémentine"
+    },
+    {
+      "old": "e41c3d8b-7d47-430c-8b7c-625b69479e1b.webp",
+      "new": "mandarine.webp",
+      "ingredient": "Mandarine"
+    },
+    {
+      "old": "3f6764e4-f49f-413a-9b09-5bd239d13a61.webp",
+      "new": "prune.webp",
+      "ingredient": "Prune"
+    },
+    {
+      "old": "292ae475-97d2-460a-aa09-ba3bf467b30f.webp",
+      "new": "figue.webp",
+      "ingredient": "Figue"
+    },
+    {
+      "old": "f42da743-303d-4c4a-ad41-ec41bb02a672.webp",
+      "new": "potimarron.webp",
+      "ingredient": "Potimarron"
+    },
+    {
+      "old": "697517fe-9f92-4ce7-9bed-fee7b3c3b0c4.webp",
+      "new": "rhubarbe.webp",
+      "ingredient": "Rhubarbe"
+    },
+    {
+      "old": "88166dc9-08a2-4d80-bdca-21df08955c7c.webp",
+      "new": "rutabaga.webp",
+      "ingredient": "Rutabaga"
+    },
+    {
+      "old": "3804c9e1-5961-4191-8bb8-f9fa4588e2cc.webp",
+      "new": "topinambour.webp",
+      "ingredient": "Topinambour"
+    },
+    {
+      "old": "db255c30-743d-4838-91e0-f0a36ab6ab66.webp",
+      "new": "potiron.webp",
+      "ingredient": "Potiron"
+    },
+    {
+      "old": "5e0f46fa-837e-4fd1-8875-0f017fe8f6f3.webp",
+      "new": "butternut.webp",
+      "ingredient": "Butternut"
+    },
+    {
+      "old": "fba2f3a6-f4e7-4c3e-a411-d6e65e9404c1.webp",
+      "new": "panais.webp",
+      "ingredient": "Panais"
+    },
+    {
+      "old": "a3a93efd-883f-4e97-9c84-0818c59375d3.webp",
+      "new": "panais-1.webp",
+      "ingredient": "Panais"
+    },
+    {
+      "old": "dfb166c3-0059-4c0e-b813-6433072ff64d.webp",
+      "new": "pak-choi.webp",
+      "ingredient": "Pak choi"
+    },
+    {
+      "old": "f0766302-da83-4f8d-8ca9-61c7bfff5be3.webp",
+      "new": "chou-rouge.webp",
+      "ingredient": "Chou rouge"
+    },
+    {
+      "old": "798bc0c6-3e28-4ad1-968f-8b86f9783b48.webp",
+      "new": "brocoli-romanesco.webp",
+      "ingredient": "Brocoli romanesco"
+    },
+    {
+      "old": "ca3d5341-afc9-4bf8-8ef5-ef7f56469966.webp",
+      "new": "chou-fleur.webp",
+      "ingredient": "Chou-fleur"
+    },
+    {
+      "old": "ddbfa103-5f67-49d8-96ac-ff443dcd2436.webp",
+      "new": "chou-de-bruxelles.webp",
+      "ingredient": "Chou de Bruxelles"
+    },
+    {
+      "old": "f4a36991-eb81-42af-9cf7-4cb602fbfff8.webp",
+      "new": "chou-kale.webp",
+      "ingredient": "Chou kale"
+    },
+    {
+      "old": "9ec3f8eb-1aa2-44e9-a0f1-34e2b5afdef0.webp",
+      "new": "cresson.webp",
+      "ingredient": "Cresson"
+    },
+    {
+      "old": "14adc5ff-3a4d-4f17-b43a-b1417856abc0.webp",
+      "new": "mache.webp",
+      "ingredient": "Mâche"
+    },
+    {
+      "old": "19738a16-91da-4e08-93ad-617b779fab29.webp",
+      "new": "roquette.webp",
+      "ingredient": "Roquette"
+    },
+    {
+      "old": "f9c6e928-dc68-4f4e-86c1-973a83c9a728.webp",
+      "new": "endive.webp",
+      "ingredient": "Endive"
+    },
+    {
+      "old": "bf5fadf9-238b-488f-8627-3d6793ab00bd.webp",
+      "new": "asperge.webp",
+      "ingredient": "Asperge"
+    },
+    {
+      "old": "07ef2697-6ffb-4191-bb74-0f10f68eabbd.webp",
+      "new": "artichaut.webp",
+      "ingredient": "Artichaut"
+    },
+    {
+      "old": "3d2a226d-b62f-4733-84ad-d578efd2ffee.webp",
+      "new": "fenouil.webp",
+      "ingredient": "Fenouil"
+    },
+    {
+      "old": "0fc6fa31-0802-42c9-bc1b-fdd3b6f97653.webp",
+      "new": "celeri.webp",
+      "ingredient": "Céleri"
+    },
+    {
+      "old": "255801fd-db08-47e0-b60f-03d7ff4b253c.webp",
+      "new": "courgette.webp",
+      "ingredient": "Courgette"
+    },
+    {
+      "old": "ff8d4d2b-16fa-4bb9-990a-a5bc7ce5fcfe.webp",
+      "new": "betterave.webp",
+      "ingredient": "Betterave"
+    },
+    {
+      "old": "44edef16-d3fb-40a0-abf6-385010eedae8.webp",
+      "new": "navet.webp",
+      "ingredient": "Navet"
+    },
+    {
+      "old": "7ff6badf-e97c-4c4a-8995-f21684a1de4c.webp",
+      "new": "radis.webp",
+      "ingredient": "Radis"
+    },
+    {
+      "old": "649a64ac-f78b-49fa-b579-bd29b0b4bae4.webp",
+      "new": "courge.webp",
+      "ingredient": "Courge"
+    },
+    {
+      "old": "b2455baa-b2b5-4bd0-9f80-6cf565c4d1b6.webp",
+      "new": "tzatziki.webp",
+      "ingredient": "Tzatziki"
+    },
+    {
+      "old": "0a943f6b-67d6-425b-812a-381e455087a8.webp",
+      "new": "salsa.webp",
+      "ingredient": "Salsa"
+    },
+    {
+      "old": "eec67496-35e3-4b84-88d8-16bcfb924783.webp",
+      "new": "guacamole.webp",
+      "ingredient": "Guacamole"
+    },
+    {
+      "old": "5e985fca-176d-4ee4-a812-eef80bf17f4d.webp",
+      "new": "houmous.webp",
+      "ingredient": "Houmous"
+    },
+    {
+      "old": "d3fa8f03-8649-402d-82c6-0850cc2e435b.webp",
+      "new": "tapenade.webp",
+      "ingredient": "Tapenade"
+    },
+    {
+      "old": "a796d5b3-d254-4c8e-8f7a-7472a50cfbb7.webp",
+      "new": "pesto.webp",
+      "ingredient": "Pesto"
+    },
+    {
+      "old": "07d9093b-da58-4383-ac3c-00f74c9c888f.webp",
+      "new": "sauce-piquante.webp",
+      "ingredient": "Sauce piquante"
+    },
+    {
+      "old": "125c1ce9-f171-4824-bc9b-e6ab51529c6d.webp",
+      "new": "moutarde.webp",
+      "ingredient": "Moutarde"
+    },
+    {
+      "old": "59a67529-f2a1-49be-ab87-44dbdccb3e84.webp",
+      "new": "sauce-soja.webp",
+      "ingredient": "Sauce soja"
+    },
+    {
+      "old": "4ed87d99-6be2-4442-9bc9-6b0dc98cef7c.webp",
+      "new": "sauce-teriyaki.webp",
+      "ingredient": "Sauce teriyaki"
+    },
+    {
+      "old": "e36c1257-7174-418c-be80-dad96ae4356a.webp",
+      "new": "sauce-worcestershire.webp",
+      "ingredient": "Sauce Worcestershire"
+    },
+    {
+      "old": "e11d2bed-f488-4575-9342-ac6a8237369a.webp",
+      "new": "mayonnaise.webp",
+      "ingredient": "Mayonnaise"
+    },
+    {
+      "old": "67b6de9e-e928-49c2-bc11-e7c561b0741b.webp",
+      "new": "ketchup.webp",
+      "ingredient": "Ketchup"
+    },
+    {
+      "old": "6fb4abc6-620e-4524-a921-5d36ea0bd8ce.webp",
+      "new": "agar-agar.webp",
+      "ingredient": "Agar-agar"
+    },
+    {
+      "old": "e3f2a01e-da55-4a06-a94c-d4424d7a53c7.webp",
+      "new": "gelatine.webp",
+      "ingredient": "Gélatine"
+    },
+    {
+      "old": "85a6df21-31ec-4cd1-9d74-fb76a5380608.webp",
+      "new": "pavot.webp",
+      "ingredient": "Pavot"
+    },
+    {
+      "old": "cd906675-3d7e-4038-9e5e-35b63f7630fe.webp",
+      "new": "farine.webp",
+      "ingredient": "Farine"
+    },
+    {
+      "old": "0e7e9d6b-c674-4187-8b35-9aa62d56f97d.webp",
+      "new": "levure.webp",
+      "ingredient": "Levure"
+    },
+    {
+      "old": "75708c6c-682d-47c0-8484-462d081cbbd3.webp",
+      "new": "bicarbonate.webp",
+      "ingredient": "Bicarbonate"
+    },
+    {
+      "old": "6d989b00-8e66-4080-9cca-f89139d4a1c1.webp",
+      "new": "sesame.webp",
+      "ingredient": "Sésame"
+    },
+    {
+      "old": "261df294-3844-4c7b-9bd0-eb172288f4ff.webp",
+      "new": "graine-de-tournesol.webp",
+      "ingredient": "Graine de tournesol"
+    },
+    {
+      "old": "4fcbf840-0ede-42a7-9312-68e6b9c77739.webp",
+      "new": "graine-de-courge.webp",
+      "ingredient": "Graine de courge"
+    },
+    {
+      "old": "66e670fe-2d4f-494f-a2dd-2ba54a9353f1.webp",
+      "new": "graine-de-lin.webp",
+      "ingredient": "Graine de lin"
+    },
+    {
+      "old": "2a3bbb0a-bd0d-4122-b131-1d6750e1b455.webp",
+      "new": "algue-nori.webp",
+      "ingredient": "Algue nori"
+    },
+    {
+      "old": "fb581230-9e3e-4e50-b175-87a48cbdab24.webp",
+      "new": "wakame.webp",
+      "ingredient": "Wakame"
+    },
+    {
+      "old": "4cfc6b6a-5097-4ed3-b411-2cbf923433f5.webp",
+      "new": "kombu.webp",
+      "ingredient": "Kombu"
+    },
+    {
+      "old": "6e88b427-a8ad-4cc3-acf7-9a2346037582.webp",
+      "new": "graine-de-chia.webp",
+      "ingredient": "Graine de chia"
+    },
+    {
+      "old": "8eadbfa7-3eaa-49b7-8178-14a376612f64.webp",
+      "new": "seitan.webp",
+      "ingredient": "Seitan"
+    },
+    {
+      "old": "b1e96bca-5593-497e-9fe7-8e54ffdab25c.webp",
+      "new": "tempeh.webp",
+      "ingredient": "Tempeh"
+    },
+    {
+      "old": "22b95c64-ab6c-4e15-8fef-cc05ec442b00.webp",
+      "new": "tofu.webp",
+      "ingredient": "Tofu"
+    },
+    {
+      "old": "66be1a2a-ca74-4951-b9f1-563c4cd9e3a1.webp",
+      "new": "pousses-de-soja.webp",
+      "ingredient": "Pousses de soja"
+    },
+    {
+      "old": "ccf8ff66-f8c6-407e-a302-db755adda0c5.webp",
+      "new": "soja.webp",
+      "ingredient": "Soja"
+    },
+    {
+      "old": "2928a23f-31eb-456a-94a8-382fd5e09b3a.webp",
+      "new": "feves.webp",
+      "ingredient": "Fèves"
+    },
+    {
+      "old": "70c4185d-c1ae-494e-b85c-62782fc29671.webp",
+      "new": "petits-pois.webp",
+      "ingredient": "Petits pois"
+    },
+    {
+      "old": "5fa9ef9f-5dbf-469a-8304-e601686abd03.webp",
+      "new": "haricots-verts.webp",
+      "ingredient": "Haricots verts"
+    },
+    {
+      "old": "d2ff681f-f100-40d5-a0b7-3787db1a0215.webp",
+      "new": "lentilles.webp",
+      "ingredient": "Lentilles"
+    },
+    {
+      "old": "bafde2b4-f946-47c8-a21c-8727c09c3c61.webp",
+      "new": "pois-chiches.webp",
+      "ingredient": "Pois chiches"
+    },
+    {
+      "old": "048edf82-849b-46fd-ad8a-01a265b6becc.webp",
+      "new": "haricots-rouges.webp",
+      "ingredient": "Haricots rouges"
+    },
+    {
+      "old": "fffc41a0-6c41-40c5-8eb3-5136d785752a.webp",
+      "new": "haricots-blancs.webp",
+      "ingredient": "Haricots blancs"
+    },
+    {
+      "old": "db60c342-df2b-4760-9727-75c7120e794d.webp",
+      "new": "boulgour.webp",
+      "ingredient": "Boulgour"
+    },
+    {
+      "old": "ae496f06-2fb5-459e-93a9-1f9c4163760f.webp",
+      "new": "quinoa.webp",
+      "ingredient": "Quinoa"
+    },
+    {
+      "old": "0cd1345a-58cb-4568-97b6-44f2892a58e7.webp",
+      "new": "pignon.webp",
+      "ingredient": "Pignon"
+    },
+    {
+      "old": "88c3441f-c46b-4733-a935-b29c502ca65d.webp",
+      "new": "cajou.webp",
+      "ingredient": "Cajou"
+    },
+    {
+      "old": "edd506db-d708-4506-b668-07b3634e0dbb.webp",
+      "new": "noisette.webp",
+      "ingredient": "Noisette"
+    },
+    {
+      "old": "6080c0c4-9d96-40ad-9db3-aef42514da12.webp",
+      "new": "noix.webp",
+      "ingredient": "Noix"
+    },
+    {
+      "old": "c3150a9f-5146-4ad7-b50c-8783fdc815e0.webp",
+      "new": "cacahuete.webp",
+      "ingredient": "Cacahuète"
+    },
+    {
+      "old": "a0f06f57-f42d-4fb2-8ca3-aecd6c676ad6.webp",
+      "new": "pistache.webp",
+      "ingredient": "Pistache"
+    },
+    {
+      "old": "9aa82330-68fb-4fd6-a7bf-70f6e9a785f5.webp",
+      "new": "amande.webp",
+      "ingredient": "Amande"
+    },
+    {
+      "old": "07b19a5a-0490-42c9-9bae-2c1902a7893c.webp",
+      "new": "the.webp",
+      "ingredient": "Thé"
+    },
+    {
+      "old": "db543f9f-3452-498b-9c7d-88cf02e68594.webp",
+      "new": "cafe.webp",
+      "ingredient": "Café"
+    },
+    {
+      "old": "bf4b4432-a5e3-44de-bf65-9c2b357be549.webp",
+      "new": "cacao.webp",
+      "ingredient": "Cacao"
+    },
+    {
+      "old": "beccaa70-6e57-4463-b134-4cc2eaa28c81.webp",
+      "new": "chocolat-blanc.webp",
+      "ingredient": "Chocolat blanc"
+    },
+    {
+      "old": "b20b4977-66b2-42db-9e8f-042bd5d0a726.webp",
+      "new": "chocolat-au-lait.webp",
+      "ingredient": "Chocolat au lait"
+    },
+    {
+      "old": "7b38fd18-6e5a-481a-ba50-bdde506d3d53.webp",
+      "new": "chocolat-noir.webp",
+      "ingredient": "Chocolat noir"
+    },
+    {
+      "old": "7005c45a-5bf4-4c95-ba92-a39cec403f13.webp",
+      "new": "gousse-de-vanille.webp",
+      "ingredient": "Gousse de vanille"
+    },
+    {
+      "old": "30e6db31-17ef-4e90-955d-731d09d9b6d8.webp",
+      "new": "cumin.webp",
+      "ingredient": "Cumin"
+    },
+    {
+      "old": "6c1d06ef-b506-4c25-8823-214f986653e3.webp",
+      "new": "curry.webp",
+      "ingredient": "Curry"
+    },
+    {
+      "old": "ccd14fa5-f92e-42fd-a4ce-2566c7bbf366.webp",
+      "new": "safran.webp",
+      "ingredient": "Safran"
+    },
+    {
+      "old": "2837c6f6-fc99-44cd-a582-b887a29923f7.webp",
+      "new": "cannelle.webp",
+      "ingredient": "Cannelle"
+    },
+    {
+      "old": "a0f2e185-1489-4158-8984-30ed59b3e797.webp",
+      "new": "paprika.webp",
+      "ingredient": "Paprika"
+    },
+    {
+      "old": "de108a91-741d-45db-b0a9-ac6fc499d7ac.webp",
+      "new": "poivron-1.webp",
+      "ingredient": "Poivron"
+    },
+    {
+      "old": "5737ab81-1a34-4841-a73e-e7ee2c38f721.webp",
+      "new": "sel.webp",
+      "ingredient": "Sel"
+    },
+    {
+      "old": "ec90a0cb-1e6a-4406-bcc9-b7b7dc08010e.webp",
+      "new": "sucre.webp",
+      "ingredient": "Sucre"
+    },
+    {
+      "old": "e3f5e780-8dea-42d6-a056-a3097760abd3.webp",
+      "new": "miel.webp",
+      "ingredient": "Miel"
+    },
+    {
+      "old": "f8d4e222-74df-4d09-97bf-a9481accd6b4.webp",
+      "new": "vinaigre.webp",
+      "ingredient": "Vinaigre"
+    },
+    {
+      "old": "50753108-1128-4b16-8b14-0930a9bcff43.webp",
+      "new": "huile-de-tournesol.webp",
+      "ingredient": "Huile de tournesol"
+    },
+    {
+      "old": "c509075f-6c7a-4a3c-b887-bb1faaba128b.webp",
+      "new": "huile-dolive.webp",
+      "ingredient": "Huile d'olive"
+    },
+    {
+      "old": "cd100abe-c5a5-4bd1-a6ef-80553215406c.webp",
+      "new": "feta.webp",
+      "ingredient": "Feta"
+    },
+    {
+      "old": "89735833-e3a2-48d8-b0f0-3fa60c01da6d.webp",
+      "new": "chevre.webp",
+      "ingredient": "Chèvre"
+    },
+    {
+      "old": "d5b3b31b-b53c-4037-9843-a9423ede689f.webp",
+      "new": "roquefort.webp",
+      "ingredient": "Roquefort"
+    },
+    {
+      "old": "1544f105-7734-4889-a3f1-1bb28cb37b0a.webp",
+      "new": "camembert.webp",
+      "ingredient": "Camembert"
+    },
+    {
+      "old": "14b8b6fc-4999-4424-9483-2f5a29f019a8.webp",
+      "new": "parmesan.webp",
+      "ingredient": "Parmesan"
+    },
+    {
+      "old": "17fc7eac-6730-49e2-9d95-0863451cbbd5.webp",
+      "new": "mozzarella.webp",
+      "ingredient": "Mozzarella"
+    },
+    {
+      "old": "e89c27f4-a29a-47d0-bbe0-07ff9a9a043a.webp",
+      "new": "feta-1.webp",
+      "ingredient": "Feta"
+    },
+    {
+      "old": "a5b9ee42-5fbd-4771-a8cc-a089e5268378.webp",
+      "new": "gruyere.webp",
+      "ingredient": "Gruyère"
+    },
+    {
+      "old": "ae716b30-7088-4033-b140-57b6465f0605.webp",
+      "new": "creme-fraiche-1.webp",
+      "ingredient": "Crème fraîche"
+    },
+    {
+      "old": "5ba4f694-1b82-436f-9d2d-cae3382ac7ee.webp",
+      "new": "parmesan-1.webp",
+      "ingredient": "Parmesan"
+    },
+    {
+      "old": "e7a3c5df-f0d2-43ff-84b7-fac4979f1d39.webp",
+      "new": "cheddar.webp",
+      "ingredient": "Cheddar"
+    },
+    {
+      "old": "5a6e4818-2a78-44d6-b13d-13548bcccb8e.webp",
+      "new": "yaourt.webp",
+      "ingredient": "Yaourt"
+    },
+    {
+      "old": "f5afbd31-8faa-4a74-a3f1-13df7bd20522.webp",
+      "new": "beurre.webp",
+      "ingredient": "Beurre"
+    },
+    {
+      "old": "b22d83d0-dd8c-49e5-ac89-8036317d1774.webp",
+      "new": "lait.webp",
+      "ingredient": "Lait"
+    },
+    {
+      "old": "88034e5d-4be8-4e67-89a7-d2611ba9db55.webp",
+      "new": "poulpe.webp",
+      "ingredient": "Poulpe"
+    },
+    {
+      "old": "c51aac64-d4bb-4c94-9d71-0a49f3cd0b7c.webp",
+      "new": "calamar.webp",
+      "ingredient": "Calamar"
+    },
+    {
+      "old": "5725f945-9d52-434d-ad47-ca8942d4684c.webp",
+      "new": "crabe.webp",
+      "ingredient": "Crabe"
+    },
+    {
+      "old": "b55a57f5-6376-4f67-9194-2efb17b71f74.webp",
+      "new": "homard.webp",
+      "ingredient": "Homard"
+    },
+    {
+      "old": "09bf05c8-6882-4716-aa57-85243cc07468.webp",
+      "new": "moule.webp",
+      "ingredient": "Moule"
+    },
+    {
+      "old": "11fd05af-13a6-4d31-9ede-e09bd9b80189.webp",
+      "new": "huitre.webp",
+      "ingredient": "Huître"
+    },
+    {
+      "old": "9954e7c0-0ab3-49e4-9cb1-99405b1bae90.webp",
+      "new": "anchois.webp",
+      "ingredient": "Anchois"
+    },
+    {
+      "old": "6a091758-0631-4030-9448-39694a892531.webp",
+      "new": "sardine.webp",
+      "ingredient": "Sardine"
+    },
+    {
+      "old": "54f92ec3-6e31-4b0c-82f4-4b9536b1c5c2.webp",
+      "new": "truite.webp",
+      "ingredient": "Truite"
+    },
+    {
+      "old": "e0bbff6d-e265-495a-b7fa-8957c6a635ac.webp",
+      "new": "cabillaud.webp",
+      "ingredient": "Cabillaud"
+    },
+    {
+      "old": "1385f05b-f4e4-4e68-b28d-5c5966307e42.webp",
+      "new": "thon.webp",
+      "ingredient": "Thon"
+    },
+    {
+      "old": "aeddb4c7-9be2-4771-86a6-96c2b978a5c8.webp",
+      "new": "canard.webp",
+      "ingredient": "Canard"
+    },
+    {
+      "old": "022e9a7a-83b8-48d8-8854-f4df653db0ed.webp",
+      "new": "agneau.webp",
+      "ingredient": "Agneau"
+    },
+    {
+      "old": "1d0567d4-faaf-4940-8f94-165f564448dd.webp",
+      "new": "cote-de-porc.webp",
+      "ingredient": "Côte de porc"
+    },
+    {
+      "old": "5802117d-47f2-4495-9f0d-badc0278d6ec.webp",
+      "new": "tourteau-1.webp",
+      "ingredient": "Tourteau"
+    },
+    {
+      "old": "97d47601-3cc4-416e-8d9a-693c1847f9ef.webp",
+      "new": "saucisse.webp",
+      "ingredient": "Saucisse"
+    },
+    {
+      "old": "ef80fe9d-954b-4041-949c-ecad652495cd.webp",
+      "new": "jambon.webp",
+      "ingredient": "Jambon"
+    },
+    {
+      "old": "aea804d2-df47-4356-85d1-fdb92c736ec7.webp",
+      "new": "agneau-1.webp",
+      "ingredient": "Agneau"
+    },
+    {
+      "old": "814c1104-209e-489d-9405-0f2fcf37c85d.webp",
+      "new": "dinde.webp",
+      "ingredient": "Dinde"
+    },
+    {
+      "old": "e6dcdcc9-84df-4b64-afc1-6c9b6c77b3e3.webp",
+      "new": "bacon.webp",
+      "ingredient": "Bacon"
+    },
+    {
+      "old": "b6a2a302-a3c2-49b5-afeb-121439be27fb.webp",
+      "new": "gaufre.webp",
+      "ingredient": "Gaufre"
+    },
+    {
+      "old": "588b8fc9-a53b-4adf-b180-be759c15d75d.webp",
+      "new": "agneau-2.webp",
+      "ingredient": "Agneau"
+    },
+    {
+      "old": "be80a709-f4cf-41b1-9233-f52ddec2a50e.webp",
+      "new": "mais.webp",
+      "ingredient": "Maïs"
+    },
+    {
+      "old": "c70083da-eddd-489c-b6c2-56f9e6cd704c.webp",
+      "new": "gingembre.webp",
+      "ingredient": "Gingembre"
+    },
+    {
+      "old": "adfbf886-f45f-4519-bd5e-b7dc52c37ffd.webp",
+      "new": "gaufre-1.webp",
+      "ingredient": "Gaufre"
+    },
+    {
+      "old": "3f3680b2-873a-401c-aae1-2d0d9e358af8.webp",
+      "new": "patate-douce.webp",
+      "ingredient": "Patate douce"
+    },
+    {
+      "old": "ce0262aa-2194-4f97-9e9b-e092d0883a56.webp",
+      "new": "romarin.webp",
+      "ingredient": "Romarin"
+    },
+    {
+      "old": "ffe09e8e-0bf0-4929-b9d3-8ef454784dc3.webp",
+      "new": "gingembre-1.webp",
+      "ingredient": "Gingembre"
+    },
+    {
+      "old": "a084a692-e2a6-4bc0-b9de-abb213cb6666.webp",
+      "new": "piment.webp",
+      "ingredient": "Piment"
+    },
+    {
+      "old": "a56e5928-a573-4515-9843-454099c5c450.webp",
+      "new": "pomme-de-terre.webp",
+      "ingredient": "Pomme de terre"
+    },
+    {
+      "old": "e9e9dcb1-26d8-4dc1-abf4-99aadfbf9c24.webp",
+      "new": "crepe.webp",
+      "ingredient": "Crêpe"
+    },
+    {
+      "old": "98bb6a27-e749-4861-a237-fce47fb333b4.webp",
+      "new": "bagel.webp",
+      "ingredient": "Bagel"
+    },
+    {
+      "old": "76b66367-3fac-4e8e-b35b-fafe337cb748.webp",
+      "new": "croissant.webp",
+      "ingredient": "Croissant"
+    },
+    {
+      "old": "657751ba-9391-4f7e-b855-d8d04d21e7ff.webp",
+      "new": "baguette.webp",
+      "ingredient": "Baguette"
+    },
+    {
+      "old": "360a9c4c-3c0a-42e4-bd32-869671b5b8ba.webp",
+      "new": "pain.webp",
+      "ingredient": "Pain"
+    },
+    {
+      "old": "d16d04fe-0f79-4b47-9397-0c61ff30e619.webp",
+      "new": "menthe.webp",
+      "ingredient": "Menthe"
+    },
+    {
+      "old": "35d0e8d1-160a-42ed-83ed-c5cecc6c30e8.webp",
+      "new": "thym.webp",
+      "ingredient": "Thym"
+    },
+    {
+      "old": "8e61cc0f-b6ac-4053-88c3-c90fd459f99d.webp",
+      "new": "coriandre.webp",
+      "ingredient": "Coriandre"
+    },
+    {
+      "old": "2fa7be76-8364-4134-a0a3-cb3a8ab526ce.webp",
+      "new": "persil.webp",
+      "ingredient": "Persil"
+    },
+    {
+      "old": "cf5db04b-73e3-4e17-8c64-5afe93e9009a.webp",
+      "new": "chou.webp",
+      "ingredient": "Chou"
+    },
+    {
+      "old": "023e64e2-d876-4b86-bd83-6b2c54cf3c6d.webp",
+      "new": "basilic.webp",
+      "ingredient": "Basilic"
+    },
+    {
+      "old": "715c55c7-cb9d-4029-abe8-1c187adfe7ef.webp",
+      "new": "epinards.webp",
+      "ingredient": "Épinards"
+    },
+    {
+      "old": "bb3a381b-fb5f-4425-859d-997590a1e333.webp",
+      "new": "concombre.webp",
+      "ingredient": "Concombre"
+    },
+    {
+      "old": "6346f3dd-4b5f-49f0-ab67-29cf08903d81.webp",
+      "new": "aubergine.webp",
+      "ingredient": "Aubergine"
+    },
+    {
+      "old": "46ba0f50-cc8c-4e4e-9a14-00d544c64ba0.webp",
+      "new": "patate-douce-1.webp",
+      "ingredient": "Patate douce"
+    },
+    {
+      "old": "9628d7cd-ffd4-4d18-97b5-61a8501830e5.webp",
+      "new": "noix-de-coco.webp",
+      "ingredient": "Noix de coco"
+    },
+    {
+      "old": "92a422e3-3860-4bc3-9614-3136408a19d0.webp",
+      "new": "mangue.webp",
+      "ingredient": "Mangue"
+    },
+    {
+      "old": "6e9c976d-ef55-4ec8-bafc-e9b3e99100d7.webp",
+      "new": "kiwi.webp",
+      "ingredient": "Kiwi"
+    },
+    {
+      "old": "aa2c3f91-9a70-48c5-927e-1dd572d09268.webp",
+      "new": "ananas.webp",
+      "ingredient": "Ananas"
+    },
+    {
+      "old": "3b3f2cdf-5d3a-47cd-89b3-61698a4a80f6.webp",
+      "new": "cerise.webp",
+      "ingredient": "Cerise"
+    },
+    {
+      "old": "cf2ad863-7bcd-4d93-ade7-3275b73066a2.webp",
+      "new": "peche.webp",
+      "ingredient": "Pêche"
+    }
+  ]
+}

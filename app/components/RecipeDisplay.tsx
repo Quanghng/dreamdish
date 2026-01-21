@@ -17,6 +17,7 @@ interface RecipeDisplayProps {
   onClose: () => void;
   onSaveToCookbook?: () => void;
   isSaved?: boolean;
+  variant?: 'modal' | 'page';
 }
 
 type TabType = 'recipe' | 'nutrition' | 'pairing';
@@ -28,7 +29,8 @@ export default function RecipeDisplay({
   drinkPairings,
   onClose,
   onSaveToCookbook,
-  isSaved = false
+  isSaved = false,
+  variant = 'modal'
 }: RecipeDisplayProps) {
   const [activeTab, setActiveTab] = useState<TabType>('recipe');
   const [checkedSteps, setCheckedSteps] = useState<Set<number>>(new Set());
@@ -91,9 +93,17 @@ export default function RecipeDisplay({
 
   const totalTime = recipe.prepTime + recipe.cookTime;
 
+  const isModal = variant === 'modal';
+  const overlayClassName = isModal
+    ? 'fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto'
+    : 'w-full';
+  const cardClassName = isModal
+    ? 'bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[95vh] overflow-hidden flex flex-col'
+    : 'bg-white rounded-3xl shadow-2xl max-w-4xl w-full overflow-hidden flex flex-col';
+
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[95vh] overflow-hidden flex flex-col">
+    <div className={overlayClassName}>
+      <div className={cardClassName}>
         {/* Header avec image */}
         <div className="relative h-64 flex-shrink-0">
           <img
