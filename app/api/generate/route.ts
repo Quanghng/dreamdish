@@ -5,9 +5,11 @@
 
 import { NextResponse } from 'next/server';
 import { mistralClient } from '@/lib/mistral';
-import { MISTRAL_CONFIG, SYSTEM_PROMPT } from '@/config/mistral.config';
+import { mistralConfig } from '@/config/mistral.config';
 import { formatIngredientsList } from '@/lib/utils';
 import type { GeneratePromptRequest, GeneratePromptResponse } from '@/types';
+
+const SYSTEM_PROMPT = "Tu es un chef expert et photographe culinaire. Ton but est de créer des descriptions visuelles alléchantes.";
 
 export async function POST(request: Request) {
   try {
@@ -37,17 +39,19 @@ original utilisant ces ingrédients : ${ingredientsList}.
 Le style de présentation doit être ${style}.`;
 
     // Configuration du modèle
-    const config = options || MISTRAL_CONFIG.PROMPT_GENERATION;
+    const model = options?.model || mistralConfig.models.promptGeneration;
+    const temperature = options?.temperature ?? mistralConfig.generation.temperature;
+    const maxTokens = options?.maxTokens ?? mistralConfig.generation.maxTokens;
 
     // Appel à l'API Mistral
     const response = await mistralClient.chat.complete({
-      model: config.model as string,
+      model: model as string,
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user', content: userPrompt },
       ],
-      temperature: config.temperature,
-      maxTokens: config.maxTokens,
+      temperature: temperature,
+      maxTokens: maxTokens,
     });
 
     // Extraction du contenu généré
@@ -61,13 +65,13 @@ Le style de présentation doit être ${style}.`;
     const promptText = typeof generatedPrompt === 'string'
       ? generatedPrompt
       : generatedPrompt
-          .map((chunk: unknown) => {
-            if (chunk && typeof chunk === 'object' && 'text' in chunk) {
-              return String((chunk as { text?: string }).text || '');
-            }
-            return '';
-          })
-          .join('');
+        .map((chunk: unknown) => {
+          if (chunk && typeof chunk === 'object' && 'text' in chunk) {
+            return String((chunk as { text?: string }).text || '');
+          }
+          return '';
+        })
+        .join('');
 
     // Construction de la réponse
     const responseData: GeneratePromptResponse = {
@@ -80,9 +84,9 @@ Le style de présentation doit être ${style}.`;
 
   } catch (error) {
     console.error('Erreur lors de la génération du prompt:', error);
-    
+
     return NextResponse.json(
-      { 
+      {
         error: 'Une erreur est survenue lors de la génération du prompt',
         details: error instanceof Error ? error.message : 'Erreur inconnue'
       },

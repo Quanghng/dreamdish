@@ -583,9 +583,6 @@ export default function Home() {
                   ✕
                 </button>
               </div>
-              <p className="text-sm text-amber-600 mt-1">
-                Généré avec {generateResult.model} • {generateResult.tokensUsed} tokens
-              </p>
             </div>
             <div className="p-6 overflow-y-auto max-h-[70vh]">
               {/* Generated Image */}

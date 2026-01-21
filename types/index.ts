@@ -27,6 +27,9 @@ export interface GeneratePromptResponse {
   prompt: string;
   ingredients: string[];
   timestamp: number;
+  model?: string;
+  tokensUsed?: number;
+  generatedAt?: string;
 }
 
 // Styles culinaires disponibles
@@ -72,6 +75,7 @@ export interface GenerateFullRequest {
   style?: CulinaryStyle;
   presentation?: PresentationStyle;
   filters?: FilterSelection;
+  additionalContext?: string;
 }
 
 // Sélection des filtres culinaires
@@ -221,8 +225,8 @@ export interface GenerateRecipeResponse {
 // ============================================
 // Prompt construit
 export interface BuiltPrompt {
-  systemPrompt: string;
-  userPrompt: string;
+  system: string;
+  user: string;
   metadata: {
     style: CulinaryStyle;
     presentation: PresentationStyle;
@@ -233,11 +237,18 @@ export interface BuiltPrompt {
 // Codes d'erreur AI
 export type AIErrorCode =
   | 'RATE_LIMIT'
+  | 'RATE_LIMITED'
   | 'INVALID_API_KEY'
+  | 'AUTH_ERROR'
+  | 'MODEL_NOT_FOUND'
   | 'MODEL_UNAVAILABLE'
+  | 'INVALID_REQUEST'
+  | 'EMPTY_RESPONSE'
+  | 'MODERATION_FAILED'
   | 'CONTENT_FILTERED'
   | 'TIMEOUT'
   | 'NETWORK_ERROR'
+  | 'SERVER_ERROR'
   | 'UNKNOWN';
 
 // Erreur AI structurée
@@ -250,6 +261,12 @@ export interface AIError extends Error {
 // Statut de santé AI
 export interface AIHealthStatus {
   status: 'healthy' | 'degraded' | 'unhealthy';
+  checks?: {
+    mistralConnection: boolean;
+    apiKeyValid: boolean;
+    moderationEnabled: boolean;
+    suggestionsEnabled: boolean;
+  };
   mistral: {
     connected: boolean;
     latency?: number;
@@ -259,8 +276,12 @@ export interface AIHealthStatus {
     provider: string;
   };
   metrics?: {
-    totalRequests: number;
-    successRate: number;
-    averageLatency: number;
+    totalRequests: number; // Required
+    successRate: number;   // Required
+    averageLatency: number; // Required
+    tokenUsage?: { total: number; average: number } | unknown;
+    recentRequests?: number;
+    suggestionsCache?: { size: number; oldestEntry: number | null } | unknown;
   };
+  timestamp?: string;
 }

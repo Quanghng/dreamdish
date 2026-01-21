@@ -1,4 +1,5 @@
 import type { DefaultSession, DefaultUser } from 'next-auth';
+import type { JWT } from 'next-auth/jwt';
 
 declare module 'next-auth' {
   interface Session {
@@ -7,7 +8,8 @@ declare module 'next-auth' {
       firstName?: string | null;
       lastName?: string | null;
       avatarUrl?: string | null;
-      preferences?: Record<string, unknown>;
+      // Allow flexible types here to handle parsed JSON
+      preferences?: Record<string, unknown> | null;
     } & DefaultSession['user'];
   }
 
@@ -15,7 +17,19 @@ declare module 'next-auth' {
     firstName?: string | null;
     lastName?: string | null;
     avatarUrl?: string | null;
-    preferences?: Record<string, unknown> | null;
+    // Allow string here because Prisma might return raw JSON string
+    // or we might pass it as a string to the token
+    preferences?: string | Record<string, unknown> | null;
     passwordHash?: string | null;
+  }
+}
+
+declare module 'next-auth/jwt' {
+  interface JWT {
+    id: string;
+    firstName?: string | null;
+    lastName?: string | null;
+    avatarUrl?: string | null;
+    preferences?: string | Record<string, unknown> | null;
   }
 }

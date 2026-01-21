@@ -55,8 +55,8 @@ export function buildVisualPrompt(options: PromptBuilderOptions): BuiltPrompt {
   }
 
   return {
-    systemPrompt: systemPrompt,
-    userPrompt: userPrompt,
+    system: systemPrompt,
+    user: userPrompt,
     metadata: {
       ingredientCount: ingredients.length,
       style,

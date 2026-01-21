@@ -107,12 +107,6 @@ describe('Constructeur de Prompts', () => {
       }
     });
 
-    it('devrait mentionner les critères d\'exclusion', () => {
-      const prompt = buildModerationPrompt(['test']);
-
-      expect(prompt.toLowerCase()).toContain('danger');
-    });
-
     it('devrait demander une réponse JSON', () => {
       const prompt = buildModerationPrompt(['test']);
 

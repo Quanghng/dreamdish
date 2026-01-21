@@ -49,6 +49,7 @@ export async function GET() {
     tokenUsage,
     recentRequests: recentMetrics.length,
     suggestionsCache: cacheStats,
+    totalRequests: recentMetrics.length + cacheStats.size,
   };
 
   // Détermination du statut global
@@ -64,6 +65,13 @@ export async function GET() {
   const healthResponse: AIHealthStatus = {
     status,
     checks,
+    mistral: {
+      connected: mistralConnection,
+    },
+    imageGeneration: {
+      available: true,
+      provider: 'huggingface',
+    },
     metrics,
     timestamp: new Date().toISOString(),
   };
