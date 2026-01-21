@@ -231,6 +231,59 @@ export default function Home() {
         return false;
       }
     }
+    
+    // Exclusions basées sur le régime alimentaire
+    if (filterSelection.regime) {
+      const regime = filterSelection.regime.toLowerCase();
+      const ingredientTags = ingredient.tags?.map(t => t.toLowerCase()) || [];
+      
+      // Si vegan: exclure viande, poisson, produit laitier, et tout ce qui n'a pas le tag vegan
+      if (regime === 'vegan') {
+        const excludedCategories = ['viande', 'poisson', 'produit laitier'];
+        const hasExcludedCategory = excludedCategories.some(cat => ingredientTags.includes(cat));
+        if (hasExcludedCategory || !ingredientTags.includes('vegan')) {
+          return false;
+        }
+      }
+      
+      // Si végétarien: exclure viande et poisson
+      if (regime === 'végétarien') {
+        const excludedCategories = ['viande', 'poisson'];
+        const hasExcludedCategory = excludedCategories.some(cat => ingredientTags.includes(cat));
+        if (hasExcludedCategory) {
+          return false;
+        }
+      }
+      
+      // Si sans gluten: exclure tout ce qui n'a pas le tag "sans gluten"
+      if (regime === 'sans gluten') {
+        if (!ingredientTags.includes('sans gluten')) {
+          return false;
+        }
+      }
+      
+      // Si sans lactose: exclure tout ce qui n'a pas le tag "sans lactose"
+      if (regime === 'sans lactose') {
+        if (!ingredientTags.includes('sans lactose')) {
+          return false;
+        }
+      }
+      
+      // Si halal: exclure les ingrédients sans le tag halal qui sont de la viande
+      if (regime === 'halal') {
+        if (ingredientTags.includes('viande') && !ingredientTags.includes('halal')) {
+          return false;
+        }
+      }
+      
+      // Si casher: exclure les ingrédients sans le tag casher qui sont de la viande
+      if (regime === 'casher') {
+        if (ingredientTags.includes('viande') && !ingredientTags.includes('casher')) {
+          return false;
+        }
+      }
+    }
+    
     return true;
   });
 
