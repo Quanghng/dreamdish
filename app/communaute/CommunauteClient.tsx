@@ -72,20 +72,20 @@ export default function CommunauteClient({
       )}
     >
       <div className="min-h-screen bg-gradient-to-b from-amber-50 via-orange-50 to-white">
-        <main className="pt-32 pb-24 max-w-7xl mx-auto px-6">
-          <div className="mb-10">
-            <h1 className="text-5xl font-bold text-amber-900">Communauté</h1>
-            <p className="mt-3 text-amber-700">
+        <main className="pt-28 sm:pt-32 pb-20 sm:pb-24 max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="mb-8 sm:mb-10">
+            <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-amber-950">Communauté</h1>
+            <p className="mt-3 text-amber-700 text-sm sm:text-base">
               Découvrez les plats créés par tous les utilisateurs.
             </p>
 
-            <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
+            <div className="mt-5 sm:mt-6 flex flex-wrap items-center justify-between gap-4">
               <CommunityCategoryFilter
                 categories={categories}
                 selected={selectedCategory}
                 uncategorizedToken={uncategorizedToken}
               />
-              <div className="flex flex-wrap items-center gap-2 text-sm text-amber-600">
+              <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-amber-600">
                 <span className="inline-flex items-center rounded-full border border-amber-200 bg-white/70 px-3 py-1 font-semibold text-amber-800">
                   {entries.length} plat{entries.length > 1 ? 's' : ''}
                 </span>

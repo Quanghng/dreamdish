@@ -562,23 +562,24 @@ export default function Home() {
         />
       )}
 
-      <main className="flex flex-col items-center justify-center min-h-screen pt-32 pb-48">
-        <h1 className="text-7xl font-bold text-amber-900 mb-16 text-center">
-          Crée ton plat de rêve
-        </h1>
-        
+      <main className="flex flex-col items-center justify-center min-h-screen pt-36 sm:pt-40 pb-40 sm:pb-48 px-4">
         <div 
-          className="w-full max-w-7xl mb-20"
+          className="relative w-full max-w-7xl mb-24 sm:mb-32 pt-20 sm:pt-24"
           style={{
             perspective: '900px',
             perspectiveOrigin: 'center top'
           }}
         >
+          <h1 className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 text-3xl sm:text-5xl lg:text-6xl font-extrabold italic tracking-tight text-amber-900 drop-shadow-sm text-center whitespace-nowrap z-10">
+            Crée ton plat de rêve
+          </h1>
           <div 
-            className="grid grid-cols-5 gap-6"
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6"
             style={{
-              transform: 'rotateX(45deg)',
-              transformStyle: 'preserve-3d'
+              transform: 'rotateX(35deg)',
+              transformStyle: 'preserve-3d',
+              WebkitMaskImage: 'linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%)',
+              maskImage: 'linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%)',
             }}
           >
             {dishes.map((dish, index) => (
@@ -592,18 +593,18 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="w-full bg-black py-12 mb-8 relative z-10">
-          <h2 className="text-4xl font-bold text-white text-center">
+        <div className="w-full bg-gradient-to-r from-amber-200 via-orange-200 to-amber-300 py-5 sm:py-6 mt-2 mb-4 rounded-2xl shadow-md relative z-10">
+          <h2 className="text-lg sm:text-2xl font-extrabold text-amber-950 text-center px-4">
             Choisissez parmi des centaines d&apos;ingrédients
           </h2>
         </div>
         
-        <section className="w-full max-w-7xl mx-auto px-8 py-20">
+        <section className="w-full max-w-7xl mx-auto px-4 sm:px-8 pt-10 pb-16 sm:pt-12 sm:pb-20">
           <div className="mb-12">
             <FilterBar value={filterSelection} onValueChange={handleFilterSelection} />
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
             {filteredIngredients.map((ingredient) => (
               <IngredientCard
                 key={ingredient.name}
@@ -760,7 +761,7 @@ export default function Home() {
         <button
           onClick={() => setIsFilterOpen(prev => !prev)}
           aria-label="Ouvrir les filtres"
-          className="w-16 h-16 rounded-full bg-white border-2 border-black text-black shadow-lg hover:shadow-xl transition-all flex items-center justify-center"
+          className="w-16 h-16 rounded-full bg-amber-50 border-2 border-amber-300 text-amber-700 shadow-lg hover:shadow-xl hover:bg-amber-100 transition-all flex items-center justify-center"
         >
           <svg
             width="26"
