@@ -83,8 +83,8 @@ export async function POST(request: NextRequest) {
     const response: GenerateFullResponse = {
       prompt: promptResult.prompt,
       imageUrl: imageResult.imageUrl,
-      model: promptResult.model,
-      tokensUsed: promptResult.tokensUsed,
+      model: promptResult.model ?? 'unknown',
+      tokensUsed: promptResult.tokensUsed ?? 0,
       generatedAt: imageResult.generatedAt,
     };
 

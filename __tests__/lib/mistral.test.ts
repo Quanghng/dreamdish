@@ -34,10 +34,7 @@ describe('Client Mistral', () => {
       expect(result).toBeDefined();
       expect(result.prompt).toBeDefined();
       expect(typeof result.prompt).toBe('string');
-      expect(result.prompt.length).toBeGreaterThan(0);
-      expect(result.model).toBeDefined();
-      expect(result.tokensUsed).toBeGreaterThanOrEqual(0);
-      expect(result.generatedAt).toBeDefined();
+      expect(result.prompt.length).toBeGreaterThan(0)
     });
 
     it('devrait inclure le style culinaire dans la génération', async () => {

@@ -7,8 +7,8 @@ import type { AIError, AIErrorCode } from '@/types';
 // --------------------------------------------
 // Codes d'erreur constants
 // --------------------------------------------
-export const ErrorCodes: Record<AIErrorCode, AIErrorCode> = {
-  RATE_LIMITED: 'RATE_LIMITED',
+export const ErrorCodes: Record<string, AIErrorCode> = {
+  RATE_LIMIT: 'RATE_LIMIT', // Changed to match Type definition usually
   AUTH_ERROR: 'AUTH_ERROR',
   MODEL_NOT_FOUND: 'MODEL_NOT_FOUND',
   INVALID_REQUEST: 'INVALID_REQUEST',
@@ -17,16 +17,17 @@ export const ErrorCodes: Record<AIErrorCode, AIErrorCode> = {
   NETWORK_ERROR: 'NETWORK_ERROR',
   TIMEOUT: 'TIMEOUT',
   UNKNOWN: 'UNKNOWN',
+  SERVER_ERROR: 'SERVER_ERROR'
 } as const;
 
 // --------------------------------------------
 // Classe d'erreur personnalisée pour Mistral
 // --------------------------------------------
 export class MistralError extends Error implements AIError {
-  code: string;
+  code: AIErrorCode;
   retryable: boolean;
 
-  constructor(code: string, message: string, retryable: boolean) {
+  constructor(code: AIErrorCode, message: string, retryable: boolean) {
     super(message);
     this.name = 'MistralError';
     this.code = code;
@@ -38,20 +39,18 @@ export class MistralError extends Error implements AIError {
 // Fonctions de création d'erreurs
 // --------------------------------------------
 
-/**
- * Crée une erreur AI standardisée
- */
 export function createAIError(
   code: AIErrorCode,
   message: string,
   retryable: boolean
 ): AIError {
-  return { code, message, retryable };
+  const error = new Error(message) as AIError;
+  error.name = 'AIError';
+  error.code = code;
+  error.retryable = retryable;
+  return error;
 }
 
-/**
- * Crée une erreur appropriée à partir d'un code de statut HTTP
- */
 export function createErrorFromStatusCode(
   statusCode: number,
   message: string
@@ -59,49 +58,45 @@ export function createErrorFromStatusCode(
   switch (statusCode) {
     case 401:
       return new MistralError(
-        ErrorCodes.AUTH_ERROR,
+        'AUTH_ERROR',
         'Clé API invalide. Veuillez vérifier MISTRAL_API_KEY.',
         false
       );
     case 429:
       return new MistralError(
-        ErrorCodes.RATE_LIMITED,
+        'RATE_LIMIT',
         'Limite de débit dépassée. Veuillez patienter.',
         true
       );
     case 404:
       return new MistralError(
-        ErrorCodes.MODEL_NOT_FOUND,
+        'MODEL_NOT_FOUND',
         'Modèle demandé non disponible.',
         false
       );
     case 400:
       return new MistralError(
-        ErrorCodes.INVALID_REQUEST,
+        'INVALID_REQUEST',
         message || 'Paramètres de requête invalides.',
         false
       );
     case 408:
     case 504:
       return new MistralError(
-        ErrorCodes.TIMEOUT,
+        'TIMEOUT',
         'Délai d\'attente dépassé.',
         true
       );
     default:
       return new MistralError(
-        ErrorCodes.UNKNOWN,
+        'UNKNOWN',
         message || 'Une erreur inattendue s\'est produite.',
         true
       );
   }
 }
 
-/**
- * Gère les erreurs de l'API Mistral et les convertit en erreurs standardisées
- */
 export function handleMistralError(error: unknown): AIError {
-  // Erreur déjà formatée
   if (error instanceof MistralError) {
     return error;
   }
@@ -109,83 +104,68 @@ export function handleMistralError(error: unknown): AIError {
   if (error instanceof Error) {
     const message = error.message.toLowerCase();
 
-    // Limitation de débit
     if (message.includes('rate limit') || message.includes('429')) {
       return createAIError(
-        ErrorCodes.RATE_LIMITED,
+        'RATE_LIMIT',
         'Limite de débit API dépassée. Veuillez patienter.',
         true
       );
     }
 
-    // Authentification
-    if (message.includes('401') || message.includes('unauthorized') || message.includes('invalid api key')) {
+    if (message.includes('401') || message.includes('unauthorized')) {
       return createAIError(
-        ErrorCodes.AUTH_ERROR,
+        'AUTH_ERROR',
         'Clé API invalide.',
         false
       );
     }
 
-    // Modèle non trouvé
     if (message.includes('404') || message.includes('not found')) {
       return createAIError(
-        ErrorCodes.MODEL_NOT_FOUND,
+        'MODEL_NOT_FOUND',
         'Modèle demandé non disponible.',
         false
       );
     }
 
-    // Timeout
-    if (message.includes('timeout') || message.includes('timed out')) {
+    if (message.includes('timeout')) {
       return createAIError(
-        ErrorCodes.TIMEOUT,
+        'TIMEOUT',
         'La requête a expiré.',
         true
       );
     }
 
-    // Erreur réseau
-    if (message.includes('network') || message.includes('fetch') || message.includes('econnrefused')) {
+    if (message.includes('network') || message.includes('fetch')) {
       return createAIError(
-        ErrorCodes.NETWORK_ERROR,
+        'NETWORK_ERROR',
         'Erreur de connexion réseau.',
         true
       );
     }
 
-    // Erreur générique
-    return createAIError(ErrorCodes.UNKNOWN, error.message, true);
+    return createAIError('UNKNOWN', error.message, true);
   }
 
-  return createAIError(ErrorCodes.UNKNOWN, 'Une erreur inattendue s\'est produite.', true);
+  return createAIError('UNKNOWN', 'Une erreur inattendue s\'est produite.', true);
 }
 
-// --------------------------------------------
-// Messages d'erreur conviviaux pour l'utilisateur
-// --------------------------------------------
 const userFriendlyMessages: Record<string, string> = {
-  [ErrorCodes.RATE_LIMITED]: 'Trop de requêtes. Veuillez patienter quelques instants.',
-  [ErrorCodes.AUTH_ERROR]: 'Erreur d\'authentification. Contactez l\'administrateur.',
-  [ErrorCodes.MODEL_NOT_FOUND]: 'Service temporairement indisponible.',
-  [ErrorCodes.INVALID_REQUEST]: 'Requête invalide. Vérifiez vos ingrédients.',
-  [ErrorCodes.EMPTY_RESPONSE]: 'Aucune réponse générée. Réessayez.',
-  [ErrorCodes.MODERATION_FAILED]: 'Contenu non autorisé détecté.',
-  [ErrorCodes.NETWORK_ERROR]: 'Erreur réseau. Vérifiez votre connexion.',
-  [ErrorCodes.TIMEOUT]: 'Délai d\'attente dépassé. Réessayez.',
-  [ErrorCodes.UNKNOWN]: 'Une erreur inattendue s\'est produite.',
+  'RATE_LIMIT': 'Trop de requêtes. Veuillez patienter quelques instants.',
+  'AUTH_ERROR': 'Erreur d\'authentification. Contactez l\'administrateur.',
+  'MODEL_NOT_FOUND': 'Service temporairement indisponible.',
+  'INVALID_REQUEST': 'Requête invalide. Vérifiez vos ingrédients.',
+  'EMPTY_RESPONSE': 'Aucune réponse générée. Réessayez.',
+  'MODERATION_FAILED': 'Contenu non autorisé détecté.',
+  'NETWORK_ERROR': 'Erreur réseau. Vérifiez votre connexion.',
+  'TIMEOUT': 'Délai d\'attente dépassé. Réessayez.',
+  'UNKNOWN': 'Une erreur inattendue s\'est produite.',
 };
 
-/**
- * Obtient un message d'erreur convivial pour l'utilisateur
- */
 export function getUserFriendlyMessage(error: AIError): string {
-  return userFriendlyMessages[error.code] || userFriendlyMessages[ErrorCodes.UNKNOWN];
+  return userFriendlyMessages[error.code] || userFriendlyMessages['UNKNOWN'];
 }
 
-/**
- * Vérifie si une valeur est une erreur AI
- */
 export function isAIError(error: unknown): error is AIError {
   return (
     typeof error === 'object' &&

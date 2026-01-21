@@ -7,7 +7,9 @@ interface RouteParams {
   params: { id: string };
 }
 
-export async function PATCH(request: Request, { params }: RouteParams) {
+export async function PATCH(request: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
+  const { id } = params;
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Non autorisé.' }, { status: 401 });
@@ -31,10 +33,12 @@ export async function PATCH(request: Request, { params }: RouteParams) {
   }
 
   const updated = await prisma.cookbookEntry.findUnique({ where: { id: params.id } });
-  return NextResponse.json(updated);
+  return NextResponse.json({ id });;
 }
 
-export async function DELETE(_request: Request, { params }: RouteParams) {
+export async function DELETE(_request: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
+  const { id } = params;
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Non autorisé.' }, { status: 401 });
@@ -48,5 +52,5 @@ export async function DELETE(_request: Request, { params }: RouteParams) {
     return NextResponse.json({ error: 'Recette introuvable.' }, { status: 404 });
   }
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ id });
 }
