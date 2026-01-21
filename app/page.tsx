@@ -1228,9 +1228,9 @@ export default function Home() {
               return (
                 <div
                   key={type}
-                  className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border-2 ${colors.bg} ${colors.border} ${colors.text} text-sm font-medium transition-all duration-200`}
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border shadow-md ${colors.bg} ${colors.border} ${colors.text} text-base font-medium hover:shadow-lg transition-shadow duration-200`}
                 >
-                  <span>{colors.icon}</span>
+                  <span className="text-2xl">{colors.icon}</span>
                   <span>{tagValue}</span>
                   <button
                     onClick={() => handleRemoveFilter(type)}
