@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface NavbarProps {
   onUserClick?: () => void;
@@ -19,9 +20,12 @@ export default function Navbar({ onUserClick, userAvatar }: NavbarProps) {
 
         {/* Catégories au milieu */}
         <div className="flex items-center gap-8">
-          <button className="px-6 py-2 rounded-full hover:bg-amber-100 transition-colors text-amber-900 font-medium">
+          <Link
+            href="/communaute"
+            className="px-6 py-2 rounded-full hover:bg-amber-100 transition-colors text-amber-900 font-medium"
+          >
             Communauté
-          </button>
+          </Link>
           <button className="px-6 py-2 rounded-full hover:bg-amber-100 transition-colors text-amber-900 font-medium">
             Créations
           </button>
