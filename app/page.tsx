@@ -636,11 +636,11 @@ export default function Home() {
             <div className="p-6 overflow-y-auto max-h-[70vh]">
               {/* Generated Image */}
               {generateResult.imageUrl && (
-                <div className="mb-6">
+                <div className="mb-6 -mx-6">
                   <img
                     src={generateResult.imageUrl}
                     alt="Plat généré"
-                    className="w-full rounded-2xl shadow-lg"
+                    className="w-full max-h-[420px] object-cover"
                   />
                 </div>
               )}
@@ -1044,6 +1044,10 @@ export default function Home() {
                                   <p className="text-xs text-amber-600 line-clamp-2">
                                     {entry.recipe.description}
                                   </p>
+                                </div>
+                                <div className="ml-4 shrink-0 inline-flex items-center gap-1 rounded-full bg-pink-50 border border-pink-200 px-3 py-1 text-xs font-semibold text-pink-700">
+                                  <span>❤️</span>
+                                  <span>{typeof entry.likesCount === 'number' ? entry.likesCount : 0}</span>
                                 </div>
                               </div>
 

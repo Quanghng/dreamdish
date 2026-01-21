@@ -201,6 +201,7 @@ export interface CookbookEntry {
   rating?: number;
   category?: string;
   isFavorite: boolean;
+  likesCount?: number;
 }
 
 // Requête pour générer une recette

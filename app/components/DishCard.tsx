@@ -1,10 +1,14 @@
 interface DishCardProps {
   image: string;
+  imageUrl?: string;
   title: string;
   index: number;
+  variant?: 'showcase' | 'flat';
 }
 
-export default function DishCard({ image, title, index }: DishCardProps) {
+export default function DishCard({ image, imageUrl, title, index, variant = 'showcase' }: DishCardProps) {
+  const isShowcase = variant === 'showcase';
+
   // Calculate U-shape rotation: sides rotate more than center
   const col = index % 5; // Column position (0-4)
   const centerCol = 2; // Center column
@@ -22,25 +26,34 @@ export default function DishCard({ image, title, index }: DishCardProps) {
   
   return (
     <div 
-      className="relative cursor-pointer"
+      className={isShowcase ? 'relative cursor-pointer' : 'relative'}
       style={{
         transformStyle: 'preserve-3d'
       }}
     >
       <div 
-        className="w-full aspect-square bg-white rounded-3xl shadow-2xl overflow-visible"
+        className="w-full aspect-square bg-white rounded-3xl overflow-hidden ring-1 ring-black/5"
         style={{
           transformStyle: 'preserve-3d',
-          transform: `rotateY(${yPosition}deg) translateY(${verticalOffset}px) translateX(${xPosition}px)`,
+          transform: isShowcase
+            ? `rotateY(${yPosition}deg) translateY(${verticalOffset}px) translateX(${xPosition}px)`
+            : undefined,
           transformOrigin: 'center center'
         }}
       >
         {/* Dish image */}
-        <div className="w-full h-full flex items-center justify-center p-8">
-          <div className="w-40 h-40 rounded-full bg-gradient-to-br from-orange-100 to-amber-100 flex items-center justify-center text-6xl shadow-inner">
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={title}
+            className="h-full w-full object-cover"
+            loading="lazy"
+          />
+        ) : (
+          <div className="h-full w-full bg-gradient-to-br from-orange-50 to-amber-50 flex items-center justify-center text-6xl">
             {image}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

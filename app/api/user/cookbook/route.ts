@@ -12,9 +12,21 @@ export async function GET() {
   const entries = await prisma.cookbookEntry.findMany({
     where: { userId: session.user.id },
     orderBy: [{ isFavorite: 'desc' }, { createdAt: 'desc' }],
+    include: {
+      _count: {
+        select: {
+          likes: true,
+        },
+      },
+    },
   });
 
-  return NextResponse.json(entries);
+  const withLikesCount = entries.map((entry) => ({
+    ...entry,
+    likesCount: entry._count.likes,
+  }));
+
+  return NextResponse.json(withLikesCount);
 }
 
 export async function POST(request: Request) {
