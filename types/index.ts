@@ -27,8 +27,8 @@ export interface GeneratePromptResponse {
   prompt: string;
   ingredients: string[];
   timestamp: number;
-  model?: string;       
-  tokensUsed?: number;  
+  model?: string;
+  tokensUsed?: number;
   generatedAt?: string;
 }
 
@@ -237,14 +237,14 @@ export interface BuiltPrompt {
 // Codes d'erreur AI
 export type AIErrorCode =
   | 'RATE_LIMIT'
-  | 'RATE_LIMITED'  
+  | 'RATE_LIMITED'
   | 'INVALID_API_KEY'
-  | 'AUTH_ERROR' 
-  | 'MODEL_NOT_FOUND' 
+  | 'AUTH_ERROR'
+  | 'MODEL_NOT_FOUND'
   | 'MODEL_UNAVAILABLE'
   | 'INVALID_REQUEST'
-  | 'EMPTY_RESPONSE' 
-  | 'MODERATION_FAILED' 
+  | 'EMPTY_RESPONSE'
+  | 'MODERATION_FAILED'
   | 'CONTENT_FILTERED'
   | 'TIMEOUT'
   | 'NETWORK_ERROR'
@@ -261,7 +261,7 @@ export interface AIError extends Error {
 // Statut de santé AI
 export interface AIHealthStatus {
   status: 'healthy' | 'degraded' | 'unhealthy';
-  checks?: { 
+  checks?: {
     mistralConnection: boolean;
     apiKeyValid: boolean;
     moderationEnabled: boolean;
@@ -279,9 +279,9 @@ export interface AIHealthStatus {
     totalRequests: number; // Required
     successRate: number;   // Required
     averageLatency: number; // Required
-    tokenUsage?: any;      // Optional or specific type
+    tokenUsage?: { total: number; average: number } | unknown;
     recentRequests?: number;
-    suggestionsCache?: any;
+    suggestionsCache?: { size: number; oldestEntry: number | null } | unknown;
   };
   timestamp?: string;
 }
