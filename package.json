@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run __tests__/simple.test.ts",
+    "test": "vitest run __tests__/simple.test.ts --no-config",
     "test:all": "vitest",
     "test:coverage": "vitest run --coverage"
   },
