@@ -722,7 +722,7 @@ export default function Home() {
             perspective: '900px'
           }}
         >
-          <h1 className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 text-3xl sm:text-5xl lg:text-6xl font-extrabold italic tracking-tight text-amber-900 drop-shadow-sm text-center whitespace-nowrap z-10">
+          <h1 className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 text-5xl sm:text-5xl lg:text-6xl font-extrabold italic tracking-tight text-amber-900 drop-shadow-sm text-center whitespace-nowrap z-10">
             Crée ton plat de rêve
           </h1>
           <div 
