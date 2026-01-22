@@ -26,6 +26,16 @@ export default function Navbar({ onUserClick, userAvatar }: NavbarProps) {
           >
             Communauté
           </Link>
+
+          {onUserClick ? (
+            <button
+              type="button"
+              onClick={onUserClick}
+              className="px-4 sm:px-6 py-2 rounded-full hover:bg-amber-100 transition-colors text-amber-900 font-semibold text-sm sm:text-base"
+            >
+              Mes créations
+            </button>
+          ) : null}
         </div>
 
         {/* Flag et Profile à droite */}

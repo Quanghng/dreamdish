@@ -55,6 +55,17 @@ export default function UserPanel({
 
   const { data: session } = useSession();
 
+  useEffect(() => {
+    if (!session?.user?.id) {
+      setUserProfile(null);
+      return;
+    }
+    loadUserProfile().then((ok) => {
+      if (ok) setUserMode('profile');
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session?.user?.id]);
+
   const loadUserProfile = async () => {
     const response = await fetch('/api/user/profile');
     if (response.status === 404) return false;

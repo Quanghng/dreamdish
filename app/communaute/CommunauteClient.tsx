@@ -30,6 +30,8 @@ type CommunauteClientProps = {
   selectedCategory: string;
   likedEntryIds: string[];
   uncategorizedToken: string;
+  canFilterMine: boolean;
+  isMineSelected: boolean;
 };
 
 function getRecipeTitle(recipe: unknown): string {
@@ -57,7 +59,9 @@ export default function CommunauteClient({
   categories,
   selectedCategory,
   likedEntryIds,
-  uncategorizedToken
+  uncategorizedToken,
+  canFilterMine,
+  isMineSelected,
 }: CommunauteClientProps) {
   const { cookbook, updateRecipeCategory, fetchCookbook } = useRecipe();
   const likedSet = useMemo(() => new Set(likedEntryIds), [likedEntryIds]);
@@ -84,6 +88,8 @@ export default function CommunauteClient({
                 categories={categories}
                 selected={selectedCategory}
                 uncategorizedToken={uncategorizedToken}
+                canFilterMine={canFilterMine}
+                isMineSelected={isMineSelected}
               />
               <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-amber-600">
                 <span className="inline-flex items-center rounded-full border border-amber-200 bg-white/70 px-3 py-1 font-semibold text-amber-800">
