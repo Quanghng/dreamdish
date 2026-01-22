@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: parsed.error }, { status: 400 });
     }
 
-    const { ingredients, style, presentation, filters } = parsed.data;
+    const { ingredients, style, presentation, filters, additionalContext } = parsed.data;
 
     // 4. Modération du contenu (si activée)
     if (mistralConfig.features.enableModeration) {
@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
     // 5. Génération du prompt via Mistral
     console.log('[API Images] Génération du prompt pour:', ingredients);
     const promptResult = await withRetry(() =>
-      generateVisualPrompt({ ingredients, style, presentation, filters })
+      generateVisualPrompt({ ingredients, style, presentation, filters, additionalContext })
     );
 
     console.log('[API Images] Prompt généré:', promptResult.prompt.substring(0, 100) + '...');

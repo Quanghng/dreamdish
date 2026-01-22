@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent, type ReactNode } from 'react';
 import { signIn, signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import RecipeDisplay from './RecipeDisplay';
 import type { CookbookEntry } from '@/types';
 
@@ -29,6 +30,7 @@ export default function UserPanel({
   updateRecipeCategory,
   fetchCookbook
 }: UserPanelProps) {
+  const router = useRouter();
   const [isUserPanelOpen, setIsUserPanelOpen] = useState(false);
   const [userMode, setUserMode] = useState<'login' | 'register' | 'profile'>('login');
   const [userProfile, setUserProfile] = useState<{
@@ -289,6 +291,11 @@ export default function UserPanel({
           drinkPairings={viewingCookbookEntry.drinkPairings}
           imageUrl={viewingCookbookEntry.imageUrl}
           onClose={() => setViewingCookbookEntry(null)}
+          onExpand={() => {
+            const entryId = viewingCookbookEntry.id;
+            setViewingCookbookEntry(null);
+            router.push(`/communaute/${entryId}`);
+          }}
           isSaved={true}
         />
       )}

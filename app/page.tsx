@@ -121,6 +121,50 @@ export default function Home() {
     type: '',
   });
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  // Seed depuis la page Stats: /?seedIngredients=tomate|riz|...
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const params = new URLSearchParams(window.location.search);
+    const raw = params.get('seedIngredients');
+    if (!raw) return;
+
+    const labels = raw
+      .split('|')
+      .map((s) => {
+        try {
+          return decodeURIComponent(s).trim();
+        } catch {
+          return s.trim();
+        }
+      })
+      .filter(Boolean);
+
+    if (labels.length === 0) return;
+
+    setIngredients((prev) => {
+      const existing = new Set(prev.map((i) => i.label.toLowerCase()));
+      const next = [...prev];
+
+      for (const label of labels) {
+        if (existing.has(label.toLowerCase())) continue;
+        existing.add(label.toLowerCase());
+        next.push({
+          id: `${Date.now()}_${label}`,
+          icon: '🥗',
+          label,
+        });
+      }
+
+      return next;
+    });
+
+    params.delete('seedIngredients');
+    const nextQuery = params.toString();
+    const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ''}${window.location.hash || ''}`;
+    window.history.replaceState(null, '', nextUrl);
+  }, []);
   const dishes = [
     { image: '🍝', title: 'Pasta', imageUrl: '/img/meals/meal1.png' },
     { image: '🍕', title: 'Pizza', imageUrl: '/img/meals/meal2.png' },

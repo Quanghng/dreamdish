@@ -35,14 +35,13 @@ export default function Navbar({ onUserClick, userAvatar, isAuthenticated }: Nav
             Stats
           </Link>
 
-          {onUserClick && isAuthenticated ? (
-            <button
-              type="button"
-              onClick={onUserClick}
+          {isAuthenticated ? (
+            <Link
+              href="/mes-creations"
               className="px-4 sm:px-6 py-2 rounded-full hover:bg-amber-100 transition-colors text-amber-900 font-semibold text-sm sm:text-base"
             >
               Mes créations
-            </button>
+            </Link>
           ) : null}
         </div>
 

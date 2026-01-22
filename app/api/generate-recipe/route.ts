@@ -12,8 +12,22 @@ import type {
   GenerateRecipeResponse,
   GeneratedRecipe,
   NutritionalInfo,
-  DrinkPairing
+  DrinkPairing,
+  FilterSelection
 } from '@/types';
+
+function formatFilterConstraints(filters?: FilterSelection): string {
+  if (!filters) return '';
+
+  const parts: string[] = [];
+  if (filters.type) parts.push(`Type de plat: ${filters.type}`);
+  if (filters.style) parts.push(`Style de cuisine: ${filters.style}`);
+  if (filters.cuisson) parts.push(`Température/cuisson: ${filters.cuisson}`);
+  if (filters.regime) parts.push(`Régime: ${filters.regime}`);
+  if (filters.category) parts.push(`Catégorie: ${filters.category}`);
+
+  return parts.length > 0 ? parts.join(' | ') : '';
+}
 
 // --------------------------------------------
 // System Prompt pour la génération de recettes
@@ -107,7 +121,7 @@ export async function POST(request: NextRequest) {
 
     // 2. Parsing et validation du body
     const body: GenerateRecipeRequest = await request.json();
-    const { imageUrl, originalIngredients, imageBase64 } = body;
+    const { imageUrl, originalIngredients, imageBase64, filters, additionalContext } = body;
 
     // Validation
     if (!imageUrl && !imageBase64) {
@@ -125,13 +139,26 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Construction du message utilisateur avec l'image
+    const filterConstraints = formatFilterConstraints(filters);
+    const userConstraintsBlock = [
+      filterConstraints ? `Contraintes (obligatoires): ${filterConstraints}` : null,
+      additionalContext && additionalContext.trim() ? `Demande utilisateur (obligatoire): ${additionalContext.trim()}` : null,
+    ].filter(Boolean).join('\n');
+
     const userMessage = `Voici l'image d'un plat généré à partir de ces ingrédients fournis par l'utilisateur: ${originalIngredients.join(', ')}.
+
+${userConstraintsBlock ? `${userConstraintsBlock}\n` : ''}
 
 Analyse cette image et crée une recette UNIQUE et AVANT-GARDISTE qui:
 1. Utilise OBLIGATOIREMENT tous les ingrédients listés ci-dessus
 2. Correspond visuellement au plat dans l'image
 3. Propose des techniques culinaires innovantes
 4. Inclut un accord mets-boisson original
+
+Contraintes supplémentaires à respecter STRICTEMENT si demandées:
+- Si la demande mentionne "sans huile": n'ajoute aucune huile (y compris huile d'olive) et évite les cuissons nécessitant de l'huile
+- Si la demande mentionne "sans gluten": n'ajoute aucun ingrédient contenant du gluten (blé, orge, seigle) et évite la contamination croisée
+- Si la demande mentionne "sans lactose": évite les produits laitiers (lait, crème, beurre, fromages) et propose des alternatives
 
 Sois créatif et audacieux!`;
 

@@ -13,12 +13,14 @@ type TopEntry = {
   authorName: string;
   authorAvatar: string;
   category: string | null;
+  seedIngredients: string[];
   count: number;
 };
 
 type TopIngredient = {
   name: string;
   count: number;
+  imageUrl?: string;
 };
 
 type StatsClientProps = {
@@ -36,8 +38,14 @@ function StatCard(props: {
   title?: string;
   meta?: string;
   href?: string;
+  seedIngredients?: string[];
 }) {
   const router = useRouter();
+
+  const canGenerateWith = Array.isArray(props.seedIngredients) && props.seedIngredients.length > 0;
+  const seedHref = canGenerateWith
+    ? `/?seedIngredients=${props.seedIngredients.map(encodeURIComponent).join('|')}`
+    : undefined;
 
   return (
     <div
@@ -60,7 +68,23 @@ function StatCard(props: {
           : 'rounded-3xl border border-amber-100 bg-white/80 backdrop-blur-md p-5 shadow-sm'
       }
     >
-      <div className="text-xs font-semibold text-amber-700">{props.label}</div>
+      <div className="flex items-start justify-between gap-3">
+        <div className="text-xs font-semibold text-amber-700">{props.label}</div>
+        {seedHref ? (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              router.push(seedHref);
+            }}
+            className="shrink-0 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-900 hover:bg-amber-100 transition"
+            title="Revenir à l'accueil avec ces ingrédients"
+          >
+            Générer avec
+          </button>
+        ) : null}
+      </div>
       <div className="mt-1 text-3xl font-extrabold text-amber-950">{props.value}</div>
       {props.subtitle ? <div className="mt-1 text-sm text-amber-700">{props.subtitle}</div> : null}
 
@@ -116,6 +140,7 @@ export default function StatsClient({ topLiked, topCommented, topIngredient, sam
               title={topLiked?.title}
               meta={topLiked ? `${topLiked.authorAvatar} ${topLiked.authorName}${topLiked.category ? ` • ${topLiked.category}` : ''}` : undefined}
               href={topLiked ? `/communaute/${topLiked.id}` : undefined}
+              seedIngredients={topLiked?.seedIngredients}
             />
 
             <StatCard
@@ -126,12 +151,16 @@ export default function StatsClient({ topLiked, topCommented, topIngredient, sam
               title={topCommented?.title}
               meta={topCommented ? `${topCommented.authorAvatar} ${topCommented.authorName}${topCommented.category ? ` • ${topCommented.category}` : ''}` : undefined}
               href={topCommented ? `/communaute/${topCommented.id}` : undefined}
+              seedIngredients={topCommented?.seedIngredients}
             />
 
             <StatCard
               label="Ingrédient le plus présent"
               value={topIngredient?.count ?? 0}
-              subtitle={topIngredient ? topIngredient.name : 'Aucune donnée'}
+              subtitle={topIngredient ? 'occurrences' : 'Aucune donnée'}
+              imageUrl={topIngredient?.imageUrl}
+              title={topIngredient?.name}
+              seedIngredients={topIngredient?.name ? [topIngredient.name] : undefined}
             />
           </div>
         </main>

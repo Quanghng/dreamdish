@@ -2,6 +2,8 @@ import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/auth';
 import StatsClient from './StatsClient';
+import fs from 'node:fs';
+import path from 'node:path';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,6 +34,47 @@ function normalizeIngredient(value: string): string {
     .toLowerCase();
 }
 
+function stripDiacritics(value: string): string {
+  return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+function slugifyIngredient(value: string, opts?: { lower?: boolean }): string {
+  const lower = opts?.lower ?? true;
+  const cleaned = stripDiacritics(value)
+    .replace(/['’]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  const withHyphens = cleaned
+    .replace(/[^a-zA-Z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .replace(/-+/g, '-');
+
+  return lower ? withHyphens.toLowerCase() : withHyphens;
+}
+
+function resolveIngredientImageUrl(name: string): string | null {
+  const dir = path.join(process.cwd(), 'public', 'img', 'ingredients');
+
+  const slugLower = slugifyIngredient(name, { lower: true });
+  const slugOriginalCase = slugifyIngredient(name, { lower: false });
+  const slugCapitalized = slugLower ? `${slugLower[0].toUpperCase()}${slugLower.slice(1)}` : slugLower;
+
+  const candidates = [
+    `${slugLower}.webp`,
+    `${slugOriginalCase}.webp`,
+    `${slugCapitalized}.webp`,
+  ];
+
+  for (const file of candidates) {
+    if (!file || file === '.webp') continue;
+    const full = path.join(dir, file);
+    if (fs.existsSync(full)) return `/img/ingredients/${file}`;
+  }
+
+  return null;
+}
+
 function extractIngredientNames(originalIngredients: unknown, recipe: unknown): string[] {
   const names: string[] = [];
 
@@ -56,6 +99,43 @@ function extractIngredientNames(originalIngredients: unknown, recipe: unknown): 
   return names;
 }
 
+function buildSeedIngredients(entry: { originalIngredients: unknown; recipe: unknown }): string[] {
+  const seen = new Set<string>();
+  const result: string[] = [];
+
+  const push = (value: string) => {
+    const cleaned = value.trim();
+    if (!cleaned) return;
+    const key = cleaned.toLowerCase();
+    if (seen.has(key)) return;
+    seen.add(key);
+    result.push(cleaned);
+  };
+
+  // Priorité aux ingrédients originaux (base user)
+  if (Array.isArray(entry.originalIngredients)) {
+    for (const item of entry.originalIngredients) {
+      if (typeof item === 'string') push(item);
+    }
+  }
+
+  // Puis compléter avec tous les ingrédients de la recette
+  if (entry.recipe && typeof entry.recipe === 'object' && 'ingredients' in entry.recipe) {
+    const ingredients = (entry.recipe as { ingredients?: unknown }).ingredients;
+    if (Array.isArray(ingredients)) {
+      for (const ing of ingredients) {
+        if (ing && typeof ing === 'object' && 'name' in ing) {
+          const n = (ing as { name?: unknown }).name;
+          if (typeof n === 'string') push(n);
+        }
+      }
+    }
+  }
+
+  // Cap pour rester compatible avec la génération (limite côté image: 15)
+  return result.slice(0, 15);
+}
+
 export default async function StatsPage() {
   // session récupérée au cas où on voudrait conditionner certaines infos, mais non obligatoire
   await getServerSession(authOptions);
@@ -65,7 +145,12 @@ export default async function StatsPage() {
   const [topLiked, topCommented, recentEntries] = await Promise.all([
     prisma.cookbookEntry.findFirst({
       orderBy: { likes: { _count: 'desc' } },
-      include: {
+      select: {
+        id: true,
+        imageUrl: true,
+        recipe: true,
+        category: true,
+        originalIngredients: true,
         user: {
           select: {
             email: true,
@@ -80,7 +165,12 @@ export default async function StatsPage() {
     }),
     prisma.cookbookEntry.findFirst({
       orderBy: { comments: { _count: 'desc' } },
-      include: {
+      select: {
+        id: true,
+        imageUrl: true,
+        recipe: true,
+        category: true,
+        originalIngredients: true,
         user: {
           select: {
             email: true,
@@ -118,11 +208,16 @@ export default async function StatsPage() {
     }
   }
 
-  let topIngredient: { name: string; count: number } | null = null;
+  let topIngredient: { name: string; count: number; imageUrl?: string } | null = null;
   for (const v of counts.values()) {
     if (!topIngredient || v.count > topIngredient.count) {
       topIngredient = { name: v.display, count: v.count };
     }
+  }
+
+  if (topIngredient) {
+    const imageUrl = resolveIngredientImageUrl(topIngredient.name);
+    if (imageUrl) topIngredient.imageUrl = imageUrl;
   }
 
   const serializeEntry = (
@@ -142,6 +237,7 @@ export default async function StatsPage() {
       authorName,
       authorAvatar,
       category: entry.category,
+      seedIngredients: buildSeedIngredients(entry),
       count,
     };
   };

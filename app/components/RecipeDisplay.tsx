@@ -15,6 +15,7 @@ interface RecipeDisplayProps {
   nutritionalInfo?: NutritionalInfo;
   drinkPairings?: DrinkPairing[];
   onClose: () => void;
+  onExpand?: () => void;
   onSaveToCookbook?: () => void;
   isSaved?: boolean;
   variant?: 'modal' | 'page';
@@ -28,6 +29,7 @@ export default function RecipeDisplay({
   nutritionalInfo,
   drinkPairings,
   onClose,
+  onExpand,
   onSaveToCookbook,
   isSaved = false,
   variant = 'modal'
@@ -113,6 +115,19 @@ export default function RecipeDisplay({
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
           
+          {/* Bouton agrandir (optionnel) */}
+          {isModal && onExpand ? (
+            <button
+              type="button"
+              onClick={onExpand}
+              className="absolute top-4 right-16 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-gray-700 flex items-center justify-center transition-colors shadow-lg"
+              aria-label="Agrandir"
+              title="Agrandir"
+            >
+              ⛶
+            </button>
+          ) : null}
+
           {/* Bouton fermer */}
           <button
             onClick={onClose}
