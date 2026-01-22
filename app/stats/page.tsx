@@ -221,7 +221,21 @@ export default async function StatsPage() {
   }
 
   const serializeEntry = (
-    entry: typeof topLiked,
+    entry: {
+      id: string;
+      imageUrl: string;
+      recipe: unknown;
+      category: string | null;
+      originalIngredients: unknown;
+      user: {
+        email: string;
+        name: string | null;
+        firstName: string | null;
+        lastName: string | null;
+        avatarUrl: string | null;
+      };
+      _count: { likes?: number; comments?: number };
+    } | null,
     count: number
   ) => {
     if (!entry) return null;

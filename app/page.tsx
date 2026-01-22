@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
 import DishCard from './components/DishCard';
 import IngredientTag from './components/IngredientTag';
@@ -26,7 +27,7 @@ interface Ingredient {
 const INITIAL_INGREDIENTS_COUNT = 20;
 const LOAD_MORE_COUNT = 20;
 
-// Tag color configurations for filter selections
+// Tag color configurations for filter selections - Updated with new palette
 const FILTER_TAG_COLORS = {
   type: {
     bg: 'bg-orange-100',
@@ -35,27 +36,27 @@ const FILTER_TAG_COLORS = {
     icon: '🍽️',
   },
   style: {
-    bg: 'bg-yellow-100',
-    border: 'border-yellow-300',
-    text: 'text-yellow-800',
+    bg: 'bg-gradient-to-r from-[#ffb703]/10 to-[#ffb703]/20',
+    border: 'border-[#ffb703]/30',
+    text: 'text-[#b8860b]',
     icon: '🌍',
   },
   cuisson: {
-    bg: 'bg-red-100',
-    border: 'border-red-300',
-    text: 'text-red-800',
+    bg: 'bg-gradient-to-r from-rose-100/80 to-red-100/80',
+    border: 'border-rose-300/50',
+    text: 'text-rose-700',
     icon: '🔥',
   },
   regime: {
-    bg: 'bg-green-100',
-    border: 'border-green-300',
-    text: 'text-green-800',
+    bg: 'bg-gradient-to-r from-[#2d6a4f]/10 to-[#2d6a4f]/20',
+    border: 'border-[#2d6a4f]/30',
+    text: 'text-[#2d6a4f]',
     icon: '🥗',
   },
   category: {
-    bg: 'bg-purple-100',
-    border: 'border-purple-300',
-    text: 'text-purple-800',
+    bg: 'bg-gradient-to-r from-violet-100/80 to-purple-100/80',
+    border: 'border-violet-300/50',
+    text: 'text-violet-700',
     icon: '📦',
   },
 };
@@ -539,417 +540,596 @@ export default function Home() {
         <Navbar onUserClick={onUserClick} userAvatar={userAvatar} isAuthenticated={isAuthenticated} />
       )}
     >
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 relative overflow-hidden">
+      <div className="min-h-screen mesh-gradient-bg relative overflow-hidden">
+        {/* Decorative background elements */}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-[#e85d04]/5 rounded-full blur-3xl" />
+          <div className="absolute top-40 right-20 w-96 h-96 bg-[#ffb703]/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-40 left-1/4 w-80 h-80 bg-[#2d6a4f]/5 rounded-full blur-3xl" />
+        </div>
       
-      {/* Loading Screen */}
-      {generateLoading && <CookingLoadingScreen ingredients={ingredients.map(i => i.label)} />}
-      
-      {showResult && generateResult && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden relative">
-            {/* Recipe Loading Screen - inside the modal */}
-            {recipeLoading && <RecipeLoadingScreen imageUrl={generateResult?.imageUrl} />}
-            
-            <div className="p-6 border-b border-amber-100">
-              <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-bold text-amber-900">🍽️ Votre plat de rêve</h3>
-                <button
-                  onClick={handleCloseResult}
-                  className="w-10 h-10 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-700 flex items-center justify-center transition-colors"
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-            <div className="p-6 overflow-y-auto max-h-[70vh]">
-              {/* Generated Image */}
-              {generateResult.imageUrl && (
-                <div className="mb-6 -mx-6">
-                  <img
-                    src={generateResult.imageUrl}
-                    alt="Plat généré"
-                    className="w-full max-h-[420px] object-cover"
-                  />
-                </div>
-              )}
-
-              {/* Selected Ingredients with Tags */}
-              <div className="mb-6">
-                <h4 className="text-sm font-semibold text-amber-800 mb-3 flex items-center gap-2">
-                  <span>🧺</span> Ingrédients utilisés
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {ingredients.map((ing) => {
-                    const ingredientData = ingredientsWithTags.find(
-                      i => i.name.toLowerCase() === ing.label.toLowerCase()
-                    );
-                    const tags = ingredientData?.tags?.slice(0, 2) || [];
-                    
-                    return (
-                      <div
-                        key={ing.id}
-                        className="flex items-center gap-2 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl px-3 py-2"
-                      >
-                        <span className="text-lg">{ing.icon}</span>
-                        <div className="flex flex-col">
-                          <span className="text-sm font-medium text-amber-900">{ing.label}</span>
-                          {tags.length > 0 && (
-                            <div className="flex gap-1 mt-0.5">
-                              {tags.map((tag, idx) => (
-                                <span
-                                  key={idx}
-                                  className="text-[10px] px-1.5 py-0.5 bg-amber-100 text-amber-600 rounded-full"
-                                >
-                                  {tag}
-                                </span>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-              
-              {/* Recipe Error */}
-              {recipeError && (
-                <div className="mb-4 bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-red-700 text-sm">
-                  ⚠️ {recipeError}
-                </div>
-              )}
-              
-              {/* Keywords / Filtres utilisés */}
-              <div className="mb-6 p-4 bg-gradient-to-br from-orange-50 to-amber-100 rounded-2xl border-2 border-amber-200">
-                <h4 className="text-sm font-bold text-amber-900 mb-3">🏷️ Vos sélections</h4>
-                <div className="space-y-2 text-sm">
-                  {filterSelection.type && (
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-amber-800 min-w-[80px]">Type:</span>
-                      <span className="inline-block px-3 py-1 bg-orange-200 text-orange-900 rounded-full text-xs font-medium">{filterSelection.type}</span>
-                    </div>
-                  )}
-                  {filterSelection.style && (
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-amber-800 min-w-[80px]">Style:</span>
-                      <span className="inline-block px-3 py-1 bg-yellow-200 text-yellow-900 rounded-full text-xs font-medium">{filterSelection.style}</span>
-                    </div>
-                  )}
-                  {filterSelection.cuisson && (
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-amber-800 min-w-[80px]">Cuisson:</span>
-                      <span className="inline-block px-3 py-1 bg-red-200 text-red-900 rounded-full text-xs font-medium">{filterSelection.cuisson}</span>
-                    </div>
-                  )}
-                  {filterSelection.regime && (
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-amber-800 min-w-[80px]">Régime:</span>
-                      <span className="inline-block px-3 py-1 bg-green-200 text-green-900 rounded-full text-xs font-medium">{filterSelection.regime}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-              
-              {/* Prompt Description (collapsible) */}
-              <details className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl">
-                <summary className="p-4 cursor-pointer text-amber-800 font-medium hover:bg-amber-100/50 rounded-2xl transition-colors">
-                  📝 Voir la description du plat
-                </summary>
-                <div className="px-6 pb-6">
-                  <p className="text-amber-900 leading-relaxed whitespace-pre-wrap text-sm">
-                    {generateResult.prompt}
-                  </p>
-                </div>
-              </details>
-              
-              {/* Generate Recipe Button - Primary CTA */}
-              {generateResult.imageUrl && (
-                <button
-                  onClick={handleGenerateRecipe}
-                  disabled={recipeLoading}
-                  className="w-full mt-4 py-4 px-6 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:from-gray-300 disabled:to-gray-400 text-white rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl disabled:shadow-none transition-all flex items-center justify-center gap-3"
-                >
-                  <span className="text-2xl">📖</span>
-                  <span>Générer la Recette</span>
-                  <span className="text-sm opacity-75">(avec IA Vision)</span>
-                </button>
-              )}
-              
-              <div className="mt-4 flex flex-wrap gap-3">
-                {generateResult.imageUrl && (
-                  <a
-                    href={generateResult.imageUrl}
-                    download="dreamdish-creation.png"
-                    className="flex-1 min-w-[140px] py-3 px-4 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-xl font-medium transition-colors text-center"
-                  >
-                    💾 Télécharger
-                  </a>
-                )}
-                <button
-                  onClick={() => navigator.clipboard.writeText(generateResult.prompt)}
-                  className="flex-1 min-w-[140px] py-3 px-4 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-xl font-medium transition-colors"
-                >
-                  📋 Copier le prompt
-                </button>
-                <button
-                  onClick={handleCloseResult}
-                  className="flex-1 min-w-[140px] py-3 px-4 bg-gradient-to-r from-orange-400 to-amber-500 hover:from-orange-500 hover:to-amber-600 text-white rounded-xl font-medium transition-colors"
-                >
-                  ✨ Nouveau plat
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showRecipe && recipeResult && generateResult?.imageUrl && (
-        <RecipeDisplay
-          recipe={recipeResult.recipe}
-          nutritionalInfo={recipeResult.nutritionalInfo}
-          drinkPairings={recipeResult.drinkPairings}
-          imageUrl={generateResult.imageUrl}
-          onClose={handleCloseRecipe}
-          onSaveToCookbook={handleSaveRecipe}
-          isSaved={isRecipeSaved}
-        />
-      )}
-
-      <main className="flex flex-col items-center justify-center min-h-screen pt-36 sm:pt-40 pb-40 sm:pb-48 px-4">
-        <div 
-          className="relative w-full max-w-7xl mb-24 sm:mb-32 pt-32 sm:pt-36 px-8 sm:px-12"
-          style={{
-            perspective: '900px'
-          }}
-        >
-          <h1 className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 text-5xl sm:text-5xl lg:text-6xl font-extrabold italic tracking-tight text-amber-900 drop-shadow-sm text-center whitespace-nowrap z-10">
-            Crée ton plat de rêve
-          </h1>
-          <div 
-            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6"
-            style={{
-              transform: 'rotateX(35deg)',
-              transformStyle: 'preserve-3d',
-              WebkitMaskImage: 'linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%)',
-              maskImage: 'linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%)',
-              overflow: 'visible',
-              paddingTop: '80px'
-            }}
-          >
-            {dishes.map((dish, index) => (
-              <DishCard
-                key={index}
-                image={dish.image}
-                imageUrl={dish.imageUrl}
-                title={dish.title}
-                index={index}
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className="w-full bg-gradient-to-r from-amber-200 via-orange-200 to-amber-300 py-5 sm:py-6 mt-2 mb-4 rounded-2xl shadow-md relative z-10">
-          <h2 className="text-lg sm:text-2xl font-extrabold text-amber-950 text-center px-4">
-            Choisissez parmi des centaines d&apos;ingrédients
-          </h2>
-        </div>
+        {/* Loading Screen */}
+        {generateLoading && <CookingLoadingScreen ingredients={ingredients.map(i => i.label)} />}
         
-        <section className="w-full max-w-7xl mx-auto px-4 sm:px-8 pt-10 pb-16 sm:pt-12 sm:pb-20">
-          <div className="mb-12">
-            <FilterBar value={filterSelection} onValueChange={handleFilterSelection} />
-          </div>
+        {/* Result Modal - Enhanced */}
+        <AnimatePresence>
+          {showResult && generateResult && (
+            <motion.div 
+              className="fixed inset-0 bg-[#1a1a2e]/60 backdrop-blur-md z-50 flex items-center justify-center p-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <motion.div 
+                className="glass rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden relative border border-white/20"
+                initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              >
+                {recipeLoading && <RecipeLoadingScreen imageUrl={generateResult?.imageUrl} />}
+                
+                <div className="p-6 border-b border-[#e85d04]/10 bg-gradient-to-r from-white/50 to-white/30">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-2xl font-bold gradient-text">🍽️ Votre plat de rêve</h3>
+                    <motion.button
+                      onClick={handleCloseResult}
+                      className="w-10 h-10 rounded-full bg-white/50 hover:bg-white/80 text-[#1a1a2e] flex items-center justify-center transition-colors"
+                      whileHover={{ scale: 1.1, rotate: 90 }}
+                      whileTap={{ scale: 0.9 }}
+                    >
+                      ✕
+                    </motion.button>
+                  </div>
+                </div>
+                <div className="p-6 overflow-y-auto max-h-[70vh]">
+                  {generateResult.imageUrl && (
+                    <motion.div 
+                      className="mb-6 -mx-6 relative overflow-hidden"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 }}
+                    >
+                      <img
+                        src={generateResult.imageUrl}
+                        alt="Plat généré"
+                        className="w-full max-h-[420px] object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-white/20 to-transparent pointer-events-none" />
+                    </motion.div>
+                  )}
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-            {filteredIngredients.slice(0, displayedIngredientsCount).map((ingredient) => (
-              <IngredientCard
-                key={ingredient.name}
-                name={ingredient.name}
-                color={ingredient.color}
-                icon={ingredient.icon}
-                onSelect={() => handleSelectIngredient(ingredient)}
-              />
-            ))}
-          </div>
+                  <motion.div 
+                    className="mb-6"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    <h4 className="text-sm font-semibold text-[#1a1a2e] mb-3 flex items-center gap-2">
+                      <span>🧺</span> Ingrédients utilisés
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {ingredients.map((ing) => {
+                        const ingredientData = ingredientsWithTags.find(
+                          i => i.name.toLowerCase() === ing.label.toLowerCase()
+                        );
+                        const tags = ingredientData?.tags?.slice(0, 2) || [];
+                        
+                        return (
+                          <motion.div
+                            key={ing.id}
+                            className="flex items-center gap-2 bg-white/60 backdrop-blur-sm border border-[#e85d04]/20 rounded-xl px-3 py-2"
+                            whileHover={{ scale: 1.05 }}
+                          >
+                            <span className="text-lg">{ing.icon}</span>
+                            <div className="flex flex-col">
+                              <span className="text-sm font-medium text-[#1a1a2e]">{ing.label}</span>
+                              {tags.length > 0 && (
+                                <div className="flex gap-1 mt-0.5">
+                                  {tags.map((tag, idx) => (
+                                    <span
+                                      key={idx}
+                                      className="text-[10px] px-1.5 py-0.5 bg-[#e85d04]/10 text-[#e85d04] rounded-full"
+                                    >
+                                      {tag}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+                  
+                  {recipeError && (
+                    <motion.div 
+                      className="mb-4 glass border border-red-200/50 rounded-xl px-4 py-3 text-red-600 text-sm"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                    >
+                      ⚠️ {recipeError}
+                    </motion.div>
+                  )}
+                  
+                  <motion.div 
+                    className="mb-6 p-4 glass rounded-2xl border border-[#e85d04]/10"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    <h4 className="text-sm font-bold text-[#1a1a2e] mb-3">🏷️ Vos sélections</h4>
+                    <div className="space-y-2 text-sm">
+                      {filterSelection.type && (
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-[#1a1a2e]/70 min-w-[80px]">Type:</span>
+                          <span className="inline-block px-3 py-1 bg-gradient-to-r from-[#e85d04]/20 to-[#ffb703]/20 text-[#e85d04] rounded-full text-xs font-medium">{filterSelection.type}</span>
+                        </div>
+                      )}
+                      {filterSelection.style && (
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-[#1a1a2e]/70 min-w-[80px]">Style:</span>
+                          <span className="inline-block px-3 py-1 bg-gradient-to-r from-[#ffb703]/20 to-[#ffb703]/30 text-[#b8860b] rounded-full text-xs font-medium">{filterSelection.style}</span>
+                        </div>
+                      )}
+                      {filterSelection.cuisson && (
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-[#1a1a2e]/70 min-w-[80px]">Cuisson:</span>
+                          <span className="inline-block px-3 py-1 bg-rose-100/80 text-rose-700 rounded-full text-xs font-medium">{filterSelection.cuisson}</span>
+                        </div>
+                      )}
+                      {filterSelection.regime && (
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-[#1a1a2e]/70 min-w-[80px]">Régime:</span>
+                          <span className="inline-block px-3 py-1 bg-gradient-to-r from-[#2d6a4f]/20 to-[#2d6a4f]/30 text-[#2d6a4f] rounded-full text-xs font-medium">{filterSelection.regime}</span>
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                  
+                  <motion.details 
+                    className="glass rounded-2xl border border-white/30"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    <summary className="p-4 cursor-pointer text-[#1a1a2e] font-medium hover:bg-white/30 rounded-2xl transition-colors">
+                      📝 Voir la description du plat
+                    </summary>
+                    <div className="px-6 pb-6">
+                      <p className="text-[#1a1a2e]/80 leading-relaxed whitespace-pre-wrap text-sm">
+                        {generateResult.prompt}
+                      </p>
+                    </div>
+                  </motion.details>
+                  
+                  {generateResult.imageUrl && (
+                    <motion.button
+                      onClick={handleGenerateRecipe}
+                      disabled={recipeLoading}
+                      className="w-full mt-4 py-4 px-6 bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 
+                        hover:from-violet-600 hover:via-purple-600 hover:to-fuchsia-600 
+                        disabled:from-gray-300 disabled:to-gray-400 
+                        text-white rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl 
+                        disabled:shadow-none transition-all flex items-center justify-center gap-3
+                        relative overflow-hidden group"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.6 }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <div className="absolute inset-0 shimmer-bg opacity-50" />
+                      <span className="text-2xl relative z-10">📖</span>
+                      <span className="relative z-10">Générer la Recette</span>
+                      <span className="text-sm opacity-75 relative z-10">(avec IA Vision)</span>
+                    </motion.button>
+                  )}
+                  
+                  <motion.div 
+                    className="mt-4 flex flex-wrap gap-3"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.7 }}
+                  >
+                    {generateResult.imageUrl && (
+                      <motion.a
+                        href={generateResult.imageUrl}
+                        download="dreamdish-creation.png"
+                        className="flex-1 min-w-[140px] py-3 px-4 glass hover:bg-white/60 text-[#1a1a2e] rounded-xl font-medium transition-colors text-center border border-white/30"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        💾 Télécharger
+                      </motion.a>
+                    )}
+                    <motion.button
+                      onClick={() => navigator.clipboard.writeText(generateResult.prompt)}
+                      className="flex-1 min-w-[140px] py-3 px-4 glass hover:bg-white/60 text-[#1a1a2e] rounded-xl font-medium transition-colors border border-white/30"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      📋 Copier le prompt
+                    </motion.button>
+                    <motion.button
+                      onClick={handleCloseResult}
+                      className="flex-1 min-w-[140px] py-3 px-4 bg-gradient-to-r from-[#e85d04] to-[#ffb703] hover:from-[#d45003] hover:to-[#e5a503] text-white rounded-xl font-medium transition-colors shadow-lg"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      ✨ Nouveau plat
+                    </motion.button>
+                  </motion.div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-          {/* Élément invisible de référence pour l'IntersectionObserver - charge automatiquement au scroll */}
-          {displayedIngredientsCount < filteredIngredients.length && (
-            <div ref={loadMoreRef} className="h-1" aria-hidden="true" />
-          )}
-          
-          {filteredIngredients.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-2xl text-amber-600">
-                Aucun ingrédient ne correspond aux filtres sélectionnés
-              </p>
-              <p className="text-amber-500 mt-2">
-                Essayez de retirer certains filtres
-              </p>
-            </div>
-          )}
-        </section>
-      </main>
+        {showRecipe && recipeResult && generateResult?.imageUrl && (
+          <RecipeDisplay
+            recipe={recipeResult.recipe}
+            nutritionalInfo={recipeResult.nutritionalInfo}
+            drinkPairings={recipeResult.drinkPairings}
+            imageUrl={generateResult.imageUrl}
+            onClose={handleCloseRecipe}
+            onSaveToCookbook={handleSaveRecipe}
+            isSaved={isRecipeSaved}
+          />
+        )}
 
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-4xl z-20">
-        <div className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-6 space-y-4">
-          {generateError && (
-            <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-red-700 text-sm">
-              ⚠️ {generateError}
+        <main className="flex flex-col items-center justify-center min-h-screen pt-36 sm:pt-40 pb-40 sm:pb-48 px-4 relative z-10">
+          {/* Hero Section - Chef's Table */}
+          <motion.div 
+            className="relative w-full max-w-7xl mb-24 sm:mb-32 pt-32 sm:pt-36 px-8 sm:px-12"
+            style={{ perspective: '900px' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+          >
+            {/* Hero Title with Gradient */}
+            <motion.h1 
+              className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 text-5xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-center whitespace-nowrap z-10"
+              initial={{ opacity: 0, y: -30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+            >
+              <span className="gradient-text drop-shadow-lg">Crée ton plat de rêve</span>
+            </motion.h1>
+            
+            
+            <div 
+              className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6"
+              style={{
+                transform: 'rotateX(35deg)',
+                transformStyle: 'preserve-3d',
+                WebkitMaskImage: 'linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%)',
+                maskImage: 'linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%)',
+                overflow: 'visible',
+                paddingTop: '80px'
+              }}
+            >
+              {dishes.map((dish, index) => (
+                <DishCard
+                  key={index}
+                  image={dish.image}
+                  imageUrl={dish.imageUrl}
+                  title={dish.title}
+                  index={index}
+                />
+              ))}
             </div>
-          )}
-          
-          {removedIngredientsNotice && (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-xl px-4 py-3 text-yellow-700 text-sm">
-              ⚠️ {removedIngredientsNotice}
+          </motion.div>
+
+          {/* Section Title - Enhanced */}
+          <motion.div 
+            className="w-full py-6 sm:py-8 mt-2 mb-8 relative z-10"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+          >
+            <div className="max-w-4xl mx-auto px-4">
+              <div className="glass rounded-3xl px-8 py-6 border border-white/30 shadow-xl">
+                <h2 className="text-xl sm:text-3xl font-extrabold text-center">
+                  <span className="text-[#1a1a2e]">Choisissez parmi </span>
+                  <span className="gradient-text">des centaines d&apos;ingrédients</span>
+                </h2>
+                <p className="text-center text-[#1a1a2e]/60 mt-2 text-sm sm:text-base">
+                  Sélectionnez vos favoris et laissez l&apos;IA créer votre plat parfait
+                </p>
+              </div>
             </div>
-          )}
+          </motion.div>
           
-          <div className="flex flex-wrap gap-3 min-h-[3rem] items-center">
-            {/* Filter Selection Tags */}
-            {activeFilterSelections.map(({ type, value: tagValue }) => {
-              const colors = FILTER_TAG_COLORS[type];
-              return (
-                <div
-                  key={type}
-                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border shadow-md ${colors.bg} ${colors.border} ${colors.text} text-base font-medium hover:shadow-lg transition-shadow duration-200`}
+          {/* Ingredients Section */}
+          <section className="w-full max-w-7xl mx-auto px-4 sm:px-8 pt-6 pb-16 sm:pt-8 sm:pb-20">
+            <motion.div 
+              className="mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+            >
+              <FilterBar value={filterSelection} onValueChange={handleFilterSelection} />
+            </motion.div>
+
+            <motion.div 
+              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1 }}
+            >
+              {filteredIngredients.slice(0, displayedIngredientsCount).map((ingredient, index) => (
+                <IngredientCard
+                  key={ingredient.name}
+                  name={ingredient.name}
+                  color={ingredient.color}
+                  icon={ingredient.icon}
+                  onSelect={() => handleSelectIngredient(ingredient)}
+                />
+              ))}
+            </motion.div>
+
+            {displayedIngredientsCount < filteredIngredients.length && (
+              <div ref={loadMoreRef} className="h-1" aria-hidden="true" />
+            )}
+            
+            {filteredIngredients.length === 0 && (
+              <motion.div 
+                className="text-center py-12"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+              >
+                <p className="text-2xl text-[#e85d04]">
+                  Aucun ingrédient ne correspond aux filtres sélectionnés
+                </p>
+                <p className="text-[#1a1a2e]/60 mt-2">
+                  Essayez de retirer certains filtres
+                </p>
+              </motion.div>
+            )}
+          </section>
+        </main>
+
+        {/* Floating Action Bar - macOS Dock Style */}
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-4xl z-20">
+          <motion.div 
+            className="glass rounded-3xl shadow-2xl p-5 space-y-4 border border-white/30"
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.5, type: "spring", stiffness: 100 }}
+          >
+            {generateError && (
+              <motion.div 
+                className="glass border border-red-200/50 rounded-xl px-4 py-3 text-red-600 text-sm"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+              >
+                ⚠️ {generateError}
+              </motion.div>
+            )}
+            
+            {removedIngredientsNotice && (
+              <motion.div 
+                className="glass border border-[#ffb703]/50 rounded-xl px-4 py-3 text-[#b8860b] text-sm"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+              >
+                ⚠️ {removedIngredientsNotice}
+              </motion.div>
+            )}
+            
+            {/* Selected Items Area */}
+            <div className="flex flex-wrap gap-2.5 min-h-[3rem] items-center">
+              <AnimatePresence mode="popLayout">
+                {/* Filter Selection Tags */}
+                {activeFilterSelections.map(({ type, value: tagValue }) => {
+                  const colors = FILTER_TAG_COLORS[type];
+                  return (
+                    <motion.div
+                      key={type}
+                      className={`inline-flex items-center gap-2 px-4 py-2 rounded-2xl border shadow-md backdrop-blur-sm ${colors.bg} ${colors.border} ${colors.text} text-sm font-medium`}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      layout
+                    >
+                      <span className="text-lg">{colors.icon}</span>
+                      <span>{tagValue}</span>
+                      <motion.button
+                        onClick={() => handleRemoveFilter(type)}
+                        className="ml-1 w-5 h-5 rounded-full flex items-center justify-center hover:bg-black/10 transition-colors text-xs font-bold"
+                        title={`Retirer ce filtre`}
+                        whileHover={{ scale: 1.2, rotate: 90 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        ✕
+                      </motion.button>
+                    </motion.div>
+                  );
+                })}
+                
+                {/* Ingredient Tags */}
+                {ingredients.map((ingredient) => (
+                  <IngredientTag
+                    key={ingredient.id}
+                    icon={ingredient.icon}
+                    label={ingredient.label}
+                    onRemove={() => handleRemoveIngredient(ingredient.id)}
+                  />
+                ))}
+              </AnimatePresence>
+              
+              {ingredients.length === 0 && activeFilterSelections.length === 0 && (
+                <motion.span 
+                  className="text-[#1a1a2e]/40 italic"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
                 >
-                  <span className="text-2xl">{colors.icon}</span>
-                  <span>{tagValue}</span>
-                  <button
-                    onClick={() => handleRemoveFilter(type)}
-                    className="ml-1 w-5 h-5 rounded-full flex items-center justify-center hover:bg-black/10 transition-colors text-xs font-bold"
-                    title={`Retirer ce filtre`}
+                  Ajoutez des ingrédients pour commencer...
+                </motion.span>
+              )}
+            </div>
+            
+            {/* Input Area */}
+            <div className="relative">
+              <div className="flex items-center gap-3 bg-white/50 backdrop-blur-sm rounded-2xl px-5 py-3 border border-[#e85d04]/10 focus-within:border-[#e85d04]/30 focus-within:bg-white/70 transition-all duration-300">
+                <input
+                  type="text"
+                  value={inputValue}
+                  onChange={(e) => {
+                    setInputValue(e.target.value);
+                    setShowSuggestions(true);
+                  }}
+                  onFocus={() => setShowSuggestions(true)}
+                  onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Avez-vous une demande particulière pour votre plat ?"
+                  className="flex-1 bg-transparent outline-none text-[#1a1a2e] placeholder:text-[#1a1a2e]/40 text-sm sm:text-base"
+                />
+                <motion.button
+                  onClick={() => handleAddIngredient()}
+                  className="w-10 h-10 rounded-xl bg-white/70 hover:bg-white text-[#e85d04] font-bold text-xl transition-all flex items-center justify-center border border-[#e85d04]/20"
+                  title="Ajouter un ingrédient"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  +
+                </motion.button>
+                
+                {/* Generate Button - The Star */}
+                <motion.button
+                  onClick={handleGenerate}
+                  disabled={ingredients.length === 0 || generateLoading}
+                  className="px-6 h-12 rounded-xl bg-gradient-to-r from-[#e85d04] via-[#ff6b1a] to-[#ffb703] 
+                    hover:from-[#d45003] hover:via-[#e85d04] hover:to-[#e5a503]
+                    disabled:from-gray-300 disabled:to-gray-400 
+                    text-white font-bold shadow-lg hover:shadow-xl disabled:shadow-none 
+                    transition-all flex items-center justify-center gap-2 relative overflow-hidden group"
+                  title="Générer votre plat"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {/* Sparkle effects */}
+                  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div className="absolute top-1 left-2 w-1 h-1 bg-white rounded-full animate-sparkle" style={{ animationDelay: '0s' }} />
+                    <div className="absolute top-3 right-4 w-1.5 h-1.5 bg-white rounded-full animate-sparkle" style={{ animationDelay: '0.3s' }} />
+                    <div className="absolute bottom-2 left-6 w-1 h-1 bg-white rounded-full animate-sparkle" style={{ animationDelay: '0.6s' }} />
+                    <div className="absolute bottom-3 right-8 w-0.5 h-0.5 bg-white rounded-full animate-sparkle" style={{ animationDelay: '0.9s' }} />
+                  </div>
+                  <div className="absolute inset-0 shimmer-bg opacity-30 group-hover:opacity-50 transition-opacity" />
+                  <span className="relative z-10 text-lg">✨</span>
+                  <span className="relative z-10">Générer</span>
+                </motion.button>
+              </div>
+
+              {/* Suggestions Dropdown - Enhanced */}
+              <AnimatePresence>
+                {showSuggestions && suggestions.length > 0 && (
+                  <motion.div 
+                    className="absolute bottom-full left-0 right-0 mb-2 glass rounded-2xl shadow-xl border border-white/30 overflow-hidden"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                  >
+                    <div className="p-2">
+                      <p className="text-xs text-[#1a1a2e]/50 px-3 py-1 font-medium">Suggestions</p>
+                      {suggestions.map((suggestion, index) => (
+                        <motion.button
+                          key={index}
+                          onClick={() => handleSelectSuggestion(suggestion)}
+                          className="w-full text-left px-4 py-3 hover:bg-white/50 rounded-xl text-[#1a1a2e] transition-colors flex items-center gap-3"
+                          whileHover={{ x: 5 }}
+                        >
+                          <span className="text-lg">🥗</span>
+                          <span className="font-medium">{suggestion}</span>
+                        </motion.button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {suggestionsLoading && inputValue.length >= 2 && (
+                <motion.div 
+                  className="absolute bottom-full left-0 right-0 mb-2 glass rounded-2xl shadow-xl border border-white/30 p-4"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                >
+                  <div className="flex items-center gap-3 text-[#e85d04]">
+                    <div className="flex gap-1">
+                      <div className="w-2 h-2 bg-[#e85d04] rounded-full processing-dot"></div>
+                      <div className="w-2 h-2 bg-[#e85d04] rounded-full processing-dot"></div>
+                      <div className="w-2 h-2 bg-[#e85d04] rounded-full processing-dot"></div>
+                    </div>
+                    <span className="font-medium">Recherche de suggestions...</span>
+                  </div>
+                </motion.div>
+              )}
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Floating Filter Button - Enhanced */}
+        <div className="fixed bottom-40 right-4 md:bottom-12 md:right-8 z-40 flex flex-col items-end gap-3">
+          <AnimatePresence>
+            {isFilterOpen && (
+              <motion.div 
+                className="w-[320px] md:w-[400px] max-h-[60vh] overflow-y-auto glass rounded-2xl border border-white/30 shadow-xl p-5"
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-sm font-semibold tracking-wide text-[#1a1a2e] uppercase">Filtres</h3>
+                  <motion.button
+                    onClick={() => setIsFilterOpen(false)}
+                    className="w-8 h-8 rounded-full border border-[#e85d04]/20 text-[#e85d04] hover:bg-[#e85d04]/10 transition"
+                    aria-label="Fermer"
+                    whileHover={{ scale: 1.1, rotate: 90 }}
+                    whileTap={{ scale: 0.9 }}
                   >
                     ✕
-                  </button>
+                  </motion.button>
                 </div>
-              );
-            })}
-            
-            {/* Ingredient Tags */}
-            {ingredients.map((ingredient) => (
-              <IngredientTag
-                key={ingredient.id}
-                icon={ingredient.icon}
-                label={ingredient.label}
-                onRemove={() => handleRemoveIngredient(ingredient.id)}
-              />
-            ))}
-            {ingredients.length === 0 && activeFilterSelections.length === 0 && (
-              <span className="text-amber-400 italic">
-                Ajoutez des ingrédients pour commencer...
-              </span>
+                <FilterBar
+                  value={filterSelection}
+                  onValueChange={handleFilterSelection}
+                  collapsible
+                />
+              </motion.div>
             )}
-          </div>
+          </AnimatePresence>
           
-          <div className="relative">
-            <div className="flex items-center gap-3 bg-gradient-to-r from-orange-50 to-amber-50 rounded-full px-6 py-4 border-2 border-amber-200 focus-within:border-amber-400 transition-colors">
-              <input
-                type="text"
-                value={inputValue}
-                onChange={(e) => {
-                  setInputValue(e.target.value);
-                  setShowSuggestions(true);
-                }}
-                onFocus={() => setShowSuggestions(true)}
-                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-                onKeyPress={handleKeyPress}
-                placeholder="Avez-vous une demande particulière pour votre plat ?"
-                className="flex-1 bg-transparent outline-none text-amber-900 placeholder:text-amber-400"
-              />
-              <button
-                onClick={() => handleAddIngredient()}
-                className="w-10 h-10 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-600 font-bold text-xl transition-all flex items-center justify-center"
-                title="Ajouter un ingrédient"
-              >
-                +
-              </button>
-              <button
-                onClick={handleGenerate}
-                disabled={ingredients.length === 0 || generateLoading}
-                className="px-6 h-12 rounded-full bg-gradient-to-br from-orange-400 to-amber-500 hover:from-orange-500 hover:to-amber-600 disabled:from-gray-300 disabled:to-gray-400 text-white font-bold shadow-lg hover:shadow-xl disabled:shadow-none transition-all flex items-center justify-center gap-2"
-                title="Générer votre plat"
-              >
-                <span>✨</span>
-                <span>Générer</span>
-              </button>
-            </div>
-
-            {showSuggestions && suggestions.length > 0 && (
-              <div className="absolute bottom-full left-0 right-0 mb-2 bg-white rounded-2xl shadow-xl border border-amber-100 overflow-hidden">
-                <div className="p-2">
-                  <p className="text-xs text-amber-500 px-3 py-1">Suggestions</p>
-                  {suggestions.map((suggestion, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handleSelectSuggestion(suggestion)}
-                      className="w-full text-left px-4 py-3 hover:bg-amber-50 rounded-xl text-amber-900 transition-colors flex items-center gap-3"
-                    >
-                      <span className="text-lg">🥗</span>
-                      <span>{suggestion}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {suggestionsLoading && inputValue.length >= 2 && (
-              <div className="absolute bottom-full left-0 right-0 mb-2 bg-white rounded-2xl shadow-xl border border-amber-100 p-4">
-                <div className="flex items-center gap-3 text-amber-600">
-                  <div className="w-5 h-5 border-2 border-amber-400 border-t-transparent rounded-full animate-spin"></div>
-                  <span>Recherche de suggestions...</span>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="fixed bottom-36 right-6 md:bottom-14 md:right-10 z-40 flex flex-col items-end gap-3">
-        {isFilterOpen && (
-          <div className="w-[320px] md:w-[400px] max-h-[60vh] overflow-y-auto bg-gradient-to-br from-white via-amber-50 to-white rounded-2xl border border-amber-200/70 shadow-xl p-5">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold tracking-wide text-amber-900 uppercase">Filtres</h3>
-              <button
-                onClick={() => setIsFilterOpen(false)}
-                className="w-8 h-8 rounded-full border border-amber-200 text-amber-700 hover:bg-amber-50 transition"
-                aria-label="Fermer"
-              >
-                ✕
-              </button>
-            </div>
-            <FilterBar
-              value={filterSelection}
-              onValueChange={handleFilterSelection}
-              collapsible
-            />
-          </div>
-        )}
-        <button
-          onClick={() => setIsFilterOpen(prev => !prev)}
-          aria-label="Ouvrir les filtres"
-          className="w-16 h-16 rounded-full bg-amber-50 border-2 border-amber-300 text-amber-700 shadow-lg hover:shadow-xl hover:bg-amber-100 transition-all flex items-center justify-center"
-        >
-          <svg
-            width="26"
-            height="26"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
+          <motion.button
+            onClick={() => setIsFilterOpen(prev => !prev)}
+            aria-label="Ouvrir les filtres"
+            className="w-14 h-14 rounded-2xl glass border border-white/30 text-[#e85d04] shadow-lg hover:shadow-xl transition-all flex items-center justify-center"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
           >
-            <path d="M3 5h18" />
-            <path d="M7 12h10" />
-            <path d="M10 19h4" />
-          </svg>
-        </button>
-      </div>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M3 5h18" />
+              <path d="M7 12h10" />
+              <path d="M10 19h4" />
+            </svg>
+          </motion.button>
+        </div>
 
-      {/* Footer */}
-      <Footer />
-    </div>
+        {/* Footer */}
+        <Footer />
+      </div>
     </UserPanel>
   );
 }
