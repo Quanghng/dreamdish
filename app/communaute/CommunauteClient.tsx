@@ -12,6 +12,7 @@ type CommunityEntry = {
   id: string;
   recipe: unknown;
   imageUrl: string;
+  originalIngredients: unknown;
   createdAt: string;
   category: string | null;
   user: {
@@ -53,6 +54,63 @@ function getUserDisplayName(user: {
   if (fullName) return fullName;
   if (user.name && user.name.trim()) return user.name.trim();
   return user.email;
+}
+
+function normalizeIngredientName(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : null;
+}
+
+function readStringArray(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  const out: string[] = [];
+  for (const item of value) {
+    const normalized = normalizeIngredientName(item);
+    if (normalized) out.push(normalized);
+  }
+  return out;
+}
+
+function readRecipeIngredients(recipe: unknown): string[] {
+  if (!recipe || typeof recipe !== 'object') return [];
+
+  const ingredients = (recipe as { ingredients?: unknown }).ingredients;
+  if (!Array.isArray(ingredients)) return [];
+
+  const out: string[] = [];
+  for (const item of ingredients) {
+    if (typeof item === 'string') {
+      const normalized = normalizeIngredientName(item);
+      if (normalized) out.push(normalized);
+      continue;
+    }
+
+    if (item && typeof item === 'object') {
+      const name = (item as { name?: unknown }).name;
+      const normalized = normalizeIngredientName(name);
+      if (normalized) out.push(normalized);
+    }
+  }
+  return out;
+}
+
+function buildSeedIngredients(entry: { originalIngredients: unknown; recipe: unknown }): string[] {
+  const fromOriginal = readStringArray(entry.originalIngredients);
+  const fromRecipe = readRecipeIngredients(entry.recipe);
+  const merged = [...fromOriginal, ...fromRecipe];
+
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const item of merged) {
+    const key = item.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(item);
+    if (out.length >= 15) break;
+  }
+
+  return out;
 }
 
 export default function CommunauteClient({
@@ -138,6 +196,7 @@ export default function CommunauteClient({
                     initialLikesCount={entry.likesCount}
                     initialCommentsCount={entry.commentsCount}
                     initialLiked={likedSet.has(entry.id)}
+                    seedIngredients={buildSeedIngredients(entry)}
                   />
                 );
               })}
