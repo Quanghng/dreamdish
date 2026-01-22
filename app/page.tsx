@@ -780,22 +780,22 @@ export default function Home() {
         )}
 
         <main className="flex flex-col items-center justify-center min-h-screen pt-36 sm:pt-40 pb-40 sm:pb-48 px-4 relative z-10">
-          {/* Hero Section - Chef's Table */}
-          <motion.div 
-            className="relative w-full max-w-7xl mb-24 sm:mb-32 pt-32 sm:pt-36 px-8 sm:px-12"
+            {/* Hero Section - Chef's Table */}
+            <motion.div 
+            className="relative w-full max-w-7xl mb-8 sm:mb-16 px-8 sm:px-12"
             style={{ perspective: '900px' }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
-          >
+            >
             {/* Hero Title with Gradient */}
             <motion.h1 
-              className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 text-5xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-center whitespace-nowrap z-10"
+              className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 text-5xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-center whitespace-nowrap z-10 font-sans uppercase"
               initial={{ opacity: 0, y: -30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.6 }}
             >
-              <span className="gradient-text drop-shadow-lg">Crée ton plat de rêve</span>
+              <span className="gradient-text drop-shadow-lg">CRÉE TON PLAT DE RÊVE</span>
             </motion.h1>
             
             
@@ -807,7 +807,7 @@ export default function Home() {
                 WebkitMaskImage: 'linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%)',
                 maskImage: 'linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%)',
                 overflow: 'visible',
-                paddingTop: '80px'
+                paddingTop: '40px'
               }}
             >
               {dishes.map((dish, index) => (
