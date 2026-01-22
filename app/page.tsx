@@ -182,6 +182,76 @@ export default function Home() {
     return { ...ing, tags: defaultTags };
   });
 
+  // Helper function to check if an ingredient is compatible with the current regime
+  const isIngredientCompatibleWithRegime = (ingredientLabel: string, regime: string): boolean => {
+    if (!regime) return true;
+    
+    const ingredientData = ingredientsWithTags.find(
+      i => i.name.toLowerCase() === ingredientLabel.toLowerCase()
+    );
+    
+    if (!ingredientData) return true; // Allow unknown ingredients
+    
+    const ingredientTags = ingredientData.tags?.map(t => t.toLowerCase()) || [];
+    const regimeLower = regime.toLowerCase();
+    
+    if (regimeLower === 'vegan') {
+      const excludedCategories = ['viande', 'poisson', 'produit laitier'];
+      const hasExcludedCategory = excludedCategories.some(cat => ingredientTags.includes(cat));
+      if (hasExcludedCategory || !ingredientTags.includes('vegan')) {
+        return false;
+      }
+    }
+    
+    if (regimeLower === 'végétarien') {
+      const excludedCategories = ['viande', 'poisson'];
+      const hasExcludedCategory = excludedCategories.some(cat => ingredientTags.includes(cat));
+      if (hasExcludedCategory) {
+        return false;
+      }
+    }
+    
+    if (regimeLower === 'sans gluten') {
+      if (!ingredientTags.includes('sans gluten')) {
+        return false;
+      }
+    }
+    
+    if (regimeLower === 'sans lactose') {
+      if (!ingredientTags.includes('sans lactose')) {
+        return false;
+      }
+    }
+    
+    return true;
+  };
+
+  // Effect to remove incompatible ingredients when regime changes
+  useEffect(() => {
+    if (!filterSelection.regime) {
+      setRemovedIngredientsNotice(null);
+      return;
+    }
+    
+    const currentRegime = filterSelection.regime;
+    const incompatibleIngredients = ingredients.filter(
+      ing => !isIngredientCompatibleWithRegime(ing.label, currentRegime)
+    );
+    
+    if (incompatibleIngredients.length > 0) {
+      const removedNames = incompatibleIngredients.map(ing => ing.label).join(', ');
+      setIngredients(prev => 
+        prev.filter(ing => isIngredientCompatibleWithRegime(ing.label, currentRegime))
+      );
+      setRemovedIngredientsNotice(
+        `Ingrédients retirés (incompatibles avec ${currentRegime}): ${removedNames}`
+      );
+      
+      // Auto-hide the notice after 5 seconds
+      setTimeout(() => setRemovedIngredientsNotice(null), 5000);
+    }
+  }, [filterSelection.regime]);
+
   // Filtrer les ingrédients selon la categorie uniquement
   // - Catégories: OBLIGATOIRE si sélectionnée (légume, poisson, etc)
   // - Autres filtres: servent aux recommandations, pas au filtrage ici
@@ -420,8 +490,8 @@ export default function Home() {
       cookbook={cookbook}
       updateRecipeCategory={updateRecipeCategory}
       fetchCookbook={fetchCookbook}
-      renderNavbar={({ onUserClick, userAvatar }) => (
-        <Navbar onUserClick={onUserClick} userAvatar={userAvatar} />
+      renderNavbar={({ onUserClick, userAvatar, isAuthenticated }) => (
+        <Navbar onUserClick={onUserClick} userAvatar={userAvatar} isAuthenticated={isAuthenticated} />
       )}
     >
       <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 relative overflow-hidden">
@@ -679,6 +749,12 @@ export default function Home() {
           {generateError && (
             <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-red-700 text-sm">
               ⚠️ {generateError}
+            </div>
+          )}
+          
+          {removedIngredientsNotice && (
+            <div className="bg-yellow-50 border border-yellow-200 rounded-xl px-4 py-3 text-yellow-700 text-sm">
+              ⚠️ {removedIngredientsNotice}
             </div>
           )}
           

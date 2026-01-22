@@ -11,6 +11,7 @@ const DEFAULT_CATEGORIES = ['Rapide', 'Healthy', 'Famille', 'Festif', 'Comfort',
 type UserPanelNavbarProps = {
   onUserClick: () => void;
   userAvatar?: string;
+  isAuthenticated: boolean;
 };
 
 type UserPanelProps = {
@@ -275,7 +276,11 @@ export default function UserPanel({
 
   return (
     <>
-      {renderNavbar({ onUserClick: handleOpenUserPanel, userAvatar: userProfile?.avatarUrl })}
+      {renderNavbar({
+        onUserClick: handleOpenUserPanel,
+        userAvatar: userProfile?.avatarUrl,
+        isAuthenticated: Boolean(session?.user?.id),
+      })}
 
       {viewingCookbookEntry && (
         <RecipeDisplay

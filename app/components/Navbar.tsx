@@ -4,9 +4,10 @@ import Link from 'next/link';
 interface NavbarProps {
   onUserClick?: () => void;
   userAvatar?: string;
+  isAuthenticated?: boolean;
 }
 
-export default function Navbar({ onUserClick, userAvatar }: NavbarProps) {
+export default function Navbar({ onUserClick, userAvatar, isAuthenticated }: NavbarProps) {
   return (
     <nav className="fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-7xl">
       <div className="bg-white/85 backdrop-blur-md rounded-2xl shadow-lg px-4 sm:px-6 py-3 sm:py-4 flex flex-wrap items-center justify-between gap-3">
@@ -27,7 +28,14 @@ export default function Navbar({ onUserClick, userAvatar }: NavbarProps) {
             Communauté
           </Link>
 
-          {onUserClick ? (
+          <Link
+            href="/stats"
+            className="px-4 sm:px-6 py-2 rounded-full hover:bg-amber-100 transition-colors text-amber-900 font-semibold text-sm sm:text-base"
+          >
+            Stats
+          </Link>
+
+          {onUserClick && isAuthenticated ? (
             <button
               type="button"
               onClick={onUserClick}

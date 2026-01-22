@@ -50,6 +50,7 @@ export default async function CommunautePage(props: { searchParams?: Promise<{ c
       _count: {
         select: {
           likes: true,
+          comments: true,
         },
       },
     },
@@ -87,6 +88,7 @@ export default async function CommunautePage(props: { searchParams?: Promise<{ c
       avatarUrl: entry.user.avatarUrl,
     },
     likesCount: entry._count.likes,
+    commentsCount: entry._count.comments,
   }));
 
   return (
