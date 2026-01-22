@@ -8,23 +8,33 @@ const UNCATEGORIZED_TOKEN = '__none__';
 
 export const dynamic = 'force-dynamic';
 
-export default async function CommunautePage(props: { searchParams?: Promise<{ category?: string }> | { category?: string } }) {
+export default async function CommunautePage(props: { searchParams?: Promise<{ category?: string; mine?: string }> | { category?: string; mine?: string } }) {
   const resolvedSearchParams =
     props.searchParams && typeof (props.searchParams as Promise<unknown>)?.then === 'function'
-      ? await (props.searchParams as Promise<{ category?: string }>)
-      : (props.searchParams as { category?: string } | undefined);
+      ? await (props.searchParams as Promise<{ category?: string; mine?: string }>)
+      : (props.searchParams as { category?: string; mine?: string } | undefined);
   const rawCategory = resolvedSearchParams?.category;
   const selectedCategory = rawCategory === UNCATEGORIZED_TOKEN ? 'Sans catégorie' : rawCategory || 'Tous';
+  const isMine = resolvedSearchParams?.mine === '1';
 
   const session = await getServerSession(authOptions);
   const userId = session?.user?.id;
 
-  const entries = await prisma.cookbookEntry.findMany({
-    where: selectedCategory === 'Tous'
-      ? undefined
+  const whereCategory =
+    selectedCategory === 'Tous'
+      ? {}
       : selectedCategory === 'Sans catégorie'
         ? { category: null }
-        : { category: selectedCategory },
+        : { category: selectedCategory };
+
+  const whereMine = isMine
+    ? userId
+      ? { userId }
+      : { userId: '__no_user__' }
+    : {};
+
+  const entries = await prisma.cookbookEntry.findMany({
+    where: { ...whereCategory, ...whereMine },
     orderBy: { createdAt: 'desc' },
     take: 60,
     include: {
@@ -86,6 +96,8 @@ export default async function CommunautePage(props: { searchParams?: Promise<{ c
       selectedCategory={selectedCategory}
       likedEntryIds={Array.from(likedEntryIds)}
       uncategorizedToken={UNCATEGORIZED_TOKEN}
+      canFilterMine={Boolean(userId)}
+      isMineSelected={isMine}
     />
   );
 }
