@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import UserPanel from '../components/UserPanel';
@@ -34,9 +35,31 @@ function StatCard(props: {
   imageUrl?: string;
   title?: string;
   meta?: string;
+  href?: string;
 }) {
+  const router = useRouter();
+
   return (
-    <div className="rounded-3xl border border-amber-100 bg-white/80 backdrop-blur-md p-5 shadow-sm">
+    <div
+      role={props.href ? 'button' : undefined}
+      tabIndex={props.href ? 0 : undefined}
+      onClick={props.href ? () => router.push(props.href!) : undefined}
+      onKeyDown={
+        props.href
+          ? (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                router.push(props.href!);
+              }
+            }
+          : undefined
+      }
+      className={
+        props.href
+          ? 'rounded-3xl border border-amber-100 bg-white/80 backdrop-blur-md p-5 shadow-sm cursor-pointer hover:shadow-md hover:border-amber-200 transition-all outline-none focus:ring-2 focus:ring-amber-300'
+          : 'rounded-3xl border border-amber-100 bg-white/80 backdrop-blur-md p-5 shadow-sm'
+      }
+    >
       <div className="text-xs font-semibold text-amber-700">{props.label}</div>
       <div className="mt-1 text-3xl font-extrabold text-amber-950">{props.value}</div>
       {props.subtitle ? <div className="mt-1 text-sm text-amber-700">{props.subtitle}</div> : null}
@@ -68,11 +91,11 @@ export default function StatsClient({ topLiked, topCommented, topIngredient, sam
       cookbook={cookbook}
       updateRecipeCategory={updateRecipeCategory}
       fetchCookbook={fetchCookbook}
-      renderNavbar={({ onUserClick, userAvatar }) => (
-        <Navbar onUserClick={onUserClick} userAvatar={userAvatar} />
+      renderNavbar={({ onUserClick, userAvatar, isAuthenticated }) => (
+        <Navbar onUserClick={onUserClick} userAvatar={userAvatar} isAuthenticated={isAuthenticated} />
       )}
     >
-      <div className="min-h-screen bg-gradient-to-b from-amber-50 via-orange-50 to-white">
+      <div className="min-h-screen bg-linear-to-b from-amber-50 via-orange-50 to-white">
         <main className="pt-28 sm:pt-32 pb-20 sm:pb-24 max-w-7xl mx-auto px-4 sm:px-6">
           <div className="mb-8 sm:mb-10">
             <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-amber-950">Stats</h1>
@@ -92,6 +115,7 @@ export default function StatsClient({ topLiked, topCommented, topIngredient, sam
               imageUrl={topLiked?.imageUrl}
               title={topLiked?.title}
               meta={topLiked ? `${topLiked.authorAvatar} ${topLiked.authorName}${topLiked.category ? ` • ${topLiked.category}` : ''}` : undefined}
+              href={topLiked ? `/communaute/${topLiked.id}` : undefined}
             />
 
             <StatCard
@@ -101,6 +125,7 @@ export default function StatsClient({ topLiked, topCommented, topIngredient, sam
               imageUrl={topCommented?.imageUrl}
               title={topCommented?.title}
               meta={topCommented ? `${topCommented.authorAvatar} ${topCommented.authorName}${topCommented.category ? ` • ${topCommented.category}` : ''}` : undefined}
+              href={topCommented ? `/communaute/${topCommented.id}` : undefined}
             />
 
             <StatCard
