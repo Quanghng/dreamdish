@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Navbar from './components/Navbar';
 import DishCard from './components/DishCard';
 import IngredientTag from './components/IngredientTag';
@@ -21,6 +21,10 @@ interface Ingredient {
   icon: string;
   label: string;
 }
+
+// Constantes pour le lazy loading
+const INITIAL_INGREDIENTS_COUNT = 20;
+const LOAD_MORE_COUNT = 20;
 
 // Tag color configurations for filter selections
 const FILTER_TAG_COLORS = {
@@ -72,6 +76,10 @@ export default function Home() {
   const [showRecipe, setShowRecipe] = useState(false);
   const [isRecipeSaved, setIsRecipeSaved] = useState(false);
   const [hasClearedDefaults, setHasClearedDefaults] = useState(false);
+  
+  // State pour le lazy loading des ingrédients
+  const [displayedIngredientsCount, setDisplayedIngredientsCount] = useState(INITIAL_INGREDIENTS_COUNT);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const { 
     suggestions, 
@@ -113,21 +121,21 @@ export default function Home() {
   });
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const dishes = [
-    { image: '🍝', title: 'Pasta' },
-    { image: '🍕', title: 'Pizza' },
-    { image: '🍜', title: 'Ramen' },
-    { image: '🍛', title: 'Curry' },
-    { image: '🥘', title: 'Paella' },
-    { image: '🍔', title: 'Burger' },
-    { image: '🌮', title: 'Tacos' },
-    { image: '🍱', title: 'Bento' },
-    { image: '🥗', title: 'Salade' },
-    { image: '🍲', title: 'Pot-au-feu' },
-    { image: '🍣', title: 'Sushi' },
-    { image: '🥙', title: 'Kebab' },
-    { image: '🍤', title: 'Tempura' },
-    { image: '🥟', title: 'Ravioli' },
-    { image: '🍖', title: 'Viande' },
+    { image: '🍝', title: 'Pasta', imageUrl: '/img/meals/meal1.png' },
+    { image: '🍕', title: 'Pizza', imageUrl: '/img/meals/meal2.png' },
+    { image: '🍜', title: 'Ramen', imageUrl: '/img/meals/meal3.png' },
+    { image: '🍛', title: 'Curry', imageUrl: '/img/meals/meal4.png' },
+    { image: '🥘', title: 'Paella', imageUrl: '/img/meals/meal5.png' },
+    { image: '🍔', title: 'Burger', imageUrl: '/img/meals/meal6.png' },
+    { image: '🌮', title: 'Tacos', imageUrl: '/img/meals/meal7.png' },
+    { image: '🍱', title: 'Bento', imageUrl: '/img/meals/meal8.png' },
+    { image: '🥗', title: 'Salade', imageUrl: '/img/meals/meal9.png' },
+    { image: '🍲', title: 'Pot-au-feu', imageUrl: '/img/meals/meal10.png' },
+    { image: '🍣', title: 'Sushi', imageUrl: '/img/meals/meal11.png' },
+    { image: '🥙', title: 'Kebab', imageUrl: '/img/meals/meal12.png' },
+    { image: '🍤', title: 'Tempura', imageUrl: '/img/meals/meal13.png' },
+    { image: '🥟', title: 'Ravioli', imageUrl: '/img/meals/meal14.png' },
+    { image: '🍖', title: 'Viande', imageUrl: '/img/meals/meal15.png' },
   ];
 
   const ingredientsWithTags = ingredientsData.map(ing => {
@@ -256,6 +264,36 @@ export default function Home() {
     setIngredients(prev => prev.filter(ing => !DEFAULT_INGREDIENT_IDS.has(ing.id)));
     setHasClearedDefaults(true);
   }, [hasClearedDefaults, ingredients]);
+
+  // Réinitialiser le compteur d'ingrédients affichés quand les filtres changent
+  useEffect(() => {
+    setDisplayedIngredientsCount(INITIAL_INGREDIENTS_COUNT);
+  }, [filterSelection, selectedCategory]);
+
+  // Intersection Observer pour le lazy loading
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && displayedIngredientsCount < filteredIngredients.length) {
+          setDisplayedIngredientsCount(prev => 
+            Math.min(prev + LOAD_MORE_COUNT, filteredIngredients.length)
+          );
+        }
+      },
+      { threshold: 0.1, rootMargin: '500px' }
+    );
+
+    const currentRef = loadMoreRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, [displayedIngredientsCount, filteredIngredients.length]);
 
   // Helper to remove a specific filter
   const handleRemoveFilter = (filterType: keyof FilterSelection) => {
@@ -564,10 +602,9 @@ export default function Home() {
 
       <main className="flex flex-col items-center justify-center min-h-screen pt-36 sm:pt-40 pb-40 sm:pb-48 px-4">
         <div 
-          className="relative w-full max-w-7xl mb-24 sm:mb-32 pt-20 sm:pt-24"
+          className="relative w-full max-w-7xl mb-24 sm:mb-32 pt-32 sm:pt-36 px-8 sm:px-12"
           style={{
-            perspective: '900px',
-            perspectiveOrigin: 'center top'
+            perspective: '900px'
           }}
         >
           <h1 className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 text-3xl sm:text-5xl lg:text-6xl font-extrabold italic tracking-tight text-amber-900 drop-shadow-sm text-center whitespace-nowrap z-10">
@@ -580,12 +617,15 @@ export default function Home() {
               transformStyle: 'preserve-3d',
               WebkitMaskImage: 'linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%)',
               maskImage: 'linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%)',
+              overflow: 'visible',
+              paddingTop: '80px'
             }}
           >
             {dishes.map((dish, index) => (
               <DishCard
                 key={index}
                 image={dish.image}
+                imageUrl={dish.imageUrl}
                 title={dish.title}
                 index={index}
               />
@@ -605,7 +645,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-            {filteredIngredients.map((ingredient) => (
+            {filteredIngredients.slice(0, displayedIngredientsCount).map((ingredient) => (
               <IngredientCard
                 key={ingredient.name}
                 name={ingredient.name}
@@ -615,6 +655,11 @@ export default function Home() {
               />
             ))}
           </div>
+
+          {/* Élément invisible de référence pour l'IntersectionObserver - charge automatiquement au scroll */}
+          {displayedIngredientsCount < filteredIngredients.length && (
+            <div ref={loadMoreRef} className="h-1" aria-hidden="true" />
+          )}
           
           {filteredIngredients.length === 0 && (
             <div className="text-center py-12">
