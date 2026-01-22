@@ -15,8 +15,10 @@ interface RecipeDisplayProps {
   nutritionalInfo?: NutritionalInfo;
   drinkPairings?: DrinkPairing[];
   onClose: () => void;
+  onExpand?: () => void;
   onSaveToCookbook?: () => void;
   isSaved?: boolean;
+  variant?: 'modal' | 'page';
 }
 
 type TabType = 'recipe' | 'nutrition' | 'pairing';
@@ -27,8 +29,10 @@ export default function RecipeDisplay({
   nutritionalInfo,
   drinkPairings,
   onClose,
+  onExpand,
   onSaveToCookbook,
-  isSaved = false
+  isSaved = false,
+  variant = 'modal'
 }: RecipeDisplayProps) {
   const [activeTab, setActiveTab] = useState<TabType>('recipe');
   const [checkedSteps, setCheckedSteps] = useState<Set<number>>(new Set());
@@ -91,9 +95,17 @@ export default function RecipeDisplay({
 
   const totalTime = recipe.prepTime + recipe.cookTime;
 
+  const isModal = variant === 'modal';
+  const overlayClassName = isModal
+    ? 'fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto'
+    : 'w-full';
+  const cardClassName = isModal
+    ? 'bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[95vh] overflow-hidden flex flex-col'
+    : 'bg-white rounded-3xl shadow-2xl max-w-4xl w-full overflow-hidden flex flex-col';
+
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[95vh] overflow-hidden flex flex-col">
+    <div className={overlayClassName}>
+      <div className={cardClassName}>
         {/* Header avec image */}
         <div className="relative h-64 flex-shrink-0">
           <img
@@ -103,6 +115,19 @@ export default function RecipeDisplay({
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
           
+          {/* Bouton agrandir (optionnel) */}
+          {isModal && onExpand ? (
+            <button
+              type="button"
+              onClick={onExpand}
+              className="absolute top-4 right-16 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-gray-700 flex items-center justify-center transition-colors shadow-lg"
+              aria-label="Agrandir"
+              title="Agrandir"
+            >
+              ⛶
+            </button>
+          ) : null}
+
           {/* Bouton fermer */}
           <button
             onClick={onClose}

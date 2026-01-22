@@ -1,0 +1,151 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Merge feature/frontnew into dev and push",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-NoProfile",
+				"-ExecutionPolicy",
+				"Bypass",
+				"-Command",
+				"Set-Location \"c:\\Users\\verdi\\MY_SPACE\\EFREI\\M2\\PROJET WEB\\projet\\dreamdish\"; $env:GIT_PAGER='cat'; $env:GIT_EDITOR='true'; git checkout dev; git pull origin dev; git merge --no-edit feature/frontnew; git push origin dev"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Merge feature/frontnew into dev and push (cmd)",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"cd /d \"c:\\Users\\verdi\\MY_SPACE\\EFREI\\M2\\PROJET WEB\\projet\\dreamdish\" & set GIT_PAGER=cat & set GIT_EDITOR=true & git checkout dev & git pull origin dev & git merge --no-edit feature/frontnew & git push origin dev"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Check merge state",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"cd /d \"c:\\Users\\verdi\\MY_SPACE\\EFREI\\M2\\PROJET WEB\\projet\\dreamdish\" & git status & git diff --name-only --diff-filter=U"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Git status porcelain",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"cd /d \"c:\\Users\\verdi\\MY_SPACE\\EFREI\\M2\\PROJET WEB\\projet\\dreamdish\" & git status --porcelain=v1 -b"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Check MERGE_HEAD",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"cd /d \"c:\\Users\\verdi\\MY_SPACE\\EFREI\\M2\\PROJET WEB\\projet\\dreamdish\" & git rev-parse -q --verify MERGE_HEAD && echo MERGE_IN_PROGRESS || echo NO_MERGE_HEAD"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Commit staged changes on dev",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"cd /d \"c:\\Users\\verdi\\MY_SPACE\\EFREI\\M2\\PROJET WEB\\projet\\dreamdish\" & git commit -m \"merge feature/frontnew: cookbook + pdf + vitest\""
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Commit staged changes on dev (safe msg)",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"cd /d \"c:\\Users\\verdi\\MY_SPACE\\EFREI\\M2\\PROJET WEB\\projet\\dreamdish\" & git commit -m merge_feature_frontnew_cookbook_pdf_vitest"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Push dev",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"cd /d \"c:\\Users\\verdi\\MY_SPACE\\EFREI\\M2\\PROJET WEB\\projet\\dreamdish\" & git push origin dev"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Verify dev up-to-date",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"cd /d \"c:\\Users\\verdi\\MY_SPACE\\EFREI\\M2\\PROJET WEB\\projet\\dreamdish\" & git status --porcelain=v1 -b & git log -1 --oneline"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Git status (clean check)",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"cd /d \"c:\\Users\\verdi\\MY_SPACE\\EFREI\\M2\\PROJET WEB\\projet\\dreamdish\" & git status --porcelain=v1 -b"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Commit .gitignore only and push dev",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"cd /d \"c:\\Users\\verdi\\MY_SPACE\\EFREI\\M2\\PROJET WEB\\projet\\dreamdish\" & git add .gitignore & git commit -m chore_ignore_vscode & git push origin dev"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Final git status",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"cd /d \"c:\\Users\\verdi\\MY_SPACE\\EFREI\\M2\\PROJET WEB\\projet\\dreamdish\" & git status --porcelain=v1 -b"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		}
+	]
+}

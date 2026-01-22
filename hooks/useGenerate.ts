@@ -93,6 +93,7 @@ export function useGenerate(options: UseGenerateOptions = {}): UseGenerateReturn
           style: genOptions?.style || defaultStyle,
           presentation: genOptions?.presentation || defaultPresentation,
           filters: genOptions?.filters || {},
+          additionalContext: genOptions?.additionalContext,
         }),
       });
 

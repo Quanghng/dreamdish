@@ -9,14 +9,41 @@ const STYLE = ['français', 'italien', 'japonais', 'chinois', 'indien', 'mexicai
 const REGIME = ['végétarien', 'vegan', 'sans gluten', 'sans lactose', 'halal', 'casher'];
 const TYPE = ['entrée', 'plat principal', 'dessert', 'apéritif', 'petit-déjeuner'];
 
+// Categories that are incompatible with dietary restrictions
+const REGIME_INCOMPATIBLE_CATEGORIES: Record<string, string[]> = {
+  'vegan': ['viande', 'poisson', 'produit laitier'],
+  'végétarien': ['viande', 'poisson'],
+  'sans lactose': ['produit laitier'],
+  'halal': [], // Halal restricts certain meats but not the whole category - handled at ingredient level
+  'casher': [], // Casher restricts certain items but not whole categories - handled at ingredient level
+};
+
+// Tooltip messages explaining why categories are disabled
+const REGIME_DISABLED_REASONS: Record<string, Record<string, string>> = {
+  'vegan': {
+    'viande': 'Les végans ne consomment pas de viande',
+    'poisson': 'Les végans ne consomment pas de poisson',
+    'produit laitier': 'Les végans ne consomment pas de produits laitiers',
+  },
+  'végétarien': {
+    'viande': 'Les végétariens ne consomment pas de viande',
+    'poisson': 'Les végétariens ne consomment pas de poisson',
+  },
+  'sans lactose': {
+    'produit laitier': 'Les produits laitiers contiennent du lactose',
+  },
+};
+
 interface FilterChipProps {
   label: string;
   group: 'category' | 'cuisson' | 'style' | 'regime' | 'type';
   selection: FilterSelection;
   onToggle: (filter: string) => void;
+  disabled?: boolean;
+  disabledReason?: string;
 }
 
-function FilterChip({ label, group, selection, onToggle }: FilterChipProps) {
+function FilterChip({ label, group, selection, onToggle, disabled = false, disabledReason }: FilterChipProps) {
   const isActive =
     group === 'category'
       ? selection.category === label
@@ -27,16 +54,22 @@ function FilterChip({ label, group, selection, onToggle }: FilterChipProps) {
           : group === 'regime'
             ? selection.regime === label
             : selection.type === label;
+  
   return (
     <button
-      onClick={() => onToggle(label)}
+      onClick={() => !disabled && onToggle(label)}
+      disabled={disabled}
+      title={disabled ? disabledReason : undefined}
       className={`px-5 py-2 rounded-full border-2 transition-all duration-300 text-sm font-medium ${
-        isActive
-          ? 'bg-amber-500 border-amber-500 text-white shadow-md'
-          : 'bg-white border-amber-200 text-amber-900 hover:border-amber-400'
+        disabled
+          ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed opacity-50'
+          : isActive
+            ? 'bg-amber-500 border-amber-500 text-white shadow-md'
+            : 'bg-white border-amber-200 text-amber-900 hover:border-amber-400'
       }`}
     >
       {label}
+      {disabled && <span className="ml-1 text-xs">🚫</span>}
     </button>
   );
 }
@@ -64,10 +97,23 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
   }));
   const selection = value ?? internalSelection;
 
+  // Get disabled categories based on current regime selection
+  const getDisabledCategories = (): Set<string> => {
+    const regime = selection.regime?.toLowerCase();
+    if (!regime) return new Set();
+    
+    const incompatible = REGIME_INCOMPATIBLE_CATEGORIES[regime];
+    return incompatible ? new Set(incompatible) : new Set();
+  };
+
+  const disabledCategories = getDisabledCategories();
+
   const toggleFilter = (filter: string) => {
     const nextSelection: FilterSelection = { ...selection };
 
     if (CATEGORIES.includes(filter)) {
+      // Don't allow selecting disabled categories
+      if (disabledCategories.has(filter)) return;
       nextSelection.category = selection.category === filter ? '' : filter;
     } else if (CUISSON.includes(filter)) {
       nextSelection.cuisson = selection.cuisson === filter ? '' : filter;
@@ -75,6 +121,13 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
       nextSelection.style = selection.style === filter ? '' : filter;
     } else if (REGIME.includes(filter)) {
       nextSelection.regime = selection.regime === filter ? '' : filter;
+      // Clear incompatible category when changing regime
+      if (nextSelection.regime) {
+        const newIncompatible = REGIME_INCOMPATIBLE_CATEGORIES[nextSelection.regime.toLowerCase()];
+        if (newIncompatible && nextSelection.category && newIncompatible.includes(nextSelection.category)) {
+          nextSelection.category = '';
+        }
+      }
     } else if (TYPE.includes(filter)) {
       nextSelection.type = selection.type === filter ? '' : filter;
     }
@@ -86,54 +139,63 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
   };
 
   return (
-    <div className="space-y-6 px-6 md:px-8">
+    <div className="space-y-6 px-4 md:px-6">
       {/* Catégories */}
-      <div className="grid gap-3 md:grid-cols-[160px_1fr] items-start">
+      <div className="grid gap-3 md:grid-cols-[220px_1fr] items-start">
         {collapsible ? (
           <button
             type="button"
             onClick={() =>
               setOpenSections(prev => ({ ...prev, category: !prev.category }))
             }
-            className="flex items-center gap-2 text-left text-lg font-semibold text-amber-900"
+            className="flex w-full items-center justify-start gap-3 rounded-full border border-amber-200 bg-amber-50 px-5 py-2 text-left text-sm font-semibold text-amber-900 shadow-sm hover:border-amber-300 min-h-[40px]"
           >
-            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-amber-50 text-amber-700">
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-white text-amber-700">
               {openSections.category ? '−' : '+'}
             </span>
             Catégories
           </button>
         ) : (
-          <h3 className="text-lg font-semibold text-amber-900">Catégories</h3>
+          <h3 className="inline-flex items-center justify-center rounded-full border border-amber-200 bg-amber-50 px-5 py-2 text-center text-sm font-semibold text-amber-900 shadow-sm min-h-[40px]">
+            Catégories
+          </h3>
         )}
         {(!collapsible || openSections.category) && (
           <div className="flex flex-wrap gap-2">
-            <FilterChip label="viande" group="category" selection={selection} onToggle={toggleFilter} />
-            <FilterChip label="poisson" group="category" selection={selection} onToggle={toggleFilter} />
-            <FilterChip label="légume" group="category" selection={selection} onToggle={toggleFilter} />
-            <FilterChip label="fruit" group="category" selection={selection} onToggle={toggleFilter} />
-            <FilterChip label="produit laitier" group="category" selection={selection} onToggle={toggleFilter} />
-            <FilterChip label="céréale" group="category" selection={selection} onToggle={toggleFilter} />
+            {CATEGORIES.map(category => (
+              <FilterChip
+                key={category}
+                label={category}
+                group="category"
+                selection={selection}
+                onToggle={toggleFilter}
+                disabled={disabledCategories.has(category)}
+                disabledReason={disabledCategories.has(category) ? 'Incompatible with selected regime' : undefined}
+              />
+            ))}
           </div>
         )}
       </div>
 
       {/* Cuisson */}
-      <div className="grid gap-3 md:grid-cols-[160px_1fr] items-start">
+      <div className="grid gap-3 md:grid-cols-[220px_1fr] items-start">
         {collapsible ? (
           <button
             type="button"
             onClick={() =>
               setOpenSections(prev => ({ ...prev, cuisson: !prev.cuisson }))
             }
-            className="flex items-center gap-2 text-left text-lg font-semibold text-amber-900"
+            className="flex w-full items-center justify-start gap-3 rounded-full border border-amber-200 bg-amber-50 px-5 py-2 text-left text-sm font-semibold text-amber-900 shadow-sm hover:border-amber-300 min-h-[40px]"
           >
-            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-amber-50 text-amber-700">
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-white text-amber-700">
               {openSections.cuisson ? '−' : '+'}
             </span>
             Cuisson
           </button>
         ) : (
-          <h3 className="text-lg font-semibold text-amber-900">Cuisson</h3>
+          <h3 className="inline-flex items-center justify-center rounded-full border border-amber-200 bg-amber-50 px-5 py-2 text-center text-sm font-semibold text-amber-900 shadow-sm min-h-[40px]">
+            Cuisson
+          </h3>
         )}
         {(!collapsible || openSections.cuisson) && (
           <div className="flex flex-wrap gap-2">
@@ -145,22 +207,24 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
       </div>
 
       {/* Style de cuisine */}
-      <div className="grid gap-3 md:grid-cols-[160px_1fr] items-start">
+      <div className="grid gap-3 md:grid-cols-[220px_1fr] items-start">
         {collapsible ? (
           <button
             type="button"
             onClick={() =>
               setOpenSections(prev => ({ ...prev, style: !prev.style }))
             }
-            className="flex items-center gap-2 text-left text-lg font-semibold text-amber-900"
+            className="flex w-full items-center justify-start gap-3 rounded-full border border-amber-200 bg-amber-50 px-5 py-2 text-left text-sm font-semibold text-amber-900 shadow-sm hover:border-amber-300 min-h-[40px]"
           >
-            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-amber-50 text-amber-700">
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-white text-amber-700">
               {openSections.style ? '−' : '+'}
             </span>
             Style de cuisine
           </button>
         ) : (
-          <h3 className="text-lg font-semibold text-amber-900">Style de cuisine</h3>
+          <h3 className="inline-flex items-center justify-center rounded-full border border-amber-200 bg-amber-50 px-5 py-2 text-center text-sm font-semibold text-amber-900 shadow-sm min-h-[40px]">
+            Style de cuisine
+          </h3>
         )}
         {(!collapsible || openSections.style) && (
           <div className="flex flex-wrap gap-2">
@@ -177,22 +241,24 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
       </div>
 
       {/* Régime alimentaire */}
-      <div className="grid gap-3 md:grid-cols-[160px_1fr] items-start">
+      <div className="grid gap-3 md:grid-cols-[220px_1fr] items-start">
         {collapsible ? (
           <button
             type="button"
             onClick={() =>
               setOpenSections(prev => ({ ...prev, regime: !prev.regime }))
             }
-            className="flex items-center gap-2 text-left text-lg font-semibold text-amber-900"
+            className="flex w-full items-center justify-start gap-3 rounded-full border border-amber-200 bg-amber-50 px-5 py-2 text-left text-sm font-semibold text-amber-900 shadow-sm hover:border-amber-300 min-h-[40px]"
           >
-            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-amber-50 text-amber-700">
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-white text-amber-700">
               {openSections.regime ? '−' : '+'}
             </span>
             Régime
           </button>
         ) : (
-          <h3 className="text-lg font-semibold text-amber-900">Régime</h3>
+          <h3 className="inline-flex items-center justify-center rounded-full border border-amber-200 bg-amber-50 px-5 py-2 text-center text-sm font-semibold text-amber-900 shadow-sm min-h-[40px]">
+            Régime
+          </h3>
         )}
         {(!collapsible || openSections.regime) && (
           <div className="flex flex-wrap gap-2">
@@ -207,22 +273,24 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
       </div>
 
       {/* Type de plat */}
-      <div className="grid gap-3 md:grid-cols-[160px_1fr] items-start">
+      <div className="grid gap-3 md:grid-cols-[220px_1fr] items-start">
         {collapsible ? (
           <button
             type="button"
             onClick={() =>
               setOpenSections(prev => ({ ...prev, type: !prev.type }))
             }
-            className="flex items-center gap-2 text-left text-lg font-semibold text-amber-900"
+            className="flex w-full items-center justify-start gap-3 rounded-full border border-amber-200 bg-amber-50 px-5 py-2 text-left text-sm font-semibold text-amber-900 shadow-sm hover:border-amber-300 min-h-[40px]"
           >
-            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-amber-50 text-amber-700">
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-amber-200 bg-white text-amber-700">
               {openSections.type ? '−' : '+'}
             </span>
             Type de plat
           </button>
         ) : (
-          <h3 className="text-lg font-semibold text-amber-900">Type de plat</h3>
+          <h3 className="inline-flex items-center justify-center rounded-full border border-amber-200 bg-amber-50 px-5 py-2 text-center text-sm font-semibold text-amber-900 shadow-sm min-h-[40px]">
+            Type de plat
+          </h3>
         )}
         {(!collapsible || openSections.type) && (
           <div className="flex flex-wrap gap-2">

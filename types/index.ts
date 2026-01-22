@@ -201,6 +201,8 @@ export interface CookbookEntry {
   rating?: number;
   category?: string;
   isFavorite: boolean;
+  likesCount?: number;
+  commentsCount?: number;
 }
 
 // Requête pour générer une recette
@@ -208,6 +210,8 @@ export interface GenerateRecipeRequest {
   imageUrl: string;
   originalIngredients: string[];
   imageBase64?: string;
+  filters?: FilterSelection;
+  additionalContext?: string;
 }
 
 // Réponse de la génération de recette
