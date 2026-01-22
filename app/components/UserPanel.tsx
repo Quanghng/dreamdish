@@ -52,17 +52,28 @@ export default function UserPanel({
   const [avatarPickerTarget, setAvatarPickerTarget] = useState<'register' | 'profile'>('profile');
   const avatarInputRef = useRef<HTMLInputElement | null>(null);
   const [viewingCookbookEntry, setViewingCookbookEntry] = useState<CookbookEntry | null>(null);
+  const [isCookbookLoading, setIsCookbookLoading] = useState(false);
+  const [hasCookbookLoadedOnce, setHasCookbookLoadedOnce] = useState(false);
 
   const { data: session } = useSession();
 
   useEffect(() => {
     if (!session?.user?.id) {
       setUserProfile(null);
+      setHasCookbookLoadedOnce(false);
       return;
     }
     loadUserProfile().then((ok) => {
       if (ok) setUserMode('profile');
     });
+
+    setIsCookbookLoading(true);
+    fetchCookbook()
+      .catch(() => undefined)
+      .finally(() => {
+        setIsCookbookLoading(false);
+        setHasCookbookLoadedOnce(true);
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session?.user?.id]);
 
@@ -494,7 +505,7 @@ export default function UserPanel({
 
                   {visibleCookbook.length === 0 ? (
                     <div className="rounded-2xl border border-dashed border-amber-200 bg-amber-50/60 px-6 py-8 text-center text-amber-700">
-                      Aucune recette générée pour le moment.
+                      {isCookbookLoading || !hasCookbookLoadedOnce ? 'Chargement de vos recettes…' : 'Aucune recette générée pour le moment.'}
                     </div>
                   ) : (
                     <div className="grid gap-4">
