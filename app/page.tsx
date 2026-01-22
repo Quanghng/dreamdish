@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
 import DishCard from './components/DishCard';
@@ -922,53 +922,41 @@ export default function Home() {
             
             {/* Selected Items Area */}
             <div className="flex flex-wrap gap-2.5 min-h-[3rem] items-center">
-              <AnimatePresence mode="popLayout">
-                {/* Filter Selection Tags */}
-                {activeFilterSelections.map(({ type, value: tagValue }) => {
-                  const colors = FILTER_TAG_COLORS[type];
-                  return (
-                    <motion.div
-                      key={type}
-                      className={`inline-flex items-center gap-2 px-4 py-2 rounded-2xl border shadow-md backdrop-blur-sm ${colors.bg} ${colors.border} ${colors.text} text-sm font-medium`}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.8 }}
-                      layout
+              {/* Filter Selection Tags */}
+              {activeFilterSelections.map(({ type, value: tagValue }) => {
+                const colors = FILTER_TAG_COLORS[type];
+                return (
+                  <div
+                    key={type}
+                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-2xl border shadow-md backdrop-blur-sm ${colors.bg} ${colors.border} ${colors.text} text-sm font-medium animate-in fade-in zoom-in-95 duration-200`}
+                  >
+                    <span className="text-lg">{colors.icon}</span>
+                    <span>{tagValue}</span>
+                    <button
+                      onClick={() => handleRemoveFilter(type)}
+                      className="ml-1 w-5 h-5 rounded-full flex items-center justify-center hover:bg-black/10 transition-all text-xs font-bold hover:scale-110 active:scale-90"
+                      title={`Retirer ce filtre`}
                     >
-                      <span className="text-lg">{colors.icon}</span>
-                      <span>{tagValue}</span>
-                      <motion.button
-                        onClick={() => handleRemoveFilter(type)}
-                        className="ml-1 w-5 h-5 rounded-full flex items-center justify-center hover:bg-black/10 transition-colors text-xs font-bold"
-                        title={`Retirer ce filtre`}
-                        whileHover={{ scale: 1.2, rotate: 90 }}
-                        whileTap={{ scale: 0.9 }}
-                      >
-                        ✕
-                      </motion.button>
-                    </motion.div>
-                  );
-                })}
-                
-                {/* Ingredient Tags */}
-                {ingredients.map((ingredient) => (
-                  <IngredientTag
-                    key={ingredient.id}
-                    icon={ingredient.icon}
-                    label={ingredient.label}
-                    onRemove={() => handleRemoveIngredient(ingredient.id)}
-                  />
-                ))}
-              </AnimatePresence>
+                      ✕
+                    </button>
+                  </div>
+                );
+              })}
+              
+              {/* Ingredient Tags */}
+              {ingredients.map((ingredient) => (
+                <IngredientTag
+                  key={ingredient.id}
+                  icon={ingredient.icon}
+                  label={ingredient.label}
+                  onRemove={() => handleRemoveIngredient(ingredient.id)}
+                />
+              ))}
               
               {ingredients.length === 0 && activeFilterSelections.length === 0 && (
-                <motion.span 
-                  className="text-[#1a1a2e]/40 italic"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                >
+                <span className="text-[#1a1a2e]/40 italic animate-in fade-in duration-300">
                   Ajoutez des ingrédients pour commencer...
-                </motion.span>
+                </span>
               )}
             </div>
             
