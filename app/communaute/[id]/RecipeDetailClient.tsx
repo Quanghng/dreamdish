@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import RecipeDisplay from '../../components/RecipeDisplay';
 import LikeButton from '../../components/LikeButton';
@@ -15,6 +15,7 @@ interface RecipeDetailClientProps {
   entryId: string;
   recipe: GeneratedRecipe;
   imageUrl: string;
+  originalIngredients?: unknown;
   nutritionalInfo?: NutritionalInfo;
   drinkPairings?: DrinkPairing[];
   author: string;
@@ -43,6 +44,14 @@ type CookbookComment = {
 
 const MAX_COMMENT_LENGTH = 300;
 
+const EMOJI_SUGGESTIONS = [
+  '😀', '😋', '😍', '🤩', '🥳', '😎',
+  '🤤', '😅', '😂', '🤔', '😮', '🙌',
+  '👏', '🙏', '👍', '👌', '🔥', '✨',
+  '🍽️', '🍳', '🥗', '🍝', '🍰', '☕️',
+  '🌶️', '🧀', '🥑', '🍋', '🧄', '🧅',
+] as const;
+
 function getUserDisplayName(user: {
   firstName: string | null;
   lastName: string | null;
@@ -59,6 +68,7 @@ export default function RecipeDetailClient({
   entryId,
   recipe,
   imageUrl,
+  originalIngredients,
   nutritionalInfo,
   drinkPairings,
   author,
@@ -78,10 +88,43 @@ export default function RecipeDetailClient({
 
   const [isComposerOpen, setIsComposerOpen] = useState(false);
   const [commentDraft, setCommentDraft] = useState('');
+  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
   const [commentError, setCommentError] = useState<string | null>(null);
 
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
   const isAuthenticated = Boolean(session?.user?.id);
+
+  const seedIngredients = useMemo(() => {
+    const fromOriginal: string[] = Array.isArray(originalIngredients)
+      ? (originalIngredients as unknown[])
+          .map((v) => (typeof v === 'string' ? v.trim() : ''))
+          .filter((v) => v)
+      : [];
+
+    const fromRecipe: string[] = Array.isArray(recipe?.ingredients)
+      ? recipe.ingredients
+          .map((ing) => (typeof ing?.name === 'string' ? ing.name.trim() : ''))
+          .filter((v) => v)
+      : [];
+
+    const merged = [...fromOriginal, ...fromRecipe];
+    const seen = new Set<string>();
+    const out: string[] = [];
+    for (const item of merged) {
+      const key = item.toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push(item);
+      if (out.length >= 15) break;
+    }
+    return out;
+  }, [originalIngredients, recipe]);
+
+  const seedHref = seedIngredients.length > 0
+    ? `/?seedIngredients=${seedIngredients.map(encodeURIComponent).join('|')}`
+    : null;
 
   useEffect(() => {
     let cancelled = false;
@@ -134,6 +177,30 @@ export default function RecipeDetailClient({
   }, [commentsCount, isCommentsLoading]);
 
   const remainingChars = MAX_COMMENT_LENGTH - commentDraft.length;
+
+  const insertEmoji = (emoji: string) => {
+    setCommentError(null);
+
+    const textarea = textareaRef.current;
+    if (!textarea) {
+      setCommentDraft((prev) => prev + emoji);
+      setIsEmojiPickerOpen(false);
+      return;
+    }
+
+    const start = textarea.selectionStart ?? textarea.value.length;
+    const end = textarea.selectionEnd ?? textarea.value.length;
+    const next = textarea.value.slice(0, start) + emoji + textarea.value.slice(end);
+    const nextCursor = start + emoji.length;
+
+    setCommentDraft(next);
+    setIsEmojiPickerOpen(false);
+
+    requestAnimationFrame(() => {
+      textarea.focus();
+      textarea.setSelectionRange(nextCursor, nextCursor);
+    });
+  };
 
   const submitComment = async () => {
     if (!isAuthenticated) {
@@ -203,7 +270,18 @@ export default function RecipeDetailClient({
                 </div>
               </div>
             </div>
-            <LikeButton entryId={entryId} initialCount={initialLikesCount} initialLiked={initialLiked} />
+            <div className="flex items-center gap-2">
+              {seedHref ? (
+                <button
+                  type="button"
+                  onClick={() => router.push(seedHref)}
+                  className="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-900 hover:bg-amber-100 transition-colors"
+                >
+                  Générer avec
+                </button>
+              ) : null}
+              <LikeButton entryId={entryId} initialCount={initialLikesCount} initialLiked={initialLiked} />
+            </div>
           </div>
 
           <RecipeDisplay
@@ -242,12 +320,43 @@ export default function RecipeDetailClient({
               <div className="mt-4 rounded-2xl border border-amber-100 bg-white/70 p-4">
                 <div className="flex items-center justify-between gap-3">
                   <div className="text-sm font-semibold text-amber-950">Nouveau commentaire</div>
-                  <div className={`text-xs ${remainingChars < 0 ? 'text-red-600' : 'text-amber-600'}`}>
-                    {remainingChars} caractères restants
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsEmojiPickerOpen((v) => !v)}
+                      className="inline-flex items-center rounded-full border border-amber-200 bg-white px-3 py-1 text-xs font-semibold text-amber-900 hover:bg-amber-100 transition-colors"
+                      aria-label="Ajouter un emoji"
+                      title="Ajouter un emoji"
+                    >
+                      🙂
+                    </button>
+                    <div className={`text-xs ${remainingChars < 0 ? 'text-red-600' : 'text-amber-600'}`}>
+                      {remainingChars} caractères restants
+                    </div>
                   </div>
                 </div>
 
+                {isEmojiPickerOpen ? (
+                  <div className="mt-3 rounded-xl border border-amber-100 bg-white/80 p-2">
+                    <div className="grid grid-cols-10 gap-1">
+                      {EMOJI_SUGGESTIONS.map((emoji) => (
+                        <button
+                          key={emoji}
+                          type="button"
+                          onClick={() => insertEmoji(emoji)}
+                          className="flex h-8 w-8 items-center justify-center rounded-lg hover:bg-amber-100 transition-colors"
+                          aria-label={`Insérer ${emoji}`}
+                          title={emoji}
+                        >
+                          {emoji}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+
                 <textarea
+                  ref={textareaRef}
                   value={commentDraft}
                   onChange={(e) => setCommentDraft(e.target.value)}
                   rows={3}

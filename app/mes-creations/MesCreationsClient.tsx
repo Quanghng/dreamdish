@@ -9,6 +9,32 @@ import UserPanel from '../components/UserPanel';
 import { useRecipe } from '@/hooks/useRecipe';
 import type { CookbookEntry } from '@/types';
 
+function buildSeedIngredients(entry: CookbookEntry): string[] {
+  const fromOriginal = Array.isArray(entry.originalIngredients)
+    ? entry.originalIngredients
+        .map((v) => (typeof v === 'string' ? v.trim() : ''))
+        .filter((v) => v)
+    : [];
+
+  const fromRecipe = Array.isArray(entry.recipe?.ingredients)
+    ? entry.recipe.ingredients
+        .map((ing) => (typeof ing?.name === 'string' ? ing.name.trim() : ''))
+        .filter((v) => v)
+    : [];
+
+  const merged = [...fromOriginal, ...fromRecipe];
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const item of merged) {
+    const key = item.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(item);
+    if (out.length >= 15) break;
+  }
+  return out;
+}
+
 export default function MesCreationsClient() {
   const router = useRouter();
   const { data: session } = useSession();
@@ -71,6 +97,11 @@ export default function MesCreationsClient() {
                 const likesCount = typeof entry.likesCount === 'number' ? entry.likesCount : 0;
                 const commentsCount = typeof entry.commentsCount === 'number' ? entry.commentsCount : 0;
                 const category = entry.category;
+                const seedIngredients = buildSeedIngredients(entry);
+                const seedHref =
+                  seedIngredients.length > 0
+                    ? `/?seedIngredients=${seedIngredients.map(encodeURIComponent).join('|')}`
+                    : null;
 
                 return (
                   <div
@@ -105,6 +136,18 @@ export default function MesCreationsClient() {
                             <span>💬</span>
                             <span>{commentsCount}</span>
                           </span>
+                          {seedHref ? (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                router.push(seedHref);
+                              }}
+                              className="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-3 py-1 font-semibold text-amber-900 hover:bg-amber-100 transition-colors"
+                            >
+                              Générer avec
+                            </button>
+                          ) : null}
                           {category ? (
                             <span className="inline-flex items-center rounded-full bg-amber-100 text-amber-800 px-3 py-1 font-semibold">
                               {category}
