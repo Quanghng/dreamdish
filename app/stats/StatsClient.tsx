@@ -43,7 +43,7 @@ function StatCard(props: {
   const router = useRouter();
 
   const canGenerateWith = Array.isArray(props.seedIngredients) && props.seedIngredients.length > 0;
-  const seedHref = canGenerateWith
+  const seedHref = canGenerateWith && props.seedIngredients
     ? `/?seedIngredients=${props.seedIngredients.map(encodeURIComponent).join('|')}`
     : undefined;
 
