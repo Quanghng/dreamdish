@@ -69,13 +69,6 @@ export default function DishCard({ image, imageUrl, title, index, variant = 'sho
             {image}
           </div>
         )}
-        
-        {/* Hover overlay with title */}
-        <motion.div 
-          className="absolute inset-0 bg-gradient-to-t from-[#1a1a2e]/80 via-transparent to-transparent 
-            flex items-end justify-center pb-4 opacity-0 hover:opacity-100 transition-opacity duration-300"
-        >
-        </motion.div>
       </motion.div>
     </motion.div>
   );
