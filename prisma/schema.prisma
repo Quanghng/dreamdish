@@ -28,6 +28,7 @@ model User {
   sessions      Session[]
   cookbookEntries CookbookEntry[]
   cookbookLikes  CookbookLike[]
+  cookbookComments CookbookComment[]
 }
 
 model Account {
@@ -82,6 +83,22 @@ model CookbookEntry {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   likes CookbookLike[]
+  comments CookbookComment[]
+}
+
+model CookbookComment {
+  id        String   @id @default(cuid())
+  entryId   String
+  userId    String
+  content   String
+  createdAt DateTime @default(now())
+
+  entry CookbookEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  user  User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([entryId])
+  @@index([userId])
+  @@index([createdAt])
 }
 
 model CookbookLike {
