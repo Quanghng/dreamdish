@@ -382,8 +382,8 @@ export default function Home() {
       cookbook={cookbook}
       updateRecipeCategory={updateRecipeCategory}
       fetchCookbook={fetchCookbook}
-      renderNavbar={({ onUserClick, userAvatar }) => (
-        <Navbar onUserClick={onUserClick} userAvatar={userAvatar} />
+      renderNavbar={({ onUserClick, userAvatar, isAuthenticated }) => (
+        <Navbar onUserClick={onUserClick} userAvatar={userAvatar} isAuthenticated={isAuthenticated} />
       )}
     >
       <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 relative overflow-hidden">

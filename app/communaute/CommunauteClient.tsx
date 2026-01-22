@@ -22,6 +22,7 @@ type CommunityEntry = {
     avatarUrl: string | null;
   };
   likesCount: number;
+  commentsCount: number;
 };
 
 type CommunauteClientProps = {
@@ -71,11 +72,11 @@ export default function CommunauteClient({
       cookbook={cookbook}
       updateRecipeCategory={updateRecipeCategory}
       fetchCookbook={fetchCookbook}
-      renderNavbar={({ onUserClick, userAvatar }) => (
-        <Navbar onUserClick={onUserClick} userAvatar={userAvatar} />
+      renderNavbar={({ onUserClick, userAvatar, isAuthenticated }) => (
+        <Navbar onUserClick={onUserClick} userAvatar={userAvatar} isAuthenticated={isAuthenticated} />
       )}
     >
-      <div className="min-h-screen bg-gradient-to-b from-amber-50 via-orange-50 to-white">
+      <div className="min-h-screen bg-linear-to-b from-amber-50 via-orange-50 to-white">
         <main className="pt-28 sm:pt-32 pb-20 sm:pb-24 max-w-7xl mx-auto px-4 sm:px-6">
           <div className="mb-8 sm:mb-10">
             <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-amber-950">Communauté</h1>
@@ -135,6 +136,7 @@ export default function CommunauteClient({
                     createdAtLabel={createdAt}
                     category={entry.category}
                     initialLikesCount={entry.likesCount}
+                    initialCommentsCount={entry.commentsCount}
                     initialLiked={likedSet.has(entry.id)}
                   />
                 );

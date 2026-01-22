@@ -1,5 +1,3 @@
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/auth';
@@ -54,14 +52,12 @@ export default async function CommunityEntryDetailPage(props: { params: Promise<
 
   if (!entry) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-amber-50 via-orange-50 to-white">
-        <Navbar />
+      <div className="min-h-screen bg-linear-to-b from-amber-50 via-orange-50 to-white">
         <main className="pt-32 pb-24 max-w-3xl mx-auto px-6">
           <div className="rounded-2xl border border-amber-100 bg-white/70 p-10 text-center text-amber-800">
             Plat introuvable.
           </div>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -88,21 +84,17 @@ export default async function CommunityEntryDetailPage(props: { params: Promise<
       : false;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50 via-orange-50 to-white">
-      <Navbar />
-      <RecipeDetailClient
-        entryId={entry.id}
-        recipe={entry.recipe as any}
-        imageUrl={entry.imageUrl}
-        nutritionalInfo={(entry.nutritionalInfo as any) ?? undefined}
-        drinkPairings={(entry.drinkPairings as any) ?? undefined}
-        author={author}
-        authorAvatar={authorAvatar}
-        createdAtLabel={createdAtLabel}
-        initialLikesCount={entry._count.likes}
-        initialLiked={liked}
-      />
-      <Footer />
-    </div>
+    <RecipeDetailClient
+      entryId={entry.id}
+      recipe={entry.recipe as any}
+      imageUrl={entry.imageUrl}
+      nutritionalInfo={(entry.nutritionalInfo as any) ?? undefined}
+      drinkPairings={(entry.drinkPairings as any) ?? undefined}
+      author={author}
+      authorAvatar={authorAvatar}
+      createdAtLabel={createdAtLabel}
+      initialLikesCount={entry._count.likes}
+      initialLiked={liked}
+    />
   );
 }
