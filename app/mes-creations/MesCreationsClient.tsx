@@ -73,10 +73,24 @@ export default function MesCreationsClient() {
       <div className="min-h-screen bg-linear-to-b from-amber-50 via-orange-50 to-white">
         <main className="pt-28 sm:pt-32 pb-20 sm:pb-24 max-w-7xl mx-auto px-4 sm:px-6">
           <div className="mb-8 sm:mb-10">
-            <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-amber-950">Mes créations</h1>
-            <p className="mt-3 text-amber-700 text-sm sm:text-base">
-              Retrouvez toutes vos recettes enregistrées.
-            </p>
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div className="min-w-0">
+                <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-amber-950">Mes créations</h1>
+                <p className="mt-3 text-amber-700 text-sm sm:text-base">
+                  Retrouvez toutes vos recettes enregistrées.
+                </p>
+              </div>
+
+              {isAuthenticated ? (
+                <button
+                  type="button"
+                  onClick={() => router.push('/mon-livre')}
+                  className="inline-flex items-center rounded-xl border border-amber-200 bg-white px-4 py-2 text-sm font-semibold text-amber-900 hover:bg-amber-100 transition-colors"
+                >
+                  Mon livre
+                </button>
+              ) : null}
+            </div>
           </div>
 
           {!isAuthenticated ? (
