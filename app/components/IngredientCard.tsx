@@ -1,3 +1,6 @@
+'use client';
+import { useState } from 'react';
+
 interface IngredientCardProps {
   name: string;
   color: string;
@@ -22,6 +25,7 @@ function getImageFilename(name: string): string {
 }
 
 export default function IngredientCard({ name, color, icon, onSelect }: IngredientCardProps) {
+  const [imageError, setImageError] = useState(false);
   const imageFilename = getImageFilename(name);
   const imagePath = `/img/ingredients/${imageFilename}.webp`;
 
@@ -41,21 +45,16 @@ export default function IngredientCard({ name, color, icon, onSelect }: Ingredie
               background: `linear-gradient(135deg, ${color}40, ${color}80)`
             }}
           >
-            <img 
-              src={imagePath} 
-              alt={name}
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                // Fallback to icon if image not found
-                const target = e.target as HTMLImageElement;
-                target.style.display = 'none';
-                if (target.nextElementSibling) {
-                  (target.nextElementSibling as HTMLElement).style.display = 'flex';
-                }
-              }}
-            />
-            {icon && (
-              <span className="text-6xl hidden items-center justify-center">{icon}</span>
+            {!imageError ? (
+              <img 
+                src={imagePath} 
+                alt={name}
+                className="w-full h-full object-cover"
+                onError={() => setImageError(true)}
+                loading="lazy"
+              />
+            ) : (
+              icon && <span className="text-6xl flex items-center justify-center">{icon}</span>
             )}
           </div>
         </div>

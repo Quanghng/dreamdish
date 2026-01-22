@@ -9,7 +9,8 @@ import type {
   GeneratedRecipe,
   NutritionalInfo,
   DrinkPairing,
-  CookbookEntry
+  CookbookEntry,
+  FilterSelection
 } from '@/types';
 
 interface UseRecipeReturn {
@@ -22,7 +23,11 @@ interface UseRecipeReturn {
   /** Fonction pour générer une recette à partir d'une image */
   generateRecipe: (
     imageUrl: string,
-    originalIngredients: string[]
+    originalIngredients: string[],
+    options?: {
+      filters?: FilterSelection;
+      additionalContext?: string;
+    }
   ) => Promise<GenerateRecipeResponse | null>;
   /** Fonction pour réinitialiser l'état */
   reset: () => void;
@@ -72,7 +77,11 @@ export function useRecipe(): UseRecipeReturn {
    */
   const generateRecipe = useCallback(async (
     imageUrl: string,
-    originalIngredients: string[]
+    originalIngredients: string[],
+    options?: {
+      filters?: FilterSelection;
+      additionalContext?: string;
+    }
   ): Promise<GenerateRecipeResponse | null> => {
     if (!imageUrl) {
       setError('Une image est requise pour générer la recette');
@@ -97,6 +106,8 @@ export function useRecipe(): UseRecipeReturn {
         body: JSON.stringify({
           imageUrl,
           originalIngredients,
+          filters: options?.filters,
+          additionalContext: options?.additionalContext,
         }),
       });
 

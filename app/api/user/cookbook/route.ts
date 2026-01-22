@@ -16,6 +16,7 @@ export async function GET() {
       _count: {
         select: {
           likes: true,
+          comments: true,
         },
       },
     },
@@ -24,6 +25,7 @@ export async function GET() {
   const withLikesCount = entries.map((entry) => ({
     ...entry,
     likesCount: entry._count.likes,
+    commentsCount: entry._count.comments,
   }));
 
   return NextResponse.json(withLikesCount);

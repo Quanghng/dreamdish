@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import DishCard from '../components/DishCard';
 import LikeButton from '../components/LikeButton';
 
@@ -14,6 +15,7 @@ interface CommunityEntryCardProps {
   createdAtLabel: string;
   category?: string | null;
   initialLikesCount: number;
+  initialCommentsCount: number;
   initialLiked: boolean;
 }
 
@@ -27,9 +29,12 @@ export default function CommunityEntryCard({
   createdAtLabel,
   category,
   initialLikesCount,
+  initialCommentsCount,
   initialLiked,
 }: CommunityEntryCardProps) {
   const router = useRouter();
+  const { data: session } = useSession();
+  const isAuthenticated = Boolean(session?.user?.id);
 
   return (
     <div
@@ -55,7 +60,7 @@ export default function CommunityEntryCard({
             initialCount={initialLikesCount}
             initialLiked={initialLiked}
           />
-          <div className="h-10 w-10 rounded-full bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center text-white shadow">
+          <div className="h-10 w-10 rounded-full bg-linear-to-br from-orange-400 to-amber-500 flex items-center justify-center text-white shadow">
             {authorAvatar}
           </div>
         </div>
@@ -66,6 +71,21 @@ export default function CommunityEntryCard({
       <div className="mt-4 flex items-center justify-between gap-3">
         <div className="min-w-0">
           <div className="font-semibold text-amber-900 line-clamp-2">{title}</div>
+          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-amber-600">
+            <span>💬 {initialCommentsCount} commentaire{initialCommentsCount > 1 ? 's' : ''}</span>
+            {isAuthenticated ? (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  router.push(`/communaute/${entryId}?comment=1#comments`);
+                }}
+                className="inline-flex items-center rounded-full border border-amber-200 bg-white/70 px-3 py-1 font-semibold text-amber-900 hover:bg-amber-100 transition-colors"
+              >
+                Commenter
+              </button>
+            ) : null}
+          </div>
         </div>
         {category ? (
           <div className="shrink-0 inline-flex items-center px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs">

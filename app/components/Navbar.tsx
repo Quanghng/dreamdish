@@ -4,31 +4,45 @@ import Link from 'next/link';
 interface NavbarProps {
   onUserClick?: () => void;
   userAvatar?: string;
+  isAuthenticated?: boolean;
 }
 
-export default function Navbar({ onUserClick, userAvatar }: NavbarProps) {
+export default function Navbar({ onUserClick, userAvatar, isAuthenticated }: NavbarProps) {
   return (
-    <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-7xl">
-      <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg px-6 py-4 flex items-center justify-between">
+    <nav className="fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-7xl">
+      <div className="bg-white/85 backdrop-blur-md rounded-2xl shadow-lg px-4 sm:px-6 py-3 sm:py-4 flex flex-wrap items-center justify-between gap-3">
         {/* Logo et Titre à gauche */}
-        <div className="flex items-center gap-3">
-          <div className="text-3xl">🍽️</div>
-          <span className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">
+        <Link href="/" className="flex items-center gap-3" aria-label="Retour à l'accueil">
+          <div className="text-3xl sm:text-4xl">🍽️</div>
+          <span className="text-2xl sm:text-3xl font-black tracking-tight bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">
             Dreamdish
           </span>
-        </div>
+        </Link>
 
         {/* Catégories au milieu */}
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-3 sm:gap-6">
           <Link
             href="/communaute"
-            className="px-6 py-2 rounded-full hover:bg-amber-100 transition-colors text-amber-900 font-medium"
+            className="px-4 sm:px-6 py-2 rounded-full hover:bg-amber-100 transition-colors text-amber-900 font-semibold text-sm sm:text-base"
           >
             Communauté
           </Link>
-          <button className="px-6 py-2 rounded-full hover:bg-amber-100 transition-colors text-amber-900 font-medium">
-            Créations
-          </button>
+
+          <Link
+            href="/stats"
+            className="px-4 sm:px-6 py-2 rounded-full hover:bg-amber-100 transition-colors text-amber-900 font-semibold text-sm sm:text-base"
+          >
+            Stats
+          </Link>
+
+          {isAuthenticated ? (
+            <Link
+              href="/mes-creations"
+              className="px-4 sm:px-6 py-2 rounded-full hover:bg-amber-100 transition-colors text-amber-900 font-semibold text-sm sm:text-base"
+            >
+              Mes créations
+            </Link>
+          ) : null}
         </div>
 
         {/* Flag et Profile à droite */}

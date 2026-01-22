@@ -28,17 +28,19 @@ export default function DishCard({ image, imageUrl, title, index, variant = 'sho
     <div 
       className={isShowcase ? 'relative cursor-pointer' : 'relative'}
       style={{
-        transformStyle: 'preserve-3d'
+        transformStyle: 'preserve-3d',
+        padding: isShowcase ? '8px' : '0'
       }}
     >
       <div 
-        className="w-full aspect-square bg-white rounded-3xl overflow-hidden ring-1 ring-black/5"
+        className="w-full aspect-square bg-white rounded-3xl ring-1 ring-black/5"
         style={{
           transformStyle: 'preserve-3d',
           transform: isShowcase
             ? `rotateY(${yPosition}deg) translateY(${verticalOffset}px) translateX(${xPosition}px)`
             : undefined,
-          transformOrigin: 'center center'
+          transformOrigin: 'center center',
+          overflow: 'visible'
         }}
       >
         {/* Dish image */}
@@ -46,11 +48,12 @@ export default function DishCard({ image, imageUrl, title, index, variant = 'sho
           <img
             src={imageUrl}
             alt={title}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-contain object-center rounded-3xl"
             loading="lazy"
+            style={{ display: 'block' }}
           />
         ) : (
-          <div className="h-full w-full bg-gradient-to-br from-orange-50 to-amber-50 flex items-center justify-center text-6xl">
+          <div className="h-full w-full bg-gradient-to-br from-orange-50 to-amber-50 flex items-center justify-center text-6xl rounded-3xl">
             {image}
           </div>
         )}
