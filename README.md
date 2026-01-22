@@ -71,6 +71,8 @@ dreamdish/
 - Node.js 22+ installé (⚠️ **Node.js 20.x n'est pas compatible** avec Next.js 16)
 - npm ou yarn
 - Une clé API Mistral AI valide
+- Une clé API Hugging Face (gratuite)
+- Une clé API Google AI (pour la génération d'images avec Imagen 3)
 
 ### Installation
 
@@ -87,16 +89,96 @@ dreamdish/
 
 3. **Configuration des variables d'environnement**
    
-   Créez un fichier `.env.local` à la racine du projet :
+   Créez un fichier `.env.local` à la racine du projet en copiant `.env.example` :
+   ```bash
+   cp .env.example .env.local
+   ```
+
+   Puis remplissez les valeurs suivantes :
+
+   #### **Clés API Requises** 🔑
+
    ```env
-   # Clé API Mistral AI
-   MISTRAL_API_KEY=votre_clé_api_ici
+   # Clé API Mistral AI (REQUIS)
+   # Obtenez-la sur : https://console.mistral.ai/
+   MISTRAL_API_KEY=votre_clé_api_mistral_ici
    
-   # Configuration optionnelle
+   # Clé API Hugging Face (REQUIS)
+   # Créez un compte gratuit : https://huggingface.co/settings/tokens
+   HUGGINGFACE_API_KEY=votre_clé_api_huggingface_ici
+   
+   # Clé API Google AI (REQUIS pour génération d'images)
+   # Obtenez-la sur : https://makersuite.google.com/app/apikey
+   GOOGLE_AI_API_KEY=votre_clé_api_google_ici
+   ```
+
+   #### **Configuration des Modèles** (Optionnel)
+
+   ```env
+   # Modèles Mistral AI (valeurs par défaut)
+   MISTRAL_MODEL_LARGE=mistral-large-latest
+   MISTRAL_MODEL_MEDIUM=mistral-medium-latest
+   MISTRAL_MODEL_SMALL=mistral-small-latest
+   MISTRAL_MODEL_MODERATION=mistral-small-latest
+   ```
+
+   #### **Rate Limiting** (Optionnel)
+
+   ```env
+   # Limites de requêtes
+   MISTRAL_MAX_REQUESTS_PER_MINUTE=60
+   MISTRAL_MAX_TOKENS_PER_REQUEST=4096
+   ```
+
+   #### **Fonctionnalités** (Optionnel)
+
+   ```env
+   # Activer/désactiver des fonctionnalités
+   ENABLE_MODERATION=true
+   ENABLE_SUGGESTIONS=true
+   ENABLE_IMAGE_GENERATION=true
+   LOG_AI_REQUESTS=true
+   ```
+
+   #### **Configuration Base de Données** (Prisma PostgreSQL)
+
+   ```env
+   # PostgreSQL Database URLs (Vercel/Prisma)
+   DATABASE_URL="postgres://user:password@host:5432/database?sslmode=require"
+   POSTGRES_URL="postgres://user:password@host:5432/database?sslmode=require"
+   PRISMA_DATABASE_URL="prisma+postgres://accelerate.prisma-data.net/?api_key=your_api_key"
+   ```
+
+   #### **NextAuth Configuration** (Authentification)
+
+   ```env
+   # NextAuth.js
+   NEXTAUTH_URL="http://localhost:3000/"
+   NEXTAUTH_SECRET="générez_un_secret_aléatoire_ici"
+   ```
+
+   Pour générer `NEXTAUTH_SECRET`, utilisez :
+   ```bash
+   openssl rand -base64 32
+   ```
+
+   #### **Configuration Locale** (Optionnel)
+
+   ```env
+   # URL de l'application
    NEXT_PUBLIC_APP_URL=http://localhost:3000
    ```
 
-   > ⚠️ **Important** : Ne jamais committer le fichier `.env.local` dans Git. La clé API doit rester secrète.
+   > ⚠️ **Important** : 
+   > - Ne jamais committer le fichier `.env.local` dans Git (déjà dans `.gitignore`)
+   > - Gardez vos clés API secrètes et ne les partagez jamais
+   > - Pour la production, configurez ces variables dans les paramètres de votre plateforme de déploiement (Vercel, etc.)
+
+4. **Initialiser la base de données** (si vous utilisez Prisma)
+   ```bash
+   npx prisma generate
+   npx prisma db push
+   ```
 
 ### Lancement en développement
 
@@ -112,6 +194,92 @@ L'application sera accessible sur [http://localhost:3000](http://localhost:3000)
 npm run build
 npm run start
 ```
+
+## 🐳 Déploiement avec Docker
+
+La méthode la plus simple pour lancer l'application est d'utiliser Docker Compose.
+
+### Prérequis Docker
+
+- [Docker](https://docs.docker.com/get-docker/) installé
+- [Docker Compose](https://docs.docker.com/compose/install/) installé (inclus avec Docker Desktop)
+
+### Lancement rapide avec Docker
+
+1. **Cloner le projet**
+   ```bash
+   git clone <url-du-repo>
+   cd dreamdish
+   ```
+
+2. **Configurer les variables d'environnement**
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Éditez le fichier `.env` et remplissez vos clés API :
+   ```env
+   # Clés API (REQUIS)
+   MISTRAL_API_KEY=votre_clé_mistral
+   HUGGINGFACE_API_KEY=votre_clé_huggingface
+   GOOGLE_AI_API_KEY=votre_clé_google
+   
+   # NextAuth (REQUIS)
+   NEXTAUTH_SECRET=générez_avec_openssl_rand_base64_32
+   ```
+
+3. **Lancer l'application**
+   ```bash
+   docker-compose up -d
+   ```
+
+4. **Initialiser la base de données** (première fois uniquement)
+   ```bash
+   docker-compose exec app npx prisma db push
+   ```
+
+5. **Accéder à l'application**
+   
+   Ouvrez [http://localhost:3000](http://localhost:3000) dans votre navigateur.
+
+### Commandes Docker utiles
+
+| Commande | Description |
+|----------|-------------|
+| `docker-compose up -d` | Démarre les conteneurs en arrière-plan |
+| `docker-compose down` | Arrête et supprime les conteneurs |
+| `docker-compose logs -f app` | Affiche les logs de l'application |
+| `docker-compose logs -f db` | Affiche les logs de la base de données |
+| `docker-compose exec app npx prisma studio` | Ouvre Prisma Studio |
+| `docker-compose build --no-cache` | Reconstruit l'image sans cache |
+| `docker-compose down -v` | Arrête et supprime les volumes (⚠️ efface les données) |
+
+### Architecture Docker
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    Docker Compose                        │
+├─────────────────────────┬───────────────────────────────┤
+│     dreamdish-app       │        dreamdish-db           │
+│     (Next.js 16)        │      (PostgreSQL 16)          │
+│     Port: 3000          │        Port: 5432             │
+├─────────────────────────┴───────────────────────────────┤
+│                  dreamdish-network                       │
+└─────────────────────────────────────────────────────────┘
+```
+
+### Personnalisation
+
+Vous pouvez personnaliser la configuration de la base de données dans `.env` :
+
+```env
+# Credentials PostgreSQL (Docker)
+POSTGRES_USER=dreamdish
+POSTGRES_PASSWORD=votre_mot_de_passe_securise
+POSTGRES_DB=dreamdish
+```
+
+> ⚠️ **Note** : En production, utilisez des mots de passe forts et ne les commitez jamais dans Git.
 
 ## 🔧 Configuration
 
