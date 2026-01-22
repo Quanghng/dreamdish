@@ -9,6 +9,32 @@ import UserPanel from '../components/UserPanel';
 import { useRecipe } from '@/hooks/useRecipe';
 import type { CookbookEntry } from '@/types';
 
+function buildSeedIngredients(entry: CookbookEntry): string[] {
+  const fromOriginal = Array.isArray(entry.originalIngredients)
+    ? entry.originalIngredients
+        .map((v) => (typeof v === 'string' ? v.trim() : ''))
+        .filter((v) => v)
+    : [];
+
+  const fromRecipe = Array.isArray(entry.recipe?.ingredients)
+    ? entry.recipe.ingredients
+        .map((ing) => (typeof ing?.name === 'string' ? ing.name.trim() : ''))
+        .filter((v) => v)
+    : [];
+
+  const merged = [...fromOriginal, ...fromRecipe];
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const item of merged) {
+    const key = item.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(item);
+    if (out.length >= 15) break;
+  }
+  return out;
+}
+
 export default function MesCreationsClient() {
   const router = useRouter();
   const { data: session } = useSession();
@@ -47,10 +73,24 @@ export default function MesCreationsClient() {
       <div className="min-h-screen bg-linear-to-b from-amber-50 via-orange-50 to-white">
         <main className="pt-28 sm:pt-32 pb-20 sm:pb-24 max-w-7xl mx-auto px-4 sm:px-6">
           <div className="mb-8 sm:mb-10">
-            <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-amber-950">Mes créations</h1>
-            <p className="mt-3 text-amber-700 text-sm sm:text-base">
-              Retrouvez toutes vos recettes enregistrées.
-            </p>
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div className="min-w-0">
+                <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-amber-950">Mes créations</h1>
+                <p className="mt-3 text-amber-700 text-sm sm:text-base">
+                  Retrouvez toutes vos recettes enregistrées.
+                </p>
+              </div>
+
+              {isAuthenticated ? (
+                <button
+                  type="button"
+                  onClick={() => router.push('/mon-livre')}
+                  className="inline-flex items-center rounded-xl border border-amber-200 bg-white px-4 py-2 text-sm font-semibold text-amber-900 hover:bg-amber-100 transition-colors"
+                >
+                  Mon livre
+                </button>
+              ) : null}
+            </div>
           </div>
 
           {!isAuthenticated ? (
@@ -71,6 +111,11 @@ export default function MesCreationsClient() {
                 const likesCount = typeof entry.likesCount === 'number' ? entry.likesCount : 0;
                 const commentsCount = typeof entry.commentsCount === 'number' ? entry.commentsCount : 0;
                 const category = entry.category;
+                const seedIngredients = buildSeedIngredients(entry);
+                const seedHref =
+                  seedIngredients.length > 0
+                    ? `/?seedIngredients=${seedIngredients.map(encodeURIComponent).join('|')}`
+                    : null;
 
                 return (
                   <div
@@ -105,6 +150,18 @@ export default function MesCreationsClient() {
                             <span>💬</span>
                             <span>{commentsCount}</span>
                           </span>
+                          {seedHref ? (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                router.push(seedHref);
+                              }}
+                              className="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-3 py-1 font-semibold text-amber-900 hover:bg-amber-100 transition-colors"
+                            >
+                              Générer avec
+                            </button>
+                          ) : null}
                           {category ? (
                             <span className="inline-flex items-center rounded-full bg-amber-100 text-amber-800 px-3 py-1 font-semibold">
                               {category}

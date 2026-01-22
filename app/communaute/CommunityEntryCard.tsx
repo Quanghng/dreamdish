@@ -17,6 +17,7 @@ interface CommunityEntryCardProps {
   initialLikesCount: number;
   initialCommentsCount: number;
   initialLiked: boolean;
+  seedIngredients?: string[];
 }
 
 export default function CommunityEntryCard({
@@ -31,10 +32,16 @@ export default function CommunityEntryCard({
   initialLikesCount,
   initialCommentsCount,
   initialLiked,
+  seedIngredients,
 }: CommunityEntryCardProps) {
   const router = useRouter();
   const { data: session } = useSession();
   const isAuthenticated = Boolean(session?.user?.id);
+
+  const canGenerateWith = Array.isArray(seedIngredients) && seedIngredients.length > 0;
+  const seedHref = canGenerateWith
+    ? `/?seedIngredients=${seedIngredients.map(encodeURIComponent).join('|')}`
+    : '';
 
   return (
     <div
@@ -83,6 +90,19 @@ export default function CommunityEntryCard({
                 className="inline-flex items-center rounded-full border border-amber-200 bg-white/70 px-3 py-1 font-semibold text-amber-900 hover:bg-amber-100 transition-colors"
               >
                 Commenter
+              </button>
+            ) : null}
+
+            {canGenerateWith ? (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  router.push(seedHref);
+                }}
+                className="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-3 py-1 font-semibold text-amber-900 hover:bg-amber-100 transition-colors"
+              >
+                Générer avec
               </button>
             ) : null}
           </div>

@@ -88,6 +88,7 @@ export default async function CommunityEntryDetailPage(props: { params: Promise<
       entryId={entry.id}
       recipe={entry.recipe as any}
       imageUrl={entry.imageUrl}
+      originalIngredients={entry.originalIngredients as any}
       nutritionalInfo={(entry.nutritionalInfo as any) ?? undefined}
       drinkPairings={(entry.drinkPairings as any) ?? undefined}
       author={author}

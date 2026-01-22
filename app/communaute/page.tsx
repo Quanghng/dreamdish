@@ -78,6 +78,7 @@ export default async function CommunautePage(props: { searchParams?: Promise<{ c
     id: entry.id,
     recipe: entry.recipe,
     imageUrl: entry.imageUrl,
+    originalIngredients: entry.originalIngredients,
     createdAt: entry.createdAt.toISOString(),
     category: entry.category,
     user: {
