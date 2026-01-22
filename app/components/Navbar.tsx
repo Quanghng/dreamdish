@@ -1,5 +1,6 @@
-import Image from 'next/image';
+'use client';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 interface NavbarProps {
   onUserClick?: () => void;
@@ -9,28 +10,39 @@ interface NavbarProps {
 
 export default function Navbar({ onUserClick, userAvatar, isAuthenticated }: NavbarProps) {
   return (
-    <nav className="fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-7xl">
-      <div className="bg-white/85 backdrop-blur-md rounded-2xl shadow-lg px-4 sm:px-6 py-3 sm:py-4 flex flex-wrap items-center justify-between gap-3">
+    <motion.nav 
+      className="fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-7xl"
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ type: "spring", stiffness: 100, damping: 20 }}
+    >
+      <div className="glass rounded-2xl shadow-xl px-4 sm:px-6 py-3 sm:py-4 flex flex-wrap items-center justify-between gap-3 border border-white/30">
         {/* Logo et Titre à gauche */}
-        <Link href="/" className="flex items-center gap-3" aria-label="Retour à l'accueil">
-          <div className="text-3xl sm:text-4xl">🍽️</div>
-          <span className="text-2xl sm:text-3xl font-black tracking-tight bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent">
+        <Link href="/" className="flex items-center gap-3 group" aria-label="Retour à l'accueil">
+          <motion.div 
+            className="text-3xl sm:text-4xl"
+            whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
+            transition={{ duration: 0.5 }}
+          >
+            🍽️
+          </motion.div>
+          <span className="text-2xl sm:text-3xl font-black tracking-tight gradient-text">
             Dreamdish
           </span>
         </Link>
 
         {/* Catégories au milieu */}
-        <div className="flex items-center gap-3 sm:gap-6">
+        <div className="flex items-center gap-2 sm:gap-4">
           <Link
             href="/communaute"
-            className="px-4 sm:px-6 py-2 rounded-full hover:bg-amber-100 transition-colors text-amber-900 font-semibold text-sm sm:text-base"
+            className="px-4 sm:px-6 py-2 rounded-xl hover:bg-[#e85d04]/10 transition-all duration-300 text-[#1a1a2e] font-semibold text-sm sm:text-base hover:text-[#e85d04]"
           >
             Communauté
           </Link>
 
           <Link
             href="/stats"
-            className="px-4 sm:px-6 py-2 rounded-full hover:bg-amber-100 transition-colors text-amber-900 font-semibold text-sm sm:text-base"
+            className="px-4 sm:px-6 py-2 rounded-xl hover:bg-[#e85d04]/10 transition-all duration-300 text-[#1a1a2e] font-semibold text-sm sm:text-base hover:text-[#e85d04]"
           >
             Stats
           </Link>
@@ -38,7 +50,7 @@ export default function Navbar({ onUserClick, userAvatar, isAuthenticated }: Nav
           {isAuthenticated ? (
             <Link
               href="/mes-creations"
-              className="px-4 sm:px-6 py-2 rounded-full hover:bg-amber-100 transition-colors text-amber-900 font-semibold text-sm sm:text-base"
+              className="px-4 sm:px-6 py-2 rounded-xl hover:bg-[#e85d04]/10 transition-all duration-300 text-[#1a1a2e] font-semibold text-sm sm:text-base hover:text-[#e85d04]"
             >
               Mes créations
             </Link>
@@ -46,20 +58,26 @@ export default function Navbar({ onUserClick, userAvatar, isAuthenticated }: Nav
         </div>
 
         {/* Flag et Profile à droite */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           {/* Flag Icon */}
-          <button className="w-10 h-10 rounded-full hover:bg-amber-100 transition-colors flex items-center justify-center text-xl">
+          <motion.button 
+            className="w-10 h-10 rounded-xl hover:bg-[#e85d04]/10 transition-colors flex items-center justify-center text-xl"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+          >
             🇫🇷
-          </button>
+          </motion.button>
           
           {/* Profile Icon */}
-          <button
+          <motion.button
             onClick={onUserClick}
-            className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-amber-500 hover:from-orange-500 hover:to-amber-600 transition-colors flex items-center justify-center text-white shadow-md"
+            className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#e85d04] to-[#ffb703] hover:from-[#d45003] hover:to-[#e5a503] transition-all flex items-center justify-center text-white shadow-lg hover:shadow-xl"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             {userAvatar ? (
               userAvatar.startsWith('blob:') || userAvatar.startsWith('data:') ? (
-                <img src={userAvatar} alt="Avatar" className="h-8 w-8 rounded-full object-cover" />
+                <img src={userAvatar} alt="Avatar" className="h-9 w-9 rounded-lg object-cover" />
               ) : (
                 <span className="text-lg">{userAvatar}</span>
               )
@@ -79,9 +97,9 @@ export default function Navbar({ onUserClick, userAvatar, isAuthenticated }: Nav
                 />
               </svg>
             )}
-          </button>
+          </motion.button>
         </div>
       </div>
-    </nav>
+    </motion.nav>
   );
 }
