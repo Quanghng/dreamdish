@@ -79,6 +79,7 @@ export default function Home() {
   
   // State pour le lazy loading des ingrédients
   const [displayedIngredientsCount, setDisplayedIngredientsCount] = useState(INITIAL_INGREDIENTS_COUNT);
+  const [removedIngredientsNotice, setRemovedIngredientsNotice] = useState<string | null>(null);
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const { 
