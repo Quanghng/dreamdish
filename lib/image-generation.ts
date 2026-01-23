@@ -69,7 +69,7 @@ export async function generateImage(
 
   throw new Error(
     'Aucune clé API configurée pour la génération d\'images. ' +
-    'Ajoutez GOOGLE_AI_API_KEY ou HUGGINGFACE_API_KEY dans .env.local'
+    'Ajoutez GOOGLE_AI_API_KEY ou HUGGINGFACE_API_KEY dans .env'
   );
 }
 
