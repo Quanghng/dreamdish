@@ -20,7 +20,7 @@ DreamDish est une application web innovante qui permet de transformer une simple
 - **Langage** : TypeScript 5
 - **Stylisation** : Tailwind CSS 4
 - **IA** : Mistral AI SDK (@mistralai/mistralai)
-- **Runtime** : Node.js 22+ (⚠️ Node.js 20 n'est pas supporté)
+- **Runtime** : Node.js 24+ (LTS)
 - **Package Manager** : npm
 
 ### Structure du Projet
@@ -68,7 +68,7 @@ dreamdish/
 
 ### Prérequis
 
-- Node.js 22+ installé (⚠️ **Node.js 20.x n'est pas compatible** avec Next.js 16)
+- Node.js 24+ installé (LTS version recommandée)
 - npm ou yarn
 - Une clé API Mistral AI valide
 - Une clé API Hugging Face (gratuite)

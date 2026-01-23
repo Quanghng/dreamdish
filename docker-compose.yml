@@ -19,7 +19,12 @@ services:
       - .env
     environment:
       - NODE_ENV=production
-      - NEXTAUTH_URL=http://localhost:3000
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-dreamdish}:${POSTGRES_PASSWORD:-dreamdish}@db:5432/${POSTGRES_DB:-dreamdish}?schema=public
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY}
+      - HUGGINGFACE_API_KEY=${HUGGINGFACE_API_KEY}
+      - GOOGLE_AI_API_KEY=${GOOGLE_AI_API_KEY}
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3000}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
     depends_on:
       db:
         condition: service_healthy
@@ -31,13 +36,16 @@ services:
     container_name: dreamdish-db
     restart: unless-stopped
     environment:
+      # Use consistent default credentials (matching the app service)
       POSTGRES_USER: ${POSTGRES_USER:-dreamdish}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dreamdish_secret}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dreamdish}
       POSTGRES_DB: ${POSTGRES_DB:-dreamdish}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      # Using 5433 externally to avoid conflict with local PostgreSQL on 5432
+      # Internal container still uses 5432 for app connectivity
+      - "5433:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dreamdish} -d ${POSTGRES_DB:-dreamdish}"]
       interval: 10s

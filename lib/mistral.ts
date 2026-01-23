@@ -6,26 +6,36 @@
 import { Mistral } from '@mistralai/mistralai';
 import type { CulinaryStyle, PresentationStyle, FilterSelection, GeneratePromptResponse } from '@/types';
 
-// Vérification de la présence de la clé API
-// Note: In test environments, we might not want to throw immediately to allow mocks to work
-if (!process.env.MISTRAL_API_KEY && process.env.NODE_ENV !== 'test') {
-  throw new Error(
-    'La variable d\'environnement MISTRAL_API_KEY est manquante. ' +
-    'Veuillez créer un fichier .env.local avec votre clé API Mistral.'
-  );
-}
-
-// Initialisation du client Mistral
-export const mistralClient = new Mistral({
-  apiKey: process.env.MISTRAL_API_KEY || 'mock-key-for-build',
-});
+// Lazy initialization - client created on first use, not at module load time
+// This prevents build-time errors when MISTRAL_API_KEY is not available
+let _mistralClient: Mistral | null = null;
 
 /**
- * Retourne le client Mistral initialisé
+ * Returns the Mistral client, creating it lazily on first use
+ * This allows the build to complete without requiring the API key
  */
 export function getMistralClient(): Mistral {
-  return mistralClient;
+  if (!_mistralClient) {
+    // Only validate API key at runtime, not during build
+    if (!process.env.MISTRAL_API_KEY && process.env.NODE_ENV !== 'test') {
+      throw new Error(
+        'La variable d\'environnement MISTRAL_API_KEY est manquante. ' +
+        'Veuillez configurer votre clé API Mistral dans les variables d\'environnement.'
+      );
+    }
+    _mistralClient = new Mistral({
+      apiKey: process.env.MISTRAL_API_KEY || 'mock-key-for-test',
+    });
+  }
+  return _mistralClient;
 }
+
+// For backward compatibility - lazy getter
+export const mistralClient = new Proxy({} as Mistral, {
+  get(_, prop) {
+    return getMistralClient()[prop as keyof Mistral];
+  }
+});
 
 // --------------------------------------------
 // Suivi des métriques (Ajouté pour corriger les erreurs TS2305)
