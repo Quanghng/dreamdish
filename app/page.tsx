@@ -433,19 +433,23 @@ export default function Home() {
       setSelectedCategory('');
     }
     setActiveFilters(
-      [nextSelection.cuisson, nextSelection.style, nextSelection.regime, nextSelection.type].filter(Boolean) as string[]
+      [nextSelection.cuisson, nextSelection.style, nextSelection.type].filter(Boolean) as string[]
     );
   };
 
-  // Get active filter selections for display
+  // Get active filter selections for display (only cuisson, style, type)
   const activeFilterSelections = Object.entries(filterSelection)
-    .filter(([_, val]) => val && val !== '')
+    .filter(([key, val]) => {
+      // Only show cuisson, style, and type in the tags (these go to the prompt)
+      if (!['cuisson', 'style', 'type'].includes(key)) return false;
+      return val && val !== '';
+    })
     .map(([key, val]) => ({ type: key as keyof FilterSelection, value: val as string }));
 
   const handleFilterSelection = (nextSelection: FilterSelection) => {
     setFilterSelection(nextSelection);
     setActiveFilters(
-      [nextSelection.cuisson, nextSelection.style, nextSelection.regime, nextSelection.type].filter(Boolean) as string[]
+      [nextSelection.cuisson, nextSelection.style, nextSelection.type].filter(Boolean) as string[]
     );
     setSelectedCategory(nextSelection.category || '');
   };
