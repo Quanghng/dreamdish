@@ -83,8 +83,12 @@ jobs:
           DATABASE_URL: "postgresql://testuser:testpassword@localhost:5432/testdb"
 
       - name: Run Integration Tests
-        if: ${{ secrets.MISTRAL_API_KEY != '' && (secrets.GOOGLE_AI_API_KEY != '' || secrets.HUGGINGFACE_API_KEY != '') }}
-        run: npm run test:integration
+        run: |
+          if [ -z "$MISTRAL_API_KEY" ] || { [ -z "$GOOGLE_AI_API_KEY" ] && [ -z "$HUGGINGFACE_API_KEY" ]; }; then
+            echo "Skipping integration tests: missing API keys."
+            exit 0
+          fi
+          npm run test:integration
         env:
           NODE_ENV: test
           DATABASE_URL: "postgresql://testuser:testpassword@localhost:5432/testdb"
