@@ -87,6 +87,7 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
     style: '',
     regime: '',
     type: '',
+    searchQuery: '',
   });
   const [openSections, setOpenSections] = useState(() => ({
     category: !collapsible,
@@ -301,6 +302,43 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
             <FilterChip label="petit-déjeuner" group="type" selection={selection} onToggle={toggleFilter} />
           </div>
         )}
+      </div>
+
+      {/* Recherche par nom */}
+      <div className="grid gap-3 md:grid-cols-[220px_1fr] items-start">
+        <h3 className="inline-flex items-center justify-center rounded-full border border-amber-200 bg-amber-50 px-5 py-2 text-center text-sm font-semibold text-amber-900 shadow-sm min-h-[40px]">
+          Recherche
+        </h3>
+        <div className="relative">
+          <input
+            type="text"
+            value={selection.searchQuery || ''}
+            onChange={(e) => {
+              const nextSelection = { ...selection, searchQuery: e.target.value };
+              if (!value) {
+                setInternalSelection(nextSelection);
+              }
+              onValueChange?.(nextSelection);
+            }}
+            placeholder="Rechercher par nom de recette..."
+            className="w-full px-5 py-2 rounded-full border-2 border-amber-200 bg-white text-sm text-amber-900 placeholder:text-amber-400 focus:outline-none focus:border-amber-500 transition-colors"
+          />
+          {selection.searchQuery && (
+            <button
+              onClick={() => {
+                const nextSelection = { ...selection, searchQuery: '' };
+                if (!value) {
+                  setInternalSelection(nextSelection);
+                }
+                onValueChange?.(nextSelection);
+              }}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-500 hover:text-amber-700 transition-colors"
+              aria-label="Effacer la recherche"
+            >
+              ✕
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
