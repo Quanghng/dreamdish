@@ -46,7 +46,7 @@ dreamdish/
 │   └── mistral.config.ts         # Configuration des modèles Mistral
 ├── public/                       # Fichiers statiques
 │   └── ingredients/              # Images d'ingrédients
-├── .env.local                    # Variables d'environnement (non versionné)
+├── .env                          # Variables d'environnement (non versionné)
 ├── .gitignore                    # Fichiers ignorés par Git
 ├── next.config.ts                # Configuration Next.js
 ├── tailwind.config.ts            # Configuration Tailwind CSS
@@ -89,9 +89,9 @@ dreamdish/
 
 3. **Configuration des variables d'environnement**
    
-   Créez un fichier `.env.local` à la racine du projet en copiant `.env.example` :
+   Créez un fichier `.env` à la racine du projet en copiant `.env.example` :
    ```bash
-   cp .env.example .env.local
+   cp .env.example .env
    ```
 
    Puis remplissez les valeurs suivantes :
@@ -170,7 +170,7 @@ dreamdish/
    ```
 
    > ⚠️ **Important** : 
-   > - Ne jamais committer le fichier `.env.local` dans Git (déjà dans `.gitignore`)
+   > - Ne jamais committer le fichier `.env` dans Git (déjà dans `.gitignore`)
    > - Gardez vos clés API secrètes et ne les partagez jamais
    > - Pour la production, configurez ces variables dans les paramètres de votre plateforme de déploiement (Vercel, etc.)
 
@@ -335,7 +335,7 @@ Le fichier `tailwind.config.ts` permet de personnaliser :
 ### Bonnes Pratiques Implémentées
 
 1. **Protection de la clé API** : La clé Mistral est stockée côté serveur uniquement (API Routes)
-2. **Variables d'environnement** : Utilisation de `.env.local` pour les secrets
+2. **Variables d'environnement** : Utilisation de `.env` pour les secrets
 3. **Validation des entrées** : Vérification des données utilisateur avant envoi à l'API
 4. **Modération** : Utilisation de Mistral Moderation pour filtrer les contenus inappropriés
 
