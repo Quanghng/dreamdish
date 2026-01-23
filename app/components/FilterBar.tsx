@@ -142,7 +142,7 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
   return (
     <div className="space-y-6 px-4 md:px-6">
       {/* Catégories */}
-      <div className="grid gap-3 md:grid-cols-[220px_1fr] items-start">
+      <div className="space-y-3">
         {collapsible ? (
           <button
             type="button"
@@ -179,7 +179,7 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
       </div>
 
       {/* Cuisson */}
-      <div className="grid gap-3 md:grid-cols-[220px_1fr] items-start">
+      <div className="space-y-3">
         {collapsible ? (
           <button
             type="button"
@@ -208,7 +208,7 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
       </div>
 
       {/* Style de cuisine */}
-      <div className="grid gap-3 md:grid-cols-[220px_1fr] items-start">
+      <div className="space-y-3">
         {collapsible ? (
           <button
             type="button"
@@ -242,7 +242,7 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
       </div>
 
       {/* Régime alimentaire */}
-      <div className="grid gap-3 md:grid-cols-[220px_1fr] items-start">
+      <div className="space-y-3">
         {collapsible ? (
           <button
             type="button"
@@ -274,7 +274,7 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
       </div>
 
       {/* Type de plat */}
-      <div className="grid gap-3 md:grid-cols-[220px_1fr] items-start">
+      <div className="space-y-3">
         {collapsible ? (
           <button
             type="button"
@@ -305,7 +305,7 @@ export default function FilterBar({ value, onValueChange, collapsible = false }:
       </div>
 
       {/* Recherche par nom */}
-      <div className="grid gap-3 md:grid-cols-[220px_1fr] items-start">
+      <div className="space-y-3">
         <h3 className="inline-flex items-center justify-center rounded-full border border-amber-200 bg-amber-50 px-5 py-2 text-center text-sm font-semibold text-amber-900 shadow-sm min-h-[40px]">
           Recherche
         </h3>
