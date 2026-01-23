@@ -10,7 +10,7 @@ export default defineConfig({
     globals: true,
 
     // Pattern pour trouver les fichiers de test
-    include: ['__tests__/simple.test.ts'],
+    include: ['__tests__/simple.test.ts', '__tests__/unit/**/*.test.ts'],
 
     // Exclusions
     exclude: ['node_modules', '.next', '__tests__/api/**', '__tests__/lib/**', '__tests__/prompts/**'],
