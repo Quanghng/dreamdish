@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Service de génération d\'images non configuré',
-          details: 'La clé API Hugging Face est manquante. Ajoutez HUGGINGFACE_API_KEY dans .env.local (gratuit sur https://huggingface.co/settings/tokens)',
+          details: 'La clé API Hugging Face est manquante. Ajoutez HUGGINGFACE_API_KEY dans .env (gratuit sur https://huggingface.co/settings/tokens)',
         },
         { status: 503 }
       );

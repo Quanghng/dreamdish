@@ -205,7 +205,7 @@ User Click → IngredientCard → IngredientSelector (state) → Selected List
 
 ### 2. Sécurité
 - Clé API Mistral stockée côté serveur uniquement
-- Variables d'environnement dans `.env.local` (non versionné)
+- Variables d'environnement dans `.env` (non versionné)
 - Validation des entrées utilisateur
 
 ### 3. Modularité

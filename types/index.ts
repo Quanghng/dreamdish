@@ -85,6 +85,7 @@ export interface FilterSelection {
   style?: string;
   regime?: string;
   type?: string;
+  searchQuery?: string;
 }
 
 // Réponse de la génération complète

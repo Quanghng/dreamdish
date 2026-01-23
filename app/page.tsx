@@ -59,6 +59,12 @@ const FILTER_TAG_COLORS = {
     text: 'text-violet-700',
     icon: '📦',
   },
+  searchQuery: {
+    bg: 'bg-blue-100',
+    border: 'border-blue-300',
+    text: 'text-blue-800',
+    icon: '🔍',
+  },
 };
 
 const DEFAULT_INGREDIENTS: Ingredient[] = [];
@@ -309,6 +315,14 @@ export default function Home() {
       return false;
     }
     
+    // Filtrer par nom si une recherche est active
+    if (filterSelection.searchQuery && filterSelection.searchQuery.trim() !== '') {
+      const searchLower = filterSelection.searchQuery.toLowerCase().trim();
+      if (!ingredient.name.toLowerCase().includes(searchLower)) {
+        return false;
+      }
+    }
+    
     // Si une catégorie est sélectionnée, l'ingrédient DOIT avoir ce tag de catégorie
     if (selectedCategory) {
       if (!ingredient.tags?.includes(selectedCategory)) {
@@ -419,19 +433,23 @@ export default function Home() {
       setSelectedCategory('');
     }
     setActiveFilters(
-      [nextSelection.cuisson, nextSelection.style, nextSelection.regime, nextSelection.type].filter(Boolean) as string[]
+      [nextSelection.cuisson, nextSelection.style, nextSelection.type].filter(Boolean) as string[]
     );
   };
 
-  // Get active filter selections for display
+  // Get active filter selections for display (only cuisson, style, type)
   const activeFilterSelections = Object.entries(filterSelection)
-    .filter(([_, val]) => val && val !== '')
+    .filter(([key, val]) => {
+      // Only show cuisson, style, and type in the tags (these go to the prompt)
+      if (!['cuisson', 'style', 'type'].includes(key)) return false;
+      return val && val !== '';
+    })
     .map(([key, val]) => ({ type: key as keyof FilterSelection, value: val as string }));
 
   const handleFilterSelection = (nextSelection: FilterSelection) => {
     setFilterSelection(nextSelection);
     setActiveFilters(
-      [nextSelection.cuisson, nextSelection.style, nextSelection.regime, nextSelection.type].filter(Boolean) as string[]
+      [nextSelection.cuisson, nextSelection.style, nextSelection.type].filter(Boolean) as string[]
     );
     setSelectedCategory(nextSelection.category || '');
   };
@@ -976,15 +994,6 @@ export default function Home() {
                   placeholder="Avez-vous une demande particulière pour votre plat ?"
                   className="flex-1 bg-transparent outline-none text-[#1a1a2e] placeholder:text-[#1a1a2e]/40 text-sm sm:text-base"
                 />
-                <motion.button
-                  onClick={() => handleAddIngredient()}
-                  className="w-10 h-10 rounded-xl bg-white/70 hover:bg-white text-[#e85d04] font-bold text-xl transition-all flex items-center justify-center border border-[#e85d04]/20"
-                  title="Ajouter un ingrédient"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  +
-                </motion.button>
                 
                 {/* Generate Button - The Star */}
                 <motion.button
